@@ -3,574 +3,554 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Patrimoine en Réalité Augmentée — Médiathèque</title>
-<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;0,900;1,700&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<title>Patrimoine en Réalité Augmentée — Guide du participant</title>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,600;0,700;1,600&family=Outfit:wght@300;400;500;600&display=swap" rel="stylesheet">
 <style>
-  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-  :root {
-    --navy: #1B2A4A;
-    --gold: #C9952A;
-    --gold-light: #E8C96A;
-    --teal: #1B6B72;
-    --cream: #F5F0E8;
-    --cream2: #EDE7DA;
-    --dark: #0E1928;
-    --white: #FFFFFF;
-    --text: #2A2A2A;
-    --text-muted: #6B7280;
-    --serif: 'Playfair Display', Georgia, serif;
-    --sans: 'DM Sans', sans-serif;
-  }
-  html { scroll-behavior: smooth; }
-  body { font-family: var(--sans); background: var(--cream); color: var(--text); overflow-x: hidden; }
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --ink:#1A1A1A;
+  --navy:#1C2B45;
+  --gold:#B8872A;
+  --gold-pale:#F4ECD8;
+  --gold-mid:#D4A84B;
+  --teal:#1A6068;
+  --teal-pale:#E3F0F1;
+  --cream:#F9F5EE;
+  --cream2:#EEE8DA;
+  --paper:#FDFAF5;
+  --grey:#6B7280;
+  --border:#DDD5C4;
+  --serif:'Cormorant Garamond',Georgia,serif;
+  --sans:'Outfit',system-ui,sans-serif;
+}
+html{scroll-behavior:smooth}
+body{font-family:var(--sans);background:var(--paper);color:var(--ink);overflow-x:hidden;font-size:16px;line-height:1.6}
 
-  /* ── NAV ── */
-  nav {
-    position: fixed; top: 0; left: 0; width: 100%; z-index: 100;
-    display: flex; align-items: center; justify-content: space-between;
-    padding: 1rem 2.5rem;
-    background: rgba(11,20,38,0.92); backdrop-filter: blur(12px);
-    border-bottom: 1px solid rgba(201,149,42,0.25);
-    transition: all 0.3s;
-  }
-  .nav-logo { font-family: var(--serif); font-size: 1.1rem; color: var(--gold); font-weight: 700; letter-spacing: 0.04em; }
-  .nav-links { display: flex; gap: 2rem; }
-  .nav-links a { color: rgba(255,255,255,0.75); text-decoration: none; font-size: 0.875rem; font-weight: 400; transition: color 0.2s; letter-spacing: 0.03em; }
-  .nav-links a:hover { color: var(--gold); }
-  .nav-cta {
-    background: var(--gold); color: var(--dark); font-weight: 500;
-    padding: 0.45rem 1.2rem; border-radius: 50px; font-size: 0.85rem;
-    text-decoration: none; transition: all 0.2s; letter-spacing: 0.02em;
-  }
-  .nav-cta:hover { background: var(--gold-light); transform: translateY(-1px); }
+/* ── TYPOGRAPHY ── */
+h1,h2,h3{font-family:var(--serif);font-weight:700;line-height:1.1}
+h1{font-size:clamp(2.6rem,6vw,5rem)}
+h2{font-size:clamp(1.8rem,4vw,3rem)}
+h3{font-size:clamp(1.2rem,2vw,1.6rem)}
+p{font-weight:300}
+strong{font-weight:600}
 
-  /* ── HERO ── */
-  .hero {
-    min-height: 100vh; position: relative; overflow: hidden;
-    display: flex; align-items: center;
-    background: linear-gradient(135deg, #0E1928 0%, #1B2A4A 50%, #0F3A3E 100%);
-  }
-  .hero-bg {
-    position: absolute; inset: 0; pointer-events: none;
-  }
-  .orb {
-    position: absolute; border-radius: 50%; filter: blur(80px); opacity: 0.3;
-    animation: float 8s ease-in-out infinite alternate;
-  }
-  .orb1 { width: 500px; height: 500px; background: var(--gold); top: -100px; right: -100px; animation-duration: 9s; }
-  .orb2 { width: 350px; height: 350px; background: var(--teal); bottom: -80px; left: -80px; animation-duration: 11s; animation-delay: -3s; }
-  .orb3 { width: 250px; height: 250px; background: #4A9B8E; top: 40%; left: 35%; animation-duration: 7s; animation-delay: -5s; }
-  @keyframes float { 0% { transform: translate(0,0) scale(1); } 100% { transform: translate(30px, -20px) scale(1.05); } }
+/* ── LAYOUT ── */
+.wrap{max-width:1160px;margin:0 auto;padding:0 2rem}
+section{padding:5rem 0}
 
-  /* Grid overlay */
-  .hero-grid {
-    position: absolute; inset: 0; opacity: 0.04;
-    background-image: linear-gradient(rgba(255,255,255,1) 1px, transparent 1px),
-                      linear-gradient(90deg, rgba(255,255,255,1) 1px, transparent 1px);
-    background-size: 60px 60px;
-  }
+/* ── NAV ── */
+nav{
+  position:sticky;top:0;z-index:100;
+  background:var(--navy);
+  border-bottom:2px solid var(--gold);
+}
+.nav-inner{
+  max-width:1160px;margin:0 auto;padding:0 2rem;
+  display:flex;align-items:center;justify-content:space-between;height:60px;
+}
+.nav-brand{
+  display:flex;align-items:center;gap:.75rem;
+  font-family:var(--serif);font-size:1.15rem;color:var(--gold-mid);font-weight:700;
+  text-decoration:none;letter-spacing:.02em;
+}
+.nav-brand span{color:rgba(255,255,255,.5);font-size:.85rem;font-weight:300;font-family:var(--sans)}
+.nav-toc{
+  display:flex;gap:2rem;list-style:none;
+}
+.nav-toc a{
+  color:rgba(255,255,255,.65);font-size:.8rem;font-weight:400;
+  text-decoration:none;letter-spacing:.04em;text-transform:uppercase;
+  transition:color .2s;padding:.25rem 0;border-bottom:2px solid transparent;
+}
+.nav-toc a:hover{color:var(--gold-mid);border-bottom-color:var(--gold-mid)}
 
-  .hero-content {
-    position: relative; z-index: 2; max-width: 1200px; margin: 0 auto;
-    padding: 8rem 2.5rem 5rem; width: 100%;
-    display: grid; grid-template-columns: 1fr 1fr; gap: 4rem; align-items: center;
-  }
-  .hero-badge {
-    display: inline-flex; align-items: center; gap: 0.5rem;
-    background: rgba(201,149,42,0.15); border: 1px solid rgba(201,149,42,0.4);
-    color: var(--gold-light); padding: 0.4rem 1rem; border-radius: 50px;
-    font-size: 0.75rem; font-weight: 500; letter-spacing: 0.08em; text-transform: uppercase;
-    margin-bottom: 1.5rem; width: fit-content;
-    animation: fadeUp 0.8s ease both;
-  }
-  .hero-title {
-    font-family: var(--serif); font-size: clamp(2.8rem, 5vw, 4.2rem); line-height: 1.08;
-    color: var(--white); font-weight: 900;
-    animation: fadeUp 0.8s 0.15s ease both;
-  }
-  .hero-title em { color: var(--gold); font-style: italic; }
-  .hero-desc {
-    margin-top: 1.5rem; color: rgba(255,255,255,0.65);
-    font-size: 1.05rem; line-height: 1.7; font-weight: 300;
-    animation: fadeUp 0.8s 0.3s ease both;
-  }
-  .hero-meta {
-    display: flex; gap: 1.5rem; margin-top: 2rem; flex-wrap: wrap;
-    animation: fadeUp 0.8s 0.45s ease both;
-  }
-  .meta-pill {
-    display: flex; align-items: center; gap: 0.5rem;
-    background: rgba(255,255,255,0.08); border: 1px solid rgba(255,255,255,0.15);
-    border-radius: 50px; padding: 0.4rem 1rem; color: rgba(255,255,255,0.85);
-    font-size: 0.85rem;
-  }
-  .meta-pill .dot { width: 6px; height: 6px; background: var(--gold); border-radius: 50%; flex-shrink: 0; }
-  .hero-ctas {
-    display: flex; gap: 1rem; margin-top: 2.5rem; flex-wrap: wrap;
-    animation: fadeUp 0.8s 0.55s ease both;
-  }
-  .btn-primary {
-    background: var(--gold); color: var(--dark); font-weight: 500;
-    padding: 0.85rem 2rem; border-radius: 50px; font-size: 0.95rem;
-    text-decoration: none; transition: all 0.25s; display: inline-flex; align-items: center; gap: 0.5rem;
-  }
-  .btn-primary:hover { background: var(--gold-light); transform: translateY(-2px); box-shadow: 0 8px 24px rgba(201,149,42,0.3); }
-  .btn-outline {
-    border: 1px solid rgba(255,255,255,0.3); color: rgba(255,255,255,0.85);
-    padding: 0.85rem 2rem; border-radius: 50px; font-size: 0.95rem;
-    text-decoration: none; transition: all 0.25s; display: inline-flex; align-items: center; gap: 0.5rem;
-  }
-  .btn-outline:hover { background: rgba(255,255,255,0.1); border-color: rgba(255,255,255,0.5); }
+/* ── HERO ── */
+.hero{
+  background:var(--navy);
+  background-image:
+    radial-gradient(ellipse 70% 60% at 80% 50%, rgba(184,135,42,.12) 0%, transparent 70%),
+    radial-gradient(ellipse 50% 80% at 10% 80%, rgba(26,96,104,.2) 0%, transparent 60%);
+  min-height:88vh;display:grid;grid-template-columns:1fr 1fr;align-items:center;gap:4rem;
+  padding:6rem 2rem 5rem;max-width:none;
+}
+.hero-inner{max-width:1160px;margin:0 auto;width:100%;display:grid;grid-template-columns:1fr 1fr;align-items:center;gap:5rem}
+.hero-eyebrow{
+  display:inline-flex;align-items:center;gap:.6rem;
+  color:var(--gold-mid);font-size:.75rem;font-weight:500;letter-spacing:.12em;text-transform:uppercase;
+  margin-bottom:1.5rem;
+}
+.hero-eyebrow::before{content:'';display:block;width:28px;height:1px;background:var(--gold-mid)}
+.hero h1{color:#fff;margin-bottom:1.25rem}
+.hero h1 em{color:var(--gold-mid);font-style:italic}
+.hero-desc{color:rgba(255,255,255,.6);font-size:1.05rem;line-height:1.75;margin-bottom:2rem;max-width:480px}
+.hero-pills{display:flex;flex-wrap:wrap;gap:.65rem}
+.pill{
+  display:inline-flex;align-items:center;gap:.45rem;
+  background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.15);
+  border-radius:4px;padding:.35rem .9rem;
+  color:rgba(255,255,255,.75);font-size:.82rem;font-weight:400;
+}
+.pill-dot{width:5px;height:5px;background:var(--gold-mid);border-radius:50%;flex-shrink:0}
+/* Hero right — decorative document stack */
+.hero-doc{display:flex;justify-content:center;align-items:center;position:relative}
+.doc-stack{position:relative;width:320px;height:380px}
+.doc-card{
+  position:absolute;background:rgba(255,255,255,.06);
+  border:1px solid rgba(255,255,255,.12);border-radius:8px;
+  backdrop-filter:blur(4px);padding:1.25rem;
+}
+.dc1{width:260px;height:200px;top:0;left:30px;transform:rotate(-3deg);animation:docFloat 7s ease-in-out infinite alternate}
+.dc2{width:240px;height:180px;bottom:10px;left:0;transform:rotate(2.5deg);animation:docFloat 9s 1s ease-in-out infinite alternate}
+.dc3{width:200px;height:160px;bottom:40px;right:0;transform:rotate(-1.5deg);animation:docFloat 8s 2s ease-in-out infinite alternate}
+@keyframes docFloat{0%{transform:rotate(var(--r,0deg)) translateY(0)}100%{transform:rotate(var(--r,0deg)) translateY(-10px)}}
+.dc1{--r:-3deg}.dc2{--r:2.5deg}.dc3{--r:-1.5deg}
+.doc-line{height:6px;border-radius:3px;background:rgba(255,255,255,.12);margin-bottom:.5rem}
+.doc-line.gold{background:rgba(184,135,42,.4);width:60%}
+.doc-line.short{width:40%}
+.doc-img-sim{
+  width:100%;height:80px;border-radius:4px;
+  background:linear-gradient(135deg,rgba(184,135,42,.2),rgba(26,96,104,.2));
+  display:flex;align-items:center;justify-content:center;
+  font-size:2rem;margin-top:.75rem;
+}
+.hero-scroll{
+  position:absolute;bottom:2rem;left:50%;transform:translateX(-50%);
+  display:flex;flex-direction:column;align-items:center;gap:.5rem;
+  color:rgba(255,255,255,.3);font-size:.72rem;letter-spacing:.1em;text-transform:uppercase;
+}
+.scroll-line{width:1px;height:40px;background:linear-gradient(to bottom,rgba(255,255,255,.3),transparent)}
 
-  /* Hero visual — RA phone mockup */
-  .hero-visual { display: flex; justify-content: center; align-items: center; animation: fadeUp 0.8s 0.2s ease both; }
-  .phone-frame {
-    width: 260px; height: 520px; background: rgba(255,255,255,0.06);
-    border: 1.5px solid rgba(255,255,255,0.2); border-radius: 36px;
-    position: relative; overflow: hidden; box-shadow: 0 40px 80px rgba(0,0,0,0.4);
-    transform: rotate(-4deg);
-    animation: phoneFloat 6s ease-in-out infinite alternate;
-  }
-  @keyframes phoneFloat { 0% { transform: rotate(-4deg) translateY(0); } 100% { transform: rotate(-4deg) translateY(-12px); } }
-  .phone-notch {
-    position: absolute; top: 14px; left: 50%; transform: translateX(-50%);
-    width: 80px; height: 20px; background: rgba(0,0,0,0.4); border-radius: 20px; z-index: 5;
-  }
-  .phone-screen {
-    position: absolute; inset: 0; padding: 50px 12px 20px;
-    display: flex; flex-direction: column; gap: 8px;
-  }
-  .phone-scan-area {
-    flex: 1; border: 2px dashed rgba(201,149,42,0.6); border-radius: 16px;
-    display: flex; align-items: center; justify-content: center; position: relative;
-    overflow: hidden;
-  }
-  .scan-corner {
-    position: absolute; width: 20px; height: 20px; border-color: var(--gold); border-style: solid;
-    border-width: 0;
-  }
-  .scan-corner.tl { top: 8px; left: 8px; border-top-width: 2px; border-left-width: 2px; }
-  .scan-corner.tr { top: 8px; right: 8px; border-top-width: 2px; border-right-width: 2px; }
-  .scan-corner.bl { bottom: 8px; left: 8px; border-bottom-width: 2px; border-left-width: 2px; }
-  .scan-corner.br { bottom: 8px; right: 8px; border-bottom-width: 2px; border-right-width: 2px; }
-  .scan-line {
-    position: absolute; width: 90%; height: 2px; background: linear-gradient(90deg, transparent, var(--gold), transparent);
-    animation: scan 2.5s ease-in-out infinite;
-  }
-  @keyframes scan { 0%, 100% { top: 15%; opacity: 0.3; } 50% { top: 80%; opacity: 1; } }
-  .phone-ar-popup {
-    background: rgba(201,149,42,0.18); border: 1px solid rgba(201,149,42,0.5);
-    border-radius: 12px; padding: 8px 12px; text-align: center;
-  }
-  .phone-ar-popup span { color: var(--gold-light); font-size: 0.7rem; font-weight: 500; }
-  .phone-ar-label {
-    position: absolute; bottom: 55px; left: 50%; transform: translateX(-50%);
-    white-space: nowrap; background: var(--gold); color: var(--dark);
-    font-size: 0.6rem; font-weight: 700; padding: 3px 10px; border-radius: 20px;
-    letter-spacing: 0.05em; animation: labelPulse 2s ease-in-out infinite;
-  }
-  @keyframes labelPulse { 0%, 100% { opacity: 0.7; } 50% { opacity: 1; } }
-  .phone-bottom { display: flex; justify-content: center; }
-  .phone-btn {
-    width: 40px; height: 40px; border-radius: 50%; border: 2px solid rgba(255,255,255,0.25);
-    display: flex; align-items: center; justify-content: center;
-  }
-  .phone-btn-inner { width: 28px; height: 28px; border-radius: 50%; background: rgba(255,255,255,0.15); }
-  /* Floating chips around phone */
-  .float-chip {
-    position: absolute; background: rgba(255,255,255,0.1); border: 1px solid rgba(255,255,255,0.2);
-    backdrop-filter: blur(8px); border-radius: 12px; padding: 6px 12px;
-    color: rgba(255,255,255,0.85); font-size: 0.72rem; font-weight: 500; white-space: nowrap;
-  }
-  .chip1 { top: 10%; right: -90px; animation: chipFloat 5s ease-in-out infinite alternate; }
-  .chip2 { bottom: 28%; right: -75px; animation: chipFloat 6s 1s ease-in-out infinite alternate; }
-  .chip3 { top: 35%; left: -80px; animation: chipFloat 7s 2s ease-in-out infinite alternate; }
-  @keyframes chipFloat { 0% { transform: translateY(0); } 100% { transform: translateY(-8px); } }
+/* ── SECTION HEADERS ── */
+.sh{margin-bottom:3.5rem}
+.sh-label{
+  display:inline-flex;align-items:center;gap:.6rem;
+  color:var(--gold);font-size:.72rem;font-weight:600;letter-spacing:.12em;text-transform:uppercase;
+  margin-bottom:.85rem;
+}
+.sh-label::before{content:'';width:20px;height:1px;background:var(--gold)}
+.sh h2{color:var(--navy)}
+.sh p{color:var(--grey);margin-top:.75rem;max-width:580px;font-size:1rem}
 
-  @keyframes fadeUp { from { opacity: 0; transform: translateY(24px); } to { opacity: 1; transform: translateY(0); } }
+/* ── KICKER BAR ── */
+.kicker{
+  background:var(--gold);padding:.6rem 1.5rem;border-radius:4px;
+  display:inline-block;color:var(--navy);font-size:.72rem;font-weight:600;
+  letter-spacing:.1em;text-transform:uppercase;margin-bottom:1.25rem;
+}
 
-  /* ── SECTION BASE ── */
-  section { padding: 6rem 2.5rem; }
-  .container { max-width: 1200px; margin: 0 auto; }
-  .section-label { font-size: 0.72rem; font-weight: 500; letter-spacing: 0.12em; text-transform: uppercase; color: var(--gold); margin-bottom: 0.75rem; }
-  .section-title { font-family: var(--serif); font-size: clamp(2rem, 4vw, 2.8rem); line-height: 1.15; color: var(--navy); font-weight: 900; }
-  .section-title.light { color: var(--white); }
-  .section-desc { color: var(--text-muted); font-size: 1.05rem; line-height: 1.7; margin-top: 1rem; max-width: 560px; }
+/* ── SECTION: C'EST QUOI ── */
+.quoi{background:var(--paper)}
+.quoi-grid{display:grid;grid-template-columns:1.1fr 1fr;gap:5rem;align-items:center}
+.quoi-text .big-def{
+  font-family:var(--serif);font-size:clamp(1.1rem,2vw,1.35rem);color:var(--navy);
+  line-height:1.65;border-left:3px solid var(--gold);padding-left:1.5rem;
+  margin:1.5rem 0 2rem;font-style:italic;
+}
+.concept-row{display:flex;gap:1.5rem;margin-bottom:1.25rem;align-items:flex-start}
+.concept-num{
+  font-family:var(--serif);font-size:2.2rem;color:var(--gold-mid);font-weight:700;
+  line-height:1;flex-shrink:0;width:40px;
+}
+.concept-text h4{font-family:var(--sans);font-size:.95rem;font-weight:600;color:var(--navy);margin-bottom:.25rem}
+.concept-text p{font-size:.88rem;color:var(--grey);line-height:1.6}
+/* RA/VR visual */
+.diff-box{
+  background:var(--cream);border:1px solid var(--border);border-radius:12px;overflow:hidden;
+}
+.diff-head{
+  display:grid;grid-template-columns:1fr 1fr;
+  border-bottom:1px solid var(--border);
+}
+.diff-col{padding:1.25rem 1.5rem;text-align:center}
+.diff-col.active{background:var(--navy)}
+.diff-col .dc-tag{font-size:.68rem;font-weight:600;letter-spacing:.1em;text-transform:uppercase;margin-bottom:.5rem}
+.diff-col.active .dc-tag{color:var(--gold-mid)}
+.diff-col:not(.active) .dc-tag{color:var(--grey)}
+.diff-col .dc-icon{font-size:2rem;margin-bottom:.5rem}
+.diff-col .dc-label{font-family:var(--serif);font-size:1.1rem;font-weight:700}
+.diff-col.active .dc-label{color:#fff}
+.diff-col:not(.active) .dc-label{color:var(--navy)}
+.diff-body{padding:1.5rem}
+.diff-row{display:flex;gap:.75rem;align-items:flex-start;margin-bottom:1rem}
+.diff-row:last-child{margin-bottom:0}
+.diff-check{
+  width:22px;height:22px;border-radius:50%;flex-shrink:0;
+  display:flex;align-items:center;justify-content:center;font-size:.7rem;font-weight:700;
+  margin-top:.1rem;
+}
+.dc-green{background:rgba(26,96,104,.12);color:var(--teal)}
+.dc-grey{background:var(--cream2);color:var(--grey)}
+.diff-row p{font-size:.85rem;color:var(--grey);line-height:1.5}
+.diff-row p strong{color:var(--ink)}
 
-  /* ── WHAT IS RA ── */
-  .what-is { background: var(--white); }
-  .what-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 5rem; align-items: center; margin-top: 3.5rem; }
-  .ra-cards { display: grid; gap: 1rem; }
-  .ra-card {
-    display: flex; gap: 1.25rem; align-items: flex-start;
-    background: var(--cream); border-radius: 16px; padding: 1.5rem;
-    border-left: 4px solid var(--gold); transition: all 0.25s;
-  }
-  .ra-card:hover { transform: translateX(6px); background: #EDE8DF; }
-  .ra-icon { font-size: 1.8rem; flex-shrink: 0; }
-  .ra-card h3 { font-family: var(--serif); font-size: 1.05rem; color: var(--navy); margin-bottom: 0.4rem; font-weight: 700; }
-  .ra-card p { font-size: 0.9rem; color: var(--text-muted); line-height: 1.6; }
-  .ra-visual { position: relative; }
-  .ra-comparison {
-    border-radius: 20px; overflow: hidden; position: relative;
-    box-shadow: 0 20px 60px rgba(27,42,74,0.15);
-  }
-  .ra-comp-row { display: flex; }
-  .ra-comp-box {
-    flex: 1; padding: 2rem; display: flex; flex-direction: column; align-items: center; gap: 0.75rem;
-  }
-  .ra-comp-box.real { background: var(--cream2); }
-  .ra-comp-box.augm { background: var(--navy); }
-  .comp-icon { font-size: 2.5rem; }
-  .comp-label { font-size: 0.75rem; font-weight: 500; letter-spacing: 0.06em; text-transform: uppercase; }
-  .ra-comp-box.real .comp-label { color: var(--text-muted); }
-  .ra-comp-box.augm .comp-label { color: rgba(255,255,255,0.5); }
-  .comp-title { font-family: var(--serif); font-size: 1rem; font-weight: 700; }
-  .ra-comp-box.real .comp-title { color: var(--navy); }
-  .ra-comp-box.augm .comp-title { color: var(--gold-light); }
-  .comp-desc { font-size: 0.82rem; text-align: center; line-height: 1.5; }
-  .ra-comp-box.real .comp-desc { color: var(--text-muted); }
-  .ra-comp-box.augm .comp-desc { color: rgba(255,255,255,0.6); }
-  .comp-plus { position: absolute; left: 50%; top: 50%; transform: translate(-50%, -50%); z-index: 10; }
-  .comp-plus span { background: var(--gold); color: var(--dark); width: 34px; height: 34px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: 700; font-size: 1.1rem; box-shadow: 0 4px 16px rgba(201,149,42,0.4); }
+/* ── VIDEO SECTION ── */
+.videos{background:var(--cream)}
+.videos-intro{
+  display:grid;grid-template-columns:1fr 1fr;gap:4rem;align-items:start;margin-bottom:4rem;
+}
+.video-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:2rem}
+.video-card{background:var(--paper);border:1px solid var(--border);border-radius:10px;overflow:hidden;transition:all .3s}
+.video-card:hover{transform:translateY(-4px);box-shadow:0 12px 32px rgba(28,43,69,.1);border-color:var(--gold)}
+.video-thumb{position:relative;padding-bottom:56.25%;background:#111;cursor:pointer}
+.video-thumb iframe{position:absolute;inset:0;width:100%;height:100%;border:0}
+.video-meta{padding:1.1rem 1.25rem}
+.video-tag{
+  display:inline-block;background:var(--teal-pale);color:var(--teal);
+  font-size:.65rem;font-weight:600;letter-spacing:.07em;text-transform:uppercase;
+  padding:.2rem .6rem;border-radius:3px;margin-bottom:.6rem;
+}
+.video-card h3{font-size:1rem;color:var(--navy);margin-bottom:.4rem;font-family:var(--sans);font-weight:600}
+.video-card p{font-size:.83rem;color:var(--grey);line-height:1.55}
+.video-note{
+  margin-top:2rem;padding:1rem 1.5rem;
+  background:var(--gold-pale);border-left:3px solid var(--gold);border-radius:0 6px 6px 0;
+  font-size:.88rem;color:var(--navy);
+}
 
-  /* ── EXAMPLES ── */
-  .examples { background: var(--cream); }
-  .examples-header { display: flex; justify-content: space-between; align-items: flex-end; }
-  .examples-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1.25rem; margin-top: 3rem; }
-  .example-card {
-    background: var(--white); border-radius: 20px; overflow: hidden;
-    border: 1px solid rgba(27,42,74,0.08);
-    transition: all 0.3s; cursor: default;
-    box-shadow: 0 4px 16px rgba(27,42,74,0.05);
-  }
-  .example-card:hover { transform: translateY(-6px); box-shadow: 0 20px 40px rgba(27,42,74,0.12); }
-  .example-thumb {
-    height: 160px; display: flex; align-items: center; justify-content: center;
-    font-size: 3.5rem; position: relative; overflow: hidden;
-  }
-  .example-thumb::after {
-    content: ''; position: absolute; inset: 0;
-    background: linear-gradient(to bottom, transparent 50%, rgba(0,0,0,0.04) 100%);
-  }
-  .ex1 { background: linear-gradient(135deg, #E8D5B0, #C9A86B); }
-  .ex2 { background: linear-gradient(135deg, #B8D4C8, #7AAF9A); }
-  .ex3 { background: linear-gradient(135deg, #C8C4E0, #9A95CA); }
-  .ex4 { background: linear-gradient(135deg, #E0C4C0, #CA8E86); }
-  .ex5 { background: linear-gradient(135deg, #B8D0E0, #7AA4C0); }
-  .ex6 { background: linear-gradient(135deg, #DDD0A8, #B8A060); }
-  .example-body { padding: 1.25rem 1.25rem 1.5rem; }
-  .example-tag {
-    display: inline-block; background: rgba(27,107,114,0.1); color: var(--teal);
-    font-size: 0.68rem; font-weight: 600; letter-spacing: 0.06em; text-transform: uppercase;
-    padding: 0.25rem 0.65rem; border-radius: 50px; margin-bottom: 0.6rem;
-  }
-  .example-card h3 { font-family: var(--serif); font-size: 1rem; color: var(--navy); font-weight: 700; margin-bottom: 0.5rem; }
-  .example-card p { font-size: 0.84rem; color: var(--text-muted); line-height: 1.55; }
+/* ── HISTORYPIN ── */
+.historypin{background:var(--navy);position:relative;overflow:hidden}
+.historypin::before{
+  content:'';position:absolute;top:-200px;right:-200px;
+  width:600px;height:600px;border-radius:50%;
+  border:80px solid rgba(184,135,42,.07);pointer-events:none;
+}
+.hp-grid{display:grid;grid-template-columns:1fr 1fr;gap:5rem;align-items:start}
+.hp-left .sh h2{color:#fff}
+.hp-left .sh p{color:rgba(255,255,255,.55)}
+.hp-badge{
+  display:inline-flex;align-items:center;gap:.6rem;
+  background:rgba(184,135,42,.15);border:1px solid rgba(184,135,42,.35);
+  color:var(--gold-mid);border-radius:4px;padding:.4rem .85rem;
+  font-size:.75rem;font-weight:500;letter-spacing:.06em;text-transform:uppercase;
+  margin-bottom:1.5rem;
+}
+.hp-features{display:flex;flex-direction:column;gap:1.25rem;margin-top:2rem}
+.hp-feat{display:flex;gap:1rem;align-items:flex-start}
+.hp-feat-icon{
+  width:40px;height:40px;border-radius:8px;background:rgba(184,135,42,.15);
+  display:flex;align-items:center;justify-content:center;font-size:1.1rem;flex-shrink:0;
+}
+.hp-feat-text h4{color:#fff;font-size:.95rem;font-weight:600;margin-bottom:.25rem}
+.hp-feat-text p{color:rgba(255,255,255,.5);font-size:.85rem;line-height:1.55}
+/* Historypin visual mockup */
+.hp-mockup{
+  background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.1);
+  border-radius:14px;overflow:hidden;
+}
+.hp-mock-bar{
+  background:rgba(255,255,255,.08);padding:.75rem 1rem;
+  display:flex;align-items:center;gap:.6rem;border-bottom:1px solid rgba(255,255,255,.08);
+}
+.mock-dot{width:8px;height:8px;border-radius:50%}
+.md1{background:#FF5F57}.md2{background:#FEBC2E}.md3{background:#28C840}
+.mock-url{
+  flex:1;background:rgba(255,255,255,.07);border-radius:4px;
+  padding:.3rem .75rem;color:rgba(255,255,255,.4);font-size:.75rem;font-family:monospace;
+}
+.hp-map{
+  height:180px;background:linear-gradient(135deg,#1a2e3a 0%,#1a3a30 100%);
+  position:relative;display:flex;align-items:center;justify-content:center;overflow:hidden;
+}
+.map-grid{
+  position:absolute;inset:0;opacity:.15;
+  background-image:linear-gradient(rgba(255,255,255,.5) 1px,transparent 1px),
+    linear-gradient(90deg,rgba(255,255,255,.5) 1px,transparent 1px);
+  background-size:30px 30px;
+}
+.map-pin{position:absolute;cursor:pointer}
+.pin-dot{width:12px;height:12px;border-radius:50%;border:2px solid #fff;animation:pinPulse 2.5s ease-in-out infinite}
+.pin-p1{background:var(--gold);top:30%;left:25%}.pin-p2{background:#4CAF82;top:55%;left:55%;animation-delay:.8s}.pin-p3{background:#6B9FD4;top:20%;left:65%;animation-delay:1.5s}.pin-p4{background:var(--gold-mid);top:65%;left:35%;animation-delay:.4s}
+@keyframes pinPulse{0%,100%{box-shadow:0 0 0 0 rgba(255,255,255,.4)}50%{box-shadow:0 0 0 6px rgba(255,255,255,0)}}
+.map-label{
+  position:absolute;top:8px;left:8px;
+  background:rgba(0,0,0,.5);color:rgba(255,255,255,.7);
+  font-size:.65rem;padding:.25rem .55rem;border-radius:3px;font-family:monospace;
+}
+.hp-photo-strip{display:grid;grid-template-columns:repeat(3,1fr);gap:0;border-top:1px solid rgba(255,255,255,.08)}
+.hp-photo{
+  aspect-ratio:4/3;display:flex;align-items:center;justify-content:center;
+  font-size:1.8rem;border-right:1px solid rgba(255,255,255,.08);
+  position:relative;overflow:hidden;
+}
+.hp-photo:last-child{border-right:none}
+.ph1{background:linear-gradient(135deg,#3a2a1a,#6b4a2a)}
+.ph2{background:linear-gradient(135deg,#1a2a3a,#2a4a5a)}
+.ph3{background:linear-gradient(135deg,#2a3a1a,#3a5a2a)}
+.hp-photo-caption{
+  position:absolute;bottom:0;left:0;right:0;
+  background:linear-gradient(to top,rgba(0,0,0,.7),transparent);
+  padding:.5rem .6rem .4rem;
+  color:rgba(255,255,255,.7);font-size:.6rem;line-height:1.3;
+}
+.hp-info-box{padding:1rem 1.25rem;display:flex;flex-direction:column;gap:.5rem;border-top:1px solid rgba(255,255,255,.08)}
+.hp-stat{display:flex;align-items:center;gap:.75rem}
+.hp-stat-n{font-family:var(--serif);font-size:1.2rem;color:var(--gold-mid);font-weight:700}
+.hp-stat-l{font-size:.78rem;color:rgba(255,255,255,.45)}
+.hp-link{
+  display:inline-flex;align-items:center;gap:.5rem;margin-top:1.5rem;
+  background:var(--gold);color:var(--navy);font-weight:600;font-size:.85rem;
+  padding:.6rem 1.4rem;border-radius:4px;text-decoration:none;transition:all .25s;
+}
+.hp-link:hover{background:var(--gold-mid);transform:translateX(3px)}
+.hp-link::after{content:'→'}
 
-  /* ── PROGRAMME ── */
-  .programme { background: var(--navy); position: relative; overflow: hidden; }
-  .programme::before {
-    content: ''; position: absolute; top: 0; right: 0; width: 500px; height: 500px;
-    background: radial-gradient(circle, rgba(201,149,42,0.12) 0%, transparent 70%);
-    pointer-events: none;
-  }
-  .prog-grid { display: grid; grid-template-columns: 1fr 2fr; gap: 4rem; margin-top: 4rem; }
-  .prog-info { }
-  .prog-info p { color: rgba(255,255,255,0.6); font-size: 1rem; line-height: 1.7; margin-top: 1.25rem; }
-  .prog-bullets { margin-top: 2rem; display: flex; flex-direction: column; gap: 0.75rem; }
-  .prog-bullet { display: flex; gap: 0.85rem; align-items: center; }
-  .pb-dot { width: 8px; height: 8px; border-radius: 50%; background: var(--gold); flex-shrink: 0; }
-  .pb-text { color: rgba(255,255,255,0.75); font-size: 0.92rem; }
-  .timeline { display: flex; flex-direction: column; gap: 0; }
-  .tl-item { display: flex; gap: 1.5rem; position: relative; }
-  .tl-item:not(:last-child)::after {
-    content: ''; position: absolute; left: 22px; top: 48px; bottom: -1px;
-    width: 2px; background: rgba(201,149,42,0.2);
-  }
-  .tl-left { flex-shrink: 0; display: flex; flex-direction: column; align-items: center; gap: 0; padding-top: 4px; }
-  .tl-circle {
-    width: 44px; height: 44px; border-radius: 50%; display: flex; align-items: center; justify-content: center;
-    font-size: 1.2rem; border: 2px solid rgba(201,149,42,0.3); background: rgba(201,149,42,0.1);
-    flex-shrink: 0; position: relative; z-index: 1;
-  }
-  .tl-content { padding: 4px 0 2.5rem; flex: 1; }
-  .tl-time { color: var(--gold); font-size: 0.75rem; font-weight: 600; letter-spacing: 0.06em; margin-bottom: 0.3rem; }
-  .tl-title { font-family: var(--serif); color: var(--white); font-size: 1.1rem; font-weight: 700; margin-bottom: 0.5rem; }
-  .tl-desc { color: rgba(255,255,255,0.55); font-size: 0.87rem; line-height: 1.6; }
+/* ── OUTILS ── */
+.outils{background:var(--paper)}
+.outils-intro{max-width:600px;margin-bottom:3.5rem}
+.tools-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:1.5rem}
+.tool-card{
+  background:var(--paper);border:1px solid var(--border);border-radius:10px;
+  padding:1.75rem;transition:all .3s;position:relative;overflow:hidden;
+}
+.tool-card::before{
+  content:'';position:absolute;top:0;left:0;width:3px;height:100%;background:var(--border);
+  transition:background .3s;
+}
+.tool-card:hover{border-color:var(--gold-mid);box-shadow:0 8px 24px rgba(28,43,69,.07)}
+.tool-card:hover::before{background:var(--gold)}
+.tool-card.featured::before{background:var(--gold)}
+.tool-card.featured{border-color:rgba(184,135,42,.3);background:var(--gold-pale)}
+.tool-top{display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:1rem}
+.tool-icon{font-size:1.8rem}
+.tool-rec{
+  background:var(--navy);color:var(--gold-mid);
+  font-size:.6rem;font-weight:700;letter-spacing:.07em;text-transform:uppercase;
+  padding:.25rem .6rem;border-radius:3px;
+}
+.tool-card h3{font-family:var(--sans);font-size:1.05rem;font-weight:600;color:var(--navy);margin-bottom:.25rem}
+.tool-level{display:flex;gap:4px;margin-bottom:.85rem}
+.tl-pip{width:20px;height:4px;border-radius:2px;background:var(--border)}
+.tl-pip.on{background:var(--gold)}
+.tool-desc{font-size:.87rem;color:var(--grey);line-height:1.6;margin-bottom:1rem}
+.tool-tags{display:flex;flex-wrap:wrap;gap:.4rem}
+.t-tag{background:var(--cream2);color:var(--teal);font-size:.68rem;font-weight:500;padding:.18rem .55rem;border-radius:3px}
+.tool-url{display:block;margin-top:1.1rem;font-size:.8rem;color:var(--gold);font-weight:500;text-decoration:none;border-top:1px solid var(--border);padding-top:.85rem}
+.tool-url:hover{text-decoration:underline}
 
-  /* ── OUTILS ── */
-  .outils { background: var(--cream); }
-  .outils-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 1.5rem; margin-top: 3rem; }
-  .outil-card {
-    background: var(--white); border-radius: 20px; padding: 2rem; position: relative;
-    border: 1px solid rgba(27,42,74,0.08);
-    transition: all 0.3s; overflow: hidden;
-    box-shadow: 0 4px 16px rgba(27,42,74,0.05);
-  }
-  .outil-card:hover { transform: translateY(-4px); box-shadow: 0 16px 40px rgba(27,42,74,0.1); }
-  .outil-card.recommended { border-color: var(--gold); }
-  .outil-badge {
-    position: absolute; top: 1.25rem; right: 1.25rem;
-    background: var(--gold); color: var(--dark); font-size: 0.65rem; font-weight: 700;
-    padding: 0.2rem 0.6rem; border-radius: 50px; letter-spacing: 0.05em; text-transform: uppercase;
-  }
-  .outil-emoji { font-size: 2.2rem; margin-bottom: 1rem; }
-  .outil-card h3 { font-family: var(--serif); font-size: 1.15rem; color: var(--navy); font-weight: 700; margin-bottom: 0.4rem; }
-  .outil-level { display: flex; gap: 4px; margin-bottom: 0.85rem; }
-  .level-dot { width: 8px; height: 8px; border-radius: 50%; background: var(--cream2); }
-  .level-dot.active { background: var(--gold); }
-  .outil-card p { font-size: 0.88rem; color: var(--text-muted); line-height: 1.6; margin-bottom: 1rem; }
-  .outil-tags { display: flex; gap: 0.5rem; flex-wrap: wrap; }
-  .outil-tag { background: var(--cream); color: var(--teal); font-size: 0.72rem; font-weight: 500; padding: 0.2rem 0.65rem; border-radius: 50px; }
+/* ── RESSOURCES ── */
+.ressources{background:var(--cream)}
+.res-cols{display:grid;grid-template-columns:repeat(3,1fr);gap:2rem;margin-top:3rem}
+.res-group h3{
+  font-family:var(--sans);font-size:.72rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;
+  color:var(--grey);margin-bottom:1.25rem;padding-bottom:.6rem;border-bottom:1px solid var(--border);
+}
+.res-list{list-style:none;display:flex;flex-direction:column;gap:.75rem}
+.res-item{display:flex;flex-direction:column;gap:.15rem}
+.res-item a{
+  color:var(--navy);font-size:.9rem;font-weight:500;text-decoration:none;
+  transition:color .2s;display:flex;align-items:center;gap:.4rem;
+}
+.res-item a::before{content:'↗';font-size:.7rem;color:var(--gold);flex-shrink:0}
+.res-item a:hover{color:var(--gold)}
+.res-item span{font-size:.78rem;color:var(--grey);padding-left:1.05rem}
 
-  /* ── PROJETS IDEAS ── */
-  .projets { background: var(--white); }
-  .projets-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1.25rem; margin-top: 3rem; }
-  .projet-card {
-    border-radius: 20px; padding: 1.75rem; position: relative; overflow: hidden;
-    transition: all 0.3s;
-  }
-  .projet-card:hover { transform: translateY(-4px); }
-  .pc-debutant { background: linear-gradient(135deg, #E8F5EE, #D0EDDE); }
-  .pc-inter { background: linear-gradient(135deg, #FDF3E3, #F5E0B8); }
-  .pc-avance { background: linear-gradient(135deg, #E3EFF5, #C0D8E8); }
-  .projet-level { font-size: 0.7rem; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; margin-bottom: 1rem; }
-  .lvl-debutant { color: #2D7A4F; }
-  .lvl-inter { color: #7A5A1A; }
-  .lvl-avance { color: #1A4A7A; }
-  .projet-card h3 { font-family: var(--serif); font-size: 1rem; color: var(--navy); font-weight: 700; margin-bottom: 0.5rem; }
-  .projet-card p { font-size: 0.85rem; color: #4A5568; line-height: 1.6; }
-  .projet-icon { font-size: 2rem; margin-bottom: 1rem; }
+/* ── ETAPES (pas à pas) ── */
+.etapes{background:var(--paper)}
+.steps-flow{position:relative;max-width:820px;margin:0 auto}
+.steps-flow::before{
+  content:'';position:absolute;left:28px;top:48px;bottom:48px;
+  width:1px;background:var(--border);
+}
+.step-item{display:grid;grid-template-columns:56px 1fr;gap:1.75rem;margin-bottom:2.5rem;position:relative}
+.step-num{
+  width:56px;height:56px;border-radius:50%;
+  background:var(--cream);border:1px solid var(--border);
+  display:flex;align-items:center;justify-content:center;flex-shrink:0;
+  font-family:var(--serif);font-size:1.5rem;font-weight:700;color:var(--gold);
+  position:relative;z-index:1;
+}
+.step-content{padding-top:.5rem}
+.step-content h3{font-family:var(--sans);font-size:1.05rem;font-weight:600;color:var(--navy);margin-bottom:.5rem}
+.step-content p{font-size:.9rem;color:var(--grey);line-height:1.65;margin-bottom:.75rem}
+.step-tip{
+  background:var(--gold-pale);border-left:2px solid var(--gold);
+  padding:.6rem 1rem;border-radius:0 5px 5px 0;
+  font-size:.82rem;color:var(--navy);
+}
+.step-tip::before{content:'💡 '}
 
-  /* ── INSCRIPTION ── */
-  .inscription { background: var(--navy); position: relative; overflow: hidden; }
-  .insc-deco {
-    position: absolute; pointer-events: none;
-  }
-  .insc-deco1 { top: -120px; left: -120px; width: 400px; height: 400px; border-radius: 50%; border: 60px solid rgba(201,149,42,0.08); }
-  .insc-deco2 { bottom: -80px; right: -80px; width: 300px; height: 300px; border-radius: 50%; border: 40px solid rgba(27,107,114,0.15); }
-  .insc-inner { text-align: center; max-width: 640px; margin: 0 auto; position: relative; z-index: 2; }
-  .insc-inner .section-label { text-align: center; }
-  .insc-form { margin-top: 2.5rem; display: flex; flex-direction: column; gap: 1rem; }
-  .form-row { display: flex; gap: 1rem; }
-  .form-field { flex: 1; }
-  .form-field label { display: block; color: rgba(255,255,255,0.6); font-size: 0.8rem; font-weight: 500; margin-bottom: 0.4rem; letter-spacing: 0.03em; }
-  .form-field input, .form-field select {
-    width: 100%; background: rgba(255,255,255,0.08); border: 1px solid rgba(255,255,255,0.15);
-    border-radius: 10px; padding: 0.75rem 1rem; color: var(--white); font-family: var(--sans);
-    font-size: 0.9rem; outline: none; transition: all 0.2s;
-  }
-  .form-field input::placeholder { color: rgba(255,255,255,0.3); }
-  .form-field input:focus, .form-field select:focus { border-color: var(--gold); background: rgba(255,255,255,0.12); }
-  .form-field select option { background: var(--navy); color: var(--white); }
-  .form-submit {
-    background: var(--gold); color: var(--dark); font-weight: 600; font-size: 1rem;
-    border: none; border-radius: 50px; padding: 0.95rem 2.5rem; cursor: pointer;
-    font-family: var(--sans); transition: all 0.25s; margin-top: 0.5rem;
-    display: flex; align-items: center; gap: 0.5rem; justify-content: center; width: 100%;
-  }
-  .form-submit:hover { background: var(--gold-light); transform: translateY(-2px); box-shadow: 0 8px 24px rgba(201,149,42,0.35); }
-  .form-note { color: rgba(255,255,255,0.35); font-size: 0.78rem; margin-top: 0.75rem; text-align: center; }
-  .form-success { display: none; text-align: center; padding: 2rem; }
-  .form-success .success-icon { font-size: 3rem; margin-bottom: 1rem; }
-  .form-success h3 { color: var(--gold-light); font-family: var(--serif); font-size: 1.5rem; margin-bottom: 0.75rem; }
-  .form-success p { color: rgba(255,255,255,0.65); }
+/* ── FAQ ── */
+.faq{background:var(--cream)}
+.faq-cols{display:grid;grid-template-columns:1fr 1fr;gap:1px;background:var(--border);border:1px solid var(--border);border-radius:10px;overflow:hidden;margin-top:2.5rem}
+.faq-item{background:var(--paper);cursor:pointer;transition:background .2s}
+.faq-item:hover{background:var(--cream)}
+.fq{padding:1.25rem 1.5rem;display:flex;justify-content:space-between;align-items:center;gap:1rem}
+.fq span{font-size:.93rem;font-weight:500;color:var(--navy)}
+.fq-icon{
+  width:26px;height:26px;border-radius:50%;border:1px solid var(--border);
+  display:flex;align-items:center;justify-content:center;flex-shrink:0;
+  font-size:.8rem;color:var(--grey);transition:all .3s;
+}
+.fa-ans{max-height:0;overflow:hidden;transition:max-height .35s ease}
+.fa-ans p{padding:0 1.5rem 1.25rem;font-size:.87rem;color:var(--grey);line-height:1.65}
+.faq-item.open .fa-ans{max-height:220px}
+.faq-item.open .fq-icon{background:var(--gold);border-color:var(--gold);color:var(--navy);transform:rotate(45deg)}
 
-  /* ── FAQ ── */
-  .faq { background: var(--cream); }
-  .faq-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin-top: 3rem; }
-  .faq-item {
-    background: var(--white); border-radius: 16px; overflow: hidden;
-    border: 1px solid rgba(27,42,74,0.08); cursor: pointer;
-    transition: all 0.25s;
-  }
-  .faq-item:hover { border-color: rgba(201,149,42,0.3); }
-  .faq-question {
-    padding: 1.25rem 1.5rem; display: flex; justify-content: space-between; align-items: center;
-  }
-  .faq-question span { font-weight: 500; color: var(--navy); font-size: 0.95rem; padding-right: 1rem; }
-  .faq-icon { width: 24px; height: 24px; border-radius: 50%; background: var(--cream2); display: flex; align-items: center; justify-content: center; flex-shrink: 0; transition: all 0.3s; }
-  .faq-icon span { font-size: 0.75rem; color: var(--navy); font-weight: 700; }
-  .faq-answer { max-height: 0; overflow: hidden; transition: max-height 0.35s ease, padding 0.3s; }
-  .faq-answer p { padding: 0 1.5rem 1.25rem; color: var(--text-muted); font-size: 0.88rem; line-height: 1.65; }
-  .faq-item.open .faq-answer { max-height: 200px; }
-  .faq-item.open .faq-icon { background: var(--gold); transform: rotate(45deg); }
-  .faq-item.open .faq-icon span { color: var(--dark); }
+/* ── FOOTER ── */
+footer{background:var(--navy);padding:3.5rem 0 2rem}
+.footer-grid{display:grid;grid-template-columns:1.5fr 1fr 1fr;gap:3rem;padding-bottom:2.5rem;border-bottom:1px solid rgba(255,255,255,.08)}
+.footer-brand p{color:rgba(255,255,255,.4);font-size:.85rem;line-height:1.65;margin-top:.75rem;max-width:280px}
+.footer-col h4{color:rgba(255,255,255,.4);font-size:.68rem;font-weight:600;letter-spacing:.1em;text-transform:uppercase;margin-bottom:1.1rem}
+.footer-col ul{list-style:none;display:flex;flex-direction:column;gap:.55rem}
+.footer-col ul a{color:rgba(255,255,255,.55);text-decoration:none;font-size:.87rem;transition:color .2s}
+.footer-col ul a:hover{color:var(--gold-mid)}
+.footer-bottom{padding-top:1.5rem;display:flex;justify-content:space-between;align-items:center}
+.footer-bottom p{color:rgba(255,255,255,.2);font-size:.78rem}
 
-  /* ── FOOTER ── */
-  footer {
-    background: var(--dark); padding: 3rem 2.5rem 2rem;
-  }
-  .footer-inner { max-width: 1200px; margin: 0 auto; }
-  .footer-top { display: flex; justify-content: space-between; align-items: flex-start; gap: 3rem; padding-bottom: 2rem; border-bottom: 1px solid rgba(255,255,255,0.08); }
-  .footer-brand .nav-logo { font-size: 1.2rem; display: block; margin-bottom: 0.75rem; }
-  .footer-brand p { color: rgba(255,255,255,0.4); font-size: 0.85rem; line-height: 1.6; max-width: 260px; }
-  .footer-links h4 { color: rgba(255,255,255,0.5); font-size: 0.7rem; letter-spacing: 0.1em; text-transform: uppercase; margin-bottom: 1rem; }
-  .footer-links ul { list-style: none; display: flex; flex-direction: column; gap: 0.5rem; }
-  .footer-links ul a { color: rgba(255,255,255,0.55); text-decoration: none; font-size: 0.88rem; transition: color 0.2s; }
-  .footer-links ul a:hover { color: var(--gold); }
-  .footer-bottom { padding-top: 1.5rem; display: flex; justify-content: space-between; align-items: center; }
-  .footer-bottom p { color: rgba(255,255,255,0.25); font-size: 0.8rem; }
+/* ── SCROLL REVEAL ── */
+.reveal{opacity:0;transform:translateY(24px);transition:opacity .7s ease,transform .7s ease}
+.reveal.visible{opacity:1;transform:none}
 
-  /* ── SCROLL REVEAL ── */
-  .reveal { opacity: 0; transform: translateY(30px); transition: all 0.7s ease; }
-  .reveal.visible { opacity: 1; transform: translateY(0); }
-
-  /* ── RESPONSIVE ── */
-  @media (max-width: 900px) {
-    .hero-content { grid-template-columns: 1fr; }
-    .hero-visual { display: none; }
-    .what-grid { grid-template-columns: 1fr; }
-    .examples-grid { grid-template-columns: repeat(2, 1fr); }
-    .prog-grid { grid-template-columns: 1fr; }
-    .outils-grid { grid-template-columns: 1fr; }
-    .projets-grid { grid-template-columns: 1fr; }
-    .faq-grid { grid-template-columns: 1fr; }
-    .nav-links { display: none; }
-    .footer-top { flex-direction: column; }
-    .form-row { flex-direction: column; }
-  }
-  @media (max-width: 600px) {
-    section { padding: 4rem 1.25rem; }
-    nav { padding: 1rem 1.25rem; }
-    .examples-grid { grid-template-columns: 1fr; }
-  }
+/* ── RESP ── */
+@media(max-width:960px){
+  .hero-inner{grid-template-columns:1fr}.hero-doc{display:none}
+  .quoi-grid{grid-template-columns:1fr}
+  .videos-intro{grid-template-columns:1fr}
+  .hp-grid{grid-template-columns:1fr}
+  .tools-grid{grid-template-columns:1fr}
+  .res-cols{grid-template-columns:1fr}
+  .faq-cols{grid-template-columns:1fr}
+  .footer-grid{grid-template-columns:1fr}
+  .nav-toc{display:none}
+  .video-grid{grid-template-columns:1fr}
+}
+@media(max-width:600px){
+  section{padding:3.5rem 0}
+  .wrap{padding:0 1.25rem}
+  h1{font-size:2.4rem}
+}
 </style>
 </head>
 <body>
 
 <!-- NAV -->
-<nav id="nav">
-  <div class="nav-logo">🏛️ Patrimoine RA</div>
-  <div class="nav-links">
-    <a href="#cest-quoi">C'est quoi ?</a>
-    <a href="#exemples">Exemples</a>
-    <a href="#programme">Programme</a>
-    <a href="#projets">Projets</a>
-    <a href="#faq">FAQ</a>
+<nav>
+  <div class="nav-inner">
+    <a href="#" class="nav-brand">
+      🏛️ Patrimoine en RA
+      <span>/ Guide du participant</span>
+    </a>
+    <ul class="nav-toc">
+      <li><a href="#cest-quoi">La RA</a></li>
+      <li><a href="#videos">Vidéos</a></li>
+      <li><a href="#historypin">Historypin</a></li>
+      <li><a href="#outils">Outils</a></li>
+      <li><a href="#etapes">Pas à pas</a></li>
+      <li><a href="#ressources">Ressources</a></li>
+    </ul>
   </div>
-  <a href="#inscription" class="nav-cta">Je m'inscris →</a>
 </nav>
 
 <!-- HERO -->
-<section class="hero" id="hero">
-  <div class="hero-bg">
-    <div class="orb orb1"></div>
-    <div class="orb orb2"></div>
-    <div class="orb orb3"></div>
-    <div class="hero-grid"></div>
-  </div>
-  <div class="hero-content">
+<div class="hero">
+  <div class="hero-inner">
     <div>
-      <div class="hero-badge">✦ Animation médiathèque</div>
-      <h1 class="hero-title">
-        Le patrimoine<br>
-        en <em>Réalité<br>Augmentée</em>
-      </h1>
-      <p class="hero-desc">
-        Donnez vie aux photos d'archives, aux cartes anciennes et aux monuments de votre région grâce à votre smartphone. Aucune compétence technique requise.
-      </p>
-      <div class="hero-meta">
-        <div class="meta-pill"><div class="dot"></div> Adultes tous niveaux</div>
-        <div class="meta-pill"><div class="dot"></div> 1h30</div>
-        <div class="meta-pill"><div class="dot"></div> Gratuit</div>
-      </div>
-      <div class="hero-ctas">
-        <a href="#inscription" class="btn-primary">Réserver ma place →</a>
-        <a href="#programme" class="btn-outline">Voir le programme</a>
+      <div class="hero-eyebrow">Animation médiathèque · Support participant</div>
+      <h1>Donnez vie au<br><em>patrimoine</em><br>avec votre<br>téléphone</h1>
+      <p class="hero-desc">Ce guide vous accompagne dans votre découverte de la réalité augmentée appliquée au patrimoine local. Vidéos, outils, exemples et ressources — tout ce dont vous avez besoin, réuni ici.</p>
+      <div class="hero-pills">
+        <div class="pill"><div class="pill-dot"></div>Adultes tous niveaux</div>
+        <div class="pill"><div class="pill-dot"></div>Smartphone ou tablette</div>
+        <div class="pill"><div class="pill-dot"></div>Outils gratuits</div>
+        <div class="pill"><div class="pill-dot"></div>Sans coder</div>
       </div>
     </div>
-    <div class="hero-visual">
-      <div style="position: relative;">
-        <div class="phone-frame">
-          <div class="phone-notch"></div>
-          <div class="phone-screen">
-            <div class="phone-scan-area">
-              <div class="scan-corner tl"></div>
-              <div class="scan-corner tr"></div>
-              <div class="scan-corner bl"></div>
-              <div class="scan-corner br"></div>
-              <div class="scan-line"></div>
-              <div class="phone-ar-label">Scan en cours…</div>
-            </div>
-            <div class="phone-ar-popup">
-              <span>📜 Carte du XVIII<sup>e</sup> siècle détectée !</span>
-            </div>
-            <div class="phone-bottom">
-              <div class="phone-btn"><div class="phone-btn-inner"></div></div>
-            </div>
-          </div>
+    <div class="hero-doc">
+      <div class="doc-stack">
+        <div class="doc-card dc1">
+          <div class="doc-line gold"></div>
+          <div class="doc-line" style="width:80%"></div>
+          <div class="doc-line short"></div>
+          <div class="doc-img-sim">🗺️</div>
         </div>
-        <div class="float-chip chip1">🏛️ Bâtiment augmenté</div>
-        <div class="float-chip chip2">📍 Lieu identifié</div>
-        <div class="float-chip chip3">🎙️ Audio d'époque</div>
+        <div class="doc-card dc2">
+          <div class="doc-line gold" style="width:70%"></div>
+          <div class="doc-line" style="width:90%"></div>
+          <div class="doc-img-sim">📸</div>
+        </div>
+        <div class="doc-card dc3">
+          <div class="doc-line gold" style="width:55%"></div>
+          <div class="doc-line" style="width:75%"></div>
+          <div class="doc-img-sim">🏛️</div>
+        </div>
       </div>
     </div>
   </div>
-</section>
+</div>
 
 <!-- C'EST QUOI -->
-<section class="what-is" id="cest-quoi">
-  <div class="container">
-    <div class="section-label">Comprendre</div>
-    <h2 class="section-title">La Réalité Augmentée,<br>c'est quoi exactement ?</h2>
-    <div class="what-grid">
-      <div class="ra-cards reveal">
-        <div class="ra-card">
-          <div class="ra-icon">👁️</div>
-          <div>
-            <h3>Voir le monde autrement</h3>
-            <p>Pointez votre smartphone vers une photo, une carte ou un objet et regardez des informations, images ou vidéos apparaître par-dessus la réalité.</p>
+<section class="quoi" id="cest-quoi">
+  <div class="wrap">
+    <div class="quoi-grid">
+      <div class="quoi-text reveal">
+        <div class="sh">
+          <div class="sh-label">Comprendre</div>
+          <h2>La Réalité Augmentée,<br>c'est quoi ?</h2>
+        </div>
+        <p class="big-def">« Superposer des éléments numériques — images, textes, sons, objets 3D — sur le monde réel, visible à travers l'écran de votre smartphone ou tablette. »</p>
+        <p style="color:var(--grey);font-size:.95rem;margin-bottom:2rem">Contrairement à la réalité virtuelle qui vous transporte dans un univers entièrement artificiel, la RA <strong>enrichit</strong> ce que vous voyez déjà autour de vous. Et vous l'utilisez peut-être déjà sans le savoir.</p>
+        <div class="concept-row">
+          <div class="concept-num">①</div>
+          <div class="concept-text">
+            <h4>Un déclencheur dans le monde réel</h4>
+            <p>Une photo ancienne, une carte postale, un panneau, la façade d'un bâtiment... Votre appareil le reconnaît.</p>
           </div>
         </div>
-        <div class="ra-card">
-          <div class="ra-icon">📱</div>
-          <div>
-            <h3>Vous l'avez déjà utilisée</h3>
-            <p>Les filtres Snapchat et Instagram, c'est de la RA ! Google Maps avec les flèches de navigation également. C'est simplement ça : du numérique superposé au réel.</p>
+        <div class="concept-row">
+          <div class="concept-num">②</div>
+          <div class="concept-text">
+            <h4>Un contenu numérique associé</h4>
+            <p>Une vidéo, une image d'archive, un texte, un son, un objet 3D — que vous avez créé ou choisi.</p>
           </div>
         </div>
-        <div class="ra-card">
-          <div class="ra-icon">🏛️</div>
-          <div>
-            <h3>Parfaite pour le patrimoine</h3>
-            <p>Faire « revivre » un bâtiment disparu, animer une photo d'archives, annoter une carte ancienne… La RA transforme chaque document en expérience vivante.</p>
+        <div class="concept-row">
+          <div class="concept-num">③</div>
+          <div class="concept-text">
+            <h4>Une expérience partageable</h4>
+            <p>Via un simple lien ou QR code, n'importe qui peut vivre votre création depuis son propre téléphone.</p>
           </div>
         </div>
       </div>
-      <div class="ra-visual reveal" style="transition-delay: 0.2s;">
-        <div class="ra-comparison">
-          <div class="ra-comp-row" style="position: relative;">
-            <div class="ra-comp-box real">
-              <div class="comp-icon">📄</div>
-              <div class="comp-label">Sans RA</div>
-              <div class="comp-title">Photo ancienne</div>
-              <div class="comp-desc">Un document figé, sans contexte ni explication</div>
+      <div class="reveal" style="transition-delay:.2s">
+        <div class="diff-box">
+          <div class="diff-head">
+            <div class="diff-col active">
+              <div class="dc-tag">Réalité Augmentée</div>
+              <div class="dc-icon">📱</div>
+              <div class="dc-label">RA</div>
             </div>
-            <div class="comp-plus">
-              <span>+</span>
-            </div>
-            <div class="ra-comp-box augm">
-              <div class="comp-icon">✨</div>
-              <div class="comp-label">Avec RA</div>
-              <div class="comp-title">Expérience augmentée</div>
-              <div class="comp-desc">Vidéo, témoignage audio, carte interactive…</div>
+            <div class="diff-col">
+              <div class="dc-tag">Réalité Virtuelle</div>
+              <div class="dc-icon">🥽</div>
+              <div class="dc-label">RV</div>
             </div>
           </div>
+          <div class="diff-body">
+            <div class="diff-row"><div class="diff-check dc-green">✓</div><p><strong>Monde réel enrichi</strong> — vous restez dans votre environnement, des éléments s'y superposent.</p></div>
+            <div class="diff-row"><div class="diff-check dc-green">✓</div><p><strong>Votre téléphone suffit</strong> — pas de casque, pas d'équipement spécial à acheter.</p></div>
+            <div class="diff-row"><div class="diff-check dc-green">✓</div><p><strong>Vous l'avez déjà vu</strong> — les filtres Instagram, Snapchat, les flèches Google Maps : c'est de la RA !</p></div>
+            <div class="diff-row"><div class="diff-check dc-green">✓</div><p><strong>Créer est accessible</strong> — des outils gratuits permettent de créer sans coder en quelques minutes.</p></div>
+            <div class="diff-row"><div class="diff-check dc-grey">≠</div><p>La RV, elle, vous plonge dans un monde <strong>entièrement virtuel</strong> et nécessite un casque dédié (Oculus, HTC Vive…).</p></div>
+          </div>
         </div>
-        <div style="margin-top: 1.5rem; background: linear-gradient(135deg, var(--cream), var(--cream2)); border-radius: 16px; padding: 1.5rem; text-align: center;">
-          <div style="font-size: 0.78rem; color: var(--text-muted); margin-bottom: 0.5rem; font-weight: 500; letter-spacing: 0.05em; text-transform: uppercase;">À ne pas confondre</div>
-          <div style="display: flex; gap: 1rem; justify-content: center; flex-wrap: wrap;">
-            <div style="text-align: center; padding: 0.75rem; background: white; border-radius: 12px; min-width: 120px;">
-              <div style="font-size: 1.4rem;">📱</div>
-              <div style="font-size: 0.82rem; font-weight: 600; color: var(--teal); margin: 0.3rem 0 0.2rem;">RA</div>
-              <div style="font-size: 0.72rem; color: var(--text-muted);">Monde réel<br>+ éléments virtuels</div>
+        <div style="margin-top:1.5rem;background:var(--navy);border-radius:10px;padding:1.25rem 1.5rem">
+          <p style="color:rgba(255,255,255,.5);font-size:.75rem;font-weight:600;letter-spacing:.08em;text-transform:uppercase;margin-bottom:.75rem">Exemples de RA que vous connaissez</p>
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:.65rem">
+            <div style="background:rgba(255,255,255,.07);border-radius:6px;padding:.7rem .9rem;display:flex;gap:.6rem;align-items:center">
+              <span style="font-size:1.2rem">📸</span>
+              <span style="color:rgba(255,255,255,.7);font-size:.82rem">Filtres Instagram & Snapchat</span>
             </div>
-            <div style="text-align: center; padding: 0.75rem; background: white; border-radius: 12px; min-width: 120px;">
-              <div style="font-size: 1.4rem;">🥽</div>
-              <div style="font-size: 0.82rem; font-weight: 600; color: var(--text-muted); margin: 0.3rem 0 0.2rem;">RV</div>
-              <div style="font-size: 0.72rem; color: var(--text-muted);">Monde entièrement<br>virtuel</div>
+            <div style="background:rgba(255,255,255,.07);border-radius:6px;padding:.7rem .9rem;display:flex;gap:.6rem;align-items:center">
+              <span style="font-size:1.2rem">🗺️</span>
+              <span style="color:rgba(255,255,255,.7);font-size:.82rem">Flèches de navigation Google Maps</span>
+            </div>
+            <div style="background:rgba(255,255,255,.07);border-radius:6px;padding:.7rem .9rem;display:flex;gap:.6rem;align-items:center">
+              <span style="font-size:1.2rem">🛋️</span>
+              <span style="color:rgba(255,255,255,.7);font-size:.82rem">IKEA Place — meubles chez soi</span>
+            </div>
+            <div style="background:rgba(255,255,255,.07);border-radius:6px;padding:.7rem .9rem;display:flex;gap:.6rem;align-items:center">
+              <span style="font-size:1.2rem">👻</span>
+              <span style="color:rgba(255,255,255,.7);font-size:.82rem">Pokémon GO dans les rues</span>
             </div>
           </div>
         </div>
@@ -579,135 +559,204 @@
   </div>
 </section>
 
-<!-- EXEMPLES -->
-<section class="examples" id="exemples">
-  <div class="container">
-    <div class="examples-header reveal">
+<!-- VIDEOS -->
+<section class="videos" id="videos">
+  <div class="wrap">
+    <div class="videos-intro reveal">
       <div>
-        <div class="section-label">Inspirations</div>
-        <h2 class="section-title">Des projets qui donnent<br>envie de créer</h2>
+        <div class="sh-label">Voir pour comprendre</div>
+        <h2 style="color:var(--navy)">La RA patrimoniale<br>en images</h2>
+        <p style="color:var(--grey);margin-top:.75rem">Ces vidéos ont été sélectionnées pour vous montrer concrètement ce qu'il est possible de réaliser, des projets professionnels aux créations accessibles à tous.</p>
+      </div>
+      <div style="background:var(--paper);border:1px solid var(--border);border-radius:10px;padding:1.5rem;align-self:start">
+        <p style="font-size:.78rem;font-weight:600;letter-spacing:.08em;text-transform:uppercase;color:var(--grey);margin-bottom:.75rem">💡 Conseil de visionnage</p>
+        <p style="font-size:.87rem;color:var(--grey);line-height:1.6">Regardez d'abord la vidéo de présentation générale, puis explorez selon vos centres d'intérêt. Elles sont classées du plus inspirant au plus pratique.</p>
       </div>
     </div>
-    <div class="examples-grid">
-      <div class="example-card reveal">
-        <div class="example-thumb ex1">🗺️</div>
-        <div class="example-body">
-          <div class="example-tag">Cartographie</div>
-          <h3>Cartes anciennes animées</h3>
-          <p>Pointer une carte du XVIIIe siècle avec son téléphone pour voir le tracé de la ville actuelle se superposer au plan d'époque.</p>
+    <div class="video-grid">
+      <!-- Vidéo 1 : Château de Chambord RA -->
+      <div class="video-card reveal">
+        <div class="video-thumb">
+          <iframe loading="lazy" src="https://www.youtube.com/embed/dWj9pTkS_Ys" title="Réalité augmentée au château de Chambord — Histopad" allowfullscreen allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"></iframe>
+        </div>
+        <div class="video-meta">
+          <div class="video-tag">Patrimoine institutionnel</div>
+          <h3>L'Histopad au château de Chambord</h3>
+          <p>Découvrez comment la RA permet de reconstituer le mobilier et l'atmosphère du XVIe siècle dans l'un des plus célèbres châteaux français. Une démonstration grandeur nature de ce que la technologie offre au patrimoine.</p>
         </div>
       </div>
-      <div class="example-card reveal" style="transition-delay: 0.1s;">
-        <div class="example-thumb ex2">🏛️</div>
-        <div class="example-body">
-          <div class="example-tag">Architecture</div>
-          <h3>Monuments avant/après</h3>
-          <p>Reconstituer un bâtiment démoli ou endommagé tel qu'il était à son époque, superposé à son état actuel.</p>
+      <!-- Vidéo 2 : Arromanches 360 RA -->
+      <div class="video-card reveal" style="transition-delay:.1s">
+        <div class="video-thumb">
+          <iframe loading="lazy" src="https://www.youtube.com/embed/TFCuE5rHbPA" title="Arromanches 1944 application réalité augmentée débarquement" allowfullscreen allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"></iframe>
+        </div>
+        <div class="video-meta">
+          <div class="video-tag">Mémoire & histoire</div>
+          <h3>Arromanches 1944 — Revivre le Débarquement en RA</h3>
+          <p>Sur les plages de Normandie, pointez votre tablette vers la mer et voyez apparaître les bateaux alliés de 1944. Un exemple saisissant de RA géolocalisée appliquée à un site historique majeur.</p>
         </div>
       </div>
-      <div class="example-card reveal" style="transition-delay: 0.2s;">
-        <div class="example-thumb ex3">📜</div>
-        <div class="example-body">
-          <div class="example-tag">Archives</div>
-          <h3>Documents enrichis</h3>
-          <p>Scanner une affiche ou un acte notarié pour voir apparaître une explication, une traduction ou un contexte historique.</p>
+      <!-- Vidéo 3 : Assemblr EDU présentation -->
+      <div class="video-card reveal" style="transition-delay:.2s">
+        <div class="video-thumb">
+          <iframe loading="lazy" src="https://www.youtube.com/embed/7q_W40a7v5U" title="Assemblr présentation application réalité augmentée" allowfullscreen allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"></iframe>
+        </div>
+        <div class="video-meta">
+          <div class="video-tag">Prise en main · Débutant</div>
+          <h3>Assemblr — Créer sa première expérience RA</h3>
+          <p>Présentation de l'outil que nous utiliserons pendant l'atelier. Découvrez l'interface, les fonctionnalités et comment créer une expérience RA en quelques clics depuis votre téléphone.</p>
         </div>
       </div>
-      <div class="example-card reveal" style="transition-delay: 0.1s;">
-        <div class="example-thumb ex4">👨‍👩‍👧</div>
-        <div class="example-body">
-          <div class="example-tag">Mémoire</div>
-          <h3>Albums de famille parlants</h3>
-          <p>Associer à une photo de famille le récit enregistré d'un aîné. La photo devient un objet qui raconte une histoire.</p>
+      <!-- Vidéo 4 : Historypin présentation -->
+      <div class="video-card reveal" style="transition-delay:.3s">
+        <div class="video-thumb">
+          <iframe loading="lazy" src="https://www.youtube.com/embed/0Zh4_D5DGRI" title="Historypin présentation outil patrimoine photos anciennes" allowfullscreen allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"></iframe>
+        </div>
+        <div class="video-meta">
+          <div class="video-tag">Outil communautaire</div>
+          <h3>Historypin — Épingler l'histoire sur la carte</h3>
+          <p>Présentation d'Historypin, la plateforme qui permet de superposer des photos anciennes sur la vue actuelle via Google Street View. Idéal pour découvrir comment votre ville ou village a évolué.</p>
         </div>
       </div>
-      <div class="example-card reveal" style="transition-delay: 0.2s;">
-        <div class="example-thumb ex5">🏘️</div>
-        <div class="example-body">
-          <div class="example-tag">Territoire</div>
-          <h3>Parcours de découverte</h3>
-          <p>Créer un circuit dans le quartier : chaque panneau ou façade déclenche un contenu sur l'histoire du lieu.</p>
+    </div>
+    <div class="video-note reveal">
+      <strong>Pour aller plus loin sur YouTube :</strong> recherchez « réalité augmentée patrimoine », « Mirage Make tutoriel », « Zappar studio tutoriel » ou « augmented reality heritage » pour découvrir d'autres exemples et formations gratuites.
+    </div>
+  </div>
+</section>
+
+<!-- HISTORYPIN -->
+<section class="historypin" id="historypin">
+  <div class="wrap">
+    <div class="hp-grid">
+      <div class="hp-left reveal">
+        <div class="hp-badge">🌍 Outil phare de l'atelier</div>
+        <div class="sh">
+          <div class="sh-label" style="color:var(--gold-mid)">Historypin</div>
+          <h2>Épinglez l'histoire<br>sur la carte du monde</h2>
+          <p>Historypin est une archive numérique participative et gratuite : chacun peut y déposer des photos, vidéos et témoignages historiques géolocalisés. Plus de <strong style="color:var(--gold-mid)">200 000 archives</strong> épinglées dans 2 500 villes.</p>
         </div>
+        <div class="hp-features">
+          <div class="hp-feat">
+            <div class="hp-feat-icon">📍</div>
+            <div class="hp-feat-text">
+              <h4>Épingler sur la carte</h4>
+              <p>Associez une photo ancienne à un lieu précis sur Google Maps. Elle s'affiche alors pour tous les visiteurs de la plateforme.</p>
+            </div>
+          </div>
+          <div class="hp-feat">
+            <div class="hp-feat-icon">🔄</div>
+            <div class="hp-feat-text">
+              <h4>Comparer avant / après</h4>
+              <p>Superposez une photo historique sur Google Street View pour voir comment un lieu a changé — un curseur permet de glisser entre les deux époques.</p>
+            </div>
+          </div>
+          <div class="hp-feat">
+            <div class="hp-feat-icon">👥</div>
+            <div class="hp-feat-text">
+              <h4>Créer des collections</h4>
+              <p>Regroupez des photos par thème, quartier ou période. Bibliothèques, musées et communautés du monde entier y contribuent.</p>
+            </div>
+          </div>
+          <div class="hp-feat">
+            <div class="hp-feat-icon">🆓</div>
+            <div class="hp-feat-text">
+              <h4>Totalement gratuit</h4>
+              <p>Vous gardez vos droits sur vos images. La création d'un compte suffit pour commencer à contribuer.</p>
+            </div>
+          </div>
+        </div>
+        <a href="https://www.historypin.org" target="_blank" class="hp-link">Explorer Historypin</a>
       </div>
-      <div class="example-card reveal" style="transition-delay: 0.3s;">
-        <div class="example-thumb ex6">📚</div>
-        <div class="example-body">
-          <div class="example-tag">Littérature</div>
-          <h3>Livres qui s'animent</h3>
-          <p>Pointer la couverture d'un ouvrage de la médiathèque pour écouter l'auteur parler de son œuvre ou voir une bande-annonce.</p>
+      <div class="reveal" style="transition-delay:.2s">
+        <div class="hp-mockup">
+          <div class="hp-mock-bar">
+            <div class="mock-dot md1"></div>
+            <div class="mock-dot md2"></div>
+            <div class="mock-dot md3"></div>
+            <div class="mock-url">historypin.org/en/explore/geo/…</div>
+          </div>
+          <div class="hp-map">
+            <div class="map-grid"></div>
+            <div class="map-label">🌍 Vue carte — Historypin</div>
+            <div class="map-pin" style="top:28%;left:22%"><div class="pin-dot pin-p1"></div></div>
+            <div class="map-pin" style="top:52%;left:52%"><div class="pin-dot pin-p2"></div></div>
+            <div class="map-pin" style="top:18%;left:63%"><div class="pin-dot pin-p3"></div></div>
+            <div class="map-pin" style="top:62%;left:33%"><div class="pin-dot pin-p4"></div></div>
+            <div class="map-pin" style="top:40%;left:75%"><div class="pin-dot" style="background:#E57373;animation-delay:.2s"></div></div>
+            <div style="position:absolute;bottom:12px;right:12px;background:rgba(0,0,0,.6);border-radius:4px;padding:.4rem .6rem;display:flex;flex-direction:column;gap:.25rem">
+              <div style="display:flex;align-items:center;gap:.4rem"><div style="width:8px;height:8px;border-radius:50%;background:var(--gold)"></div><span style="color:rgba(255,255,255,.7);font-size:.6rem">Photo épinglée</span></div>
+              <div style="display:flex;align-items:center;gap:.4rem"><div style="width:8px;height:8px;border-radius:50%;background:#4CAF82"></div><span style="color:rgba(255,255,255,.7);font-size:.6rem">Témoignage</span></div>
+              <div style="display:flex;align-items:center;gap:.4rem"><div style="width:8px;height:8px;border-radius:50%;background:#6B9FD4"></div><span style="color:rgba(255,255,255,.7);font-size:.6rem">Vidéo d'archive</span></div>
+            </div>
+          </div>
+          <div class="hp-photo-strip">
+            <div class="hp-photo ph1">🏘️<div class="hp-photo-caption">Rue principale<br>vers 1920</div></div>
+            <div class="hp-photo ph2">🌉<div class="hp-photo-caption">Le vieux pont<br>vers 1935</div></div>
+            <div class="hp-photo ph3">🌳<div class="hp-photo-caption">La place du marché<br>vers 1910</div></div>
+          </div>
+          <div class="hp-info-box">
+            <div style="display:flex;gap:2rem">
+              <div class="hp-stat"><div class="hp-stat-n">200k+</div><div class="hp-stat-l">archives épinglées</div></div>
+              <div class="hp-stat"><div class="hp-stat-n">2 500</div><div class="hp-stat-l">villes représentées</div></div>
+              <div class="hp-stat"><div class="hp-stat-n">75</div><div class="hp-stat-l">pays participants</div></div>
+            </div>
+          </div>
+        </div>
+        <div style="margin-top:1.25rem;background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.1);border-radius:10px;padding:1.25rem">
+          <p style="color:rgba(255,255,255,.4);font-size:.72rem;font-weight:600;letter-spacing:.08em;text-transform:uppercase;margin-bottom:.85rem">Utilisé par les institutions culturelles</p>
+          <div style="display:flex;flex-wrap:wrap;gap:.5rem">
+            <span style="background:rgba(255,255,255,.08);color:rgba(255,255,255,.6);font-size:.75rem;padding:.25rem .7rem;border-radius:3px">Bibliothèques nationales</span>
+            <span style="background:rgba(255,255,255,.08);color:rgba(255,255,255,.6);font-size:.75rem;padding:.25rem .7rem;border-radius:3px">Musées locaux</span>
+            <span style="background:rgba(255,255,255,.08);color:rgba(255,255,255,.6);font-size:.75rem;padding:.25rem .7rem;border-radius:3px">Archives départementales</span>
+            <span style="background:rgba(255,255,255,.08);color:rgba(255,255,255,.6);font-size:.75rem;padding:.25rem .7rem;border-radius:3px">Universités</span>
+            <span style="background:rgba(255,255,255,.08);color:rgba(255,255,255,.6);font-size:.75rem;padding:.25rem .7rem;border-radius:3px">Sociétés d'histoire locale</span>
+          </div>
         </div>
       </div>
     </div>
   </div>
 </section>
 
-<!-- PROGRAMME -->
-<section class="programme" id="programme">
-  <div class="container">
-    <div style="display: grid; grid-template-columns: 1fr 2fr; gap: 4rem; align-items: start;">
-      <div class="reveal">
-        <div class="section-label" style="color: var(--gold);">Programme</div>
-        <h2 class="section-title light">1h30 pour<br>tout apprendre</h2>
-        <p style="color: rgba(255,255,255,0.6); font-size: 1rem; line-height: 1.7; margin-top: 1.25rem;">
-          L'atelier est conçu pour progresser naturellement, de la découverte à la création. Aucun niveau de départ requis.
-        </p>
-        <div class="prog-bullets" style="margin-top: 2rem;">
-          <div class="prog-bullet"><div class="pb-dot"></div><div class="pb-text">8 à 15 participants maximum</div></div>
-          <div class="prog-bullet"><div class="pb-dot"></div><div class="pb-text">Votre smartphone suffit (Android ou iOS)</div></div>
-          <div class="prog-bullet"><div class="pb-dot"></div><div class="pb-text">Vous repartez avec votre création</div></div>
-          <div class="prog-bullet"><div class="pb-dot"></div><div class="pb-text">Outils gratuits, sans compte requis</div></div>
+<!-- PAS À PAS -->
+<section class="etapes" id="etapes">
+  <div class="wrap">
+    <div class="sh reveal" style="text-align:center;margin-bottom:3.5rem">
+      <div class="sh-label" style="justify-content:center">Créer votre première RA</div>
+      <h2>Pas à pas, de zéro à partager</h2>
+      <p style="margin:0 auto;text-align:center">Quatre étapes simples pour créer et partager votre première expérience de Réalité Augmentée patrimoniale.</p>
+    </div>
+    <div class="steps-flow">
+      <div class="step-item reveal">
+        <div class="step-num">1</div>
+        <div class="step-content">
+          <h3>Choisir votre déclencheur</h3>
+          <p>C'est l'image que l'utilisateur pointera avec son téléphone pour déclencher l'expérience. Choisissez une photo, une carte postale ancienne, une couverture de livre, une affiche… L'idéal : une image riche en détails contrastés, sans trop de zones uniformes.</p>
+          <div class="step-tip">Une carte postale d'époque représentant votre ville, une photo de famille ancienne ou l'image d'un document d'archives sont d'excellents déclencheurs.</div>
         </div>
       </div>
-      <div class="timeline reveal" style="transition-delay: 0.2s;">
-        <div class="tl-item">
-          <div class="tl-left">
-            <div class="tl-circle">👋</div>
-          </div>
-          <div class="tl-content">
-            <div class="tl-time">0 – 10 min</div>
-            <div class="tl-title">Accueil & tour de table</div>
-            <div class="tl-desc">Présentation, attentes de chacun, questions libres. On brise la glace et on découvre qu'on a tous déjà fait de la RA sans le savoir !</div>
-          </div>
+      <div class="step-item reveal" style="transition-delay:.1s">
+        <div class="step-num">2</div>
+        <div class="step-content">
+          <h3>Préparer votre contenu</h3>
+          <p>Qu'est-ce qui apparaîtra quand on scannera votre déclencheur ? Cela peut être une vidéo courte (l'état actuel du lieu, un témoignage audio), une image (le même endroit aujourd'hui, un plan, une photo de famille), un texte explicatif, ou même un modèle 3D. Préparez votre contenu à l'avance sur votre téléphone.</p>
+          <div class="step-tip">Pour trouver des images du patrimoine libres de droits, explorez Gallica (gallica.bnf.fr), Europeana (europeana.eu) ou Wikimedia Commons.</div>
         </div>
-        <div class="tl-item">
-          <div class="tl-left">
-            <div class="tl-circle">🎯</div>
-          </div>
-          <div class="tl-content">
-            <div class="tl-time">10 – 30 min</div>
-            <div class="tl-title">Découverte de la Réalité Augmentée</div>
-            <div class="tl-desc">Exemples patrimoniaux inspirants, démonstration en direct, présentation des outils. On voit ce que c'est avant de créer.</div>
-          </div>
+      </div>
+      <div class="step-item reveal" style="transition-delay:.2s">
+        <div class="step-num">3</div>
+        <div class="step-content">
+          <h3>Créer l'expérience dans l'outil</h3>
+          <p>Dans l'application choisie (Assemblr, Zappar ou Metaverse), importez votre image-déclencheur, puis associez-y votre contenu. Positionnez les éléments à l'écran, ajustez la taille et le placement. Chaque outil propose une interface visuelle : pas de code, tout se fait en glisser-déposer.</p>
+          <div class="step-tip">Commencez simple : un seul élément sur le déclencheur. Vous pourrez enrichir votre création lors d'une prochaine session.</div>
         </div>
-        <div class="tl-item">
-          <div class="tl-left">
-            <div class="tl-circle">🛠️</div>
-          </div>
-          <div class="tl-content">
-            <div class="tl-time">30 – 50 min</div>
-            <div class="tl-title">Prise en main guidée</div>
-            <div class="tl-desc">Pas à pas collectif : importer une image, y associer un contenu, tester le scan. Chacun suit à son rythme, l'animateur accompagne.</div>
-          </div>
-        </div>
-        <div class="tl-item">
-          <div class="tl-left">
-            <div class="tl-circle">🎨</div>
-          </div>
-          <div class="tl-content">
-            <div class="tl-time">50 – 75 min</div>
-            <div class="tl-title">Création personnelle</div>
-            <div class="tl-desc">C'est votre tour ! Vous choisissez votre déclencheur (photo, carte, objet…) et le contenu qui l'enrichira. L'animateur vous guide.</div>
-          </div>
-        </div>
-        <div class="tl-item">
-          <div class="tl-left">
-            <div class="tl-circle">🎤</div>
-          </div>
-          <div class="tl-content" style="padding-bottom: 0;">
-            <div class="tl-time">75 – 90 min</div>
-            <div class="tl-title">Restitution & partage</div>
-            <div class="tl-desc">Chacun présente sa création, on la teste en direct. Ressources pour continuer chez soi, questions finales.</div>
-          </div>
+      </div>
+      <div class="step-item reveal" style="transition-delay:.3s">
+        <div class="step-num">4</div>
+        <div class="step-content">
+          <h3>Tester et partager</h3>
+          <p>Imprimez ou affichez votre image-déclencheur, puis pointez votre téléphone dessus avec l'application pour voir le résultat. Une fois satisfait, générez un lien de partage ou un QR code. N'importe qui avec un smartphone pourra alors vivre votre expérience.</p>
+          <div class="step-tip">Partagez votre QR code sur les réseaux sociaux, dans un email à votre famille, ou collez-le directement sur la photo déclencheur pour une expérience "clé en main".</div>
         </div>
       </div>
     </div>
@@ -716,187 +765,139 @@
 
 <!-- OUTILS -->
 <section class="outils" id="outils">
-  <div class="container">
-    <div class="reveal">
-      <div class="section-label">Sans coder</div>
-      <h2 class="section-title">Les outils que vous utiliserez</h2>
-      <p class="section-desc">Des applications simples, gratuites, disponibles sur Android et iOS. Aucune compétence technique requise.</p>
+  <div class="wrap">
+    <div class="outils-intro reveal">
+      <div class="sh-label">Les outils</div>
+      <h2 style="color:var(--navy)">Créer sans coder :<br>4 applications gratuites</h2>
+      <p style="color:var(--grey);margin-top:.75rem">Toutes sont disponibles sur Android et iOS. Aucune compétence technique n'est nécessaire pour commencer.</p>
     </div>
-    <div class="outils-grid">
-      <div class="outil-card recommended reveal" style="transition-delay: 0.1s;">
-        <div class="outil-badge">Recommandé débutant</div>
-        <div class="outil-emoji">📱</div>
+    <div class="tools-grid">
+      <div class="tool-card featured reveal">
+        <div class="tool-top">
+          <div class="tool-icon">📱</div>
+          <div class="tool-rec">Recommandé atelier</div>
+        </div>
         <h3>Assemblr EDU</h3>
-        <div class="outil-level">
-          <div class="level-dot active"></div>
-          <div class="level-dot"></div>
-          <div class="level-dot"></div>
+        <div class="tool-level">
+          <div class="tl-pip on"></div><div class="tl-pip"></div><div class="tl-pip"></div>
         </div>
-        <p>L'outil le plus simple pour commencer. Interface glisser-déposer, bibliothèque de contenus prêts à l'emploi. Idéal pour associer une image 3D à un objet déclencheur en 5 minutes.</p>
-        <div class="outil-tags">
-          <span class="outil-tag">Très accessible</span>
-          <span class="outil-tag">Gratuit</span>
-          <span class="outil-tag">iOS & Android</span>
+        <p class="tool-desc">L'outil le plus accessible pour débuter. Interface glisser-déposer, bibliothèque de contenus intégrée, résultats en quelques minutes. Idéal pour associer une image ou un objet 3D à un déclencheur patrimonial.</p>
+        <div class="tool-tags">
+          <span class="t-tag">Débutant</span><span class="t-tag">Gratuit</span><span class="t-tag">Android & iOS</span><span class="t-tag">QR code</span>
         </div>
+        <a href="https://www.assemblrworld.com" target="_blank" class="tool-url">↗ assemblrworld.com</a>
       </div>
-      <div class="outil-card reveal" style="transition-delay: 0.2s;">
-        <div class="outil-emoji">⚡</div>
-        <h3>Zappar (ZapWorks Studio)</h3>
-        <div class="outil-level">
-          <div class="level-dot active"></div>
-          <div class="level-dot active"></div>
-          <div class="level-dot"></div>
+      <div class="tool-card reveal" style="transition-delay:.1s">
+        <div class="tool-top"><div class="tool-icon">⚡</div></div>
+        <h3>Zappar (ZapWorks)</h3>
+        <div class="tool-level">
+          <div class="tl-pip on"></div><div class="tl-pip on"></div><div class="tl-pip"></div>
         </div>
-        <p>Créer des expériences RA riches : vidéos déclenchées, images animées, textes informatifs. Version pédagogique avec tutoriels en français et usage éducatif gratuit.</p>
-        <div class="outil-tags">
-          <span class="outil-tag">Intermédiaire</span>
-          <span class="outil-tag">Version gratuite</span>
-          <span class="outil-tag">Tutoriels FR</span>
+        <p class="tool-desc">Interface de création plus riche : vidéos déclenchées, images animées, superpositions multiples. Version éducative gratuite avec tutoriels. Excellent pour des créations visuellement soignées.</p>
+        <div class="tool-tags">
+          <span class="t-tag">Intermédiaire</span><span class="t-tag">Gratuit (EDU)</span><span class="t-tag">Tutoriels FR</span>
         </div>
+        <a href="https://www.zappar.com/education" target="_blank" class="tool-url">↗ zappar.com/education</a>
       </div>
-      <div class="outil-card reveal" style="transition-delay: 0.3s;">
-        <div class="outil-emoji">🎮</div>
+      <div class="tool-card reveal" style="transition-delay:.2s">
+        <div class="tool-top"><div class="tool-icon">🗺️</div></div>
+        <h3>Historypin</h3>
+        <div class="tool-level">
+          <div class="tl-pip on"></div><div class="tl-pip"></div><div class="tl-pip"></div>
+        </div>
+        <p class="tool-desc">Pas un outil de création RA à proprement parler, mais une plateforme pour superposer des photos historiques sur Google Street View. Idéal pour explorer comment un lieu a changé et contribuer à l'archive collaborative mondiale.</p>
+        <div class="tool-tags">
+          <span class="t-tag">Débutant</span><span class="t-tag">Gratuit</span><span class="t-tag">Collaboratif</span><span class="t-tag">Web</span>
+        </div>
+        <a href="https://www.historypin.org" target="_blank" class="tool-url">↗ historypin.org</a>
+      </div>
+      <div class="tool-card reveal" style="transition-delay:.3s">
+        <div class="tool-top"><div class="tool-icon">🎮</div></div>
         <h3>Metaverse</h3>
-        <div class="outil-level">
-          <div class="level-dot active"></div>
-          <div class="level-dot active"></div>
-          <div class="level-dot"></div>
+        <div class="tool-level">
+          <div class="tl-pip on"></div><div class="tl-pip on"></div><div class="tl-pip"></div>
         </div>
-        <p>Créer des parcours interactifs avec quiz, choix multiples et narration. Parfait pour construire une visite guidée augmentée ou une chasse au trésor patrimoniale.</p>
-        <div class="outil-tags">
-          <span class="outil-tag">Interactif</span>
-          <span class="outil-tag">Gratuit</span>
-          <span class="outil-tag">Scénarios</span>
+        <p class="tool-desc">Créez des parcours interactifs complets : quiz, choix multiples, narration en plusieurs étapes. Parfait pour construire une chasse au trésor patrimoniale ou un parcours de visite augmenté dans un quartier.</p>
+        <div class="tool-tags">
+          <span class="t-tag">Intermédiaire</span><span class="t-tag">Gratuit</span><span class="t-tag">Scénarios</span><span class="t-tag">Parcours</span>
         </div>
-      </div>
-      <div class="outil-card reveal" style="transition-delay: 0.4s;">
-        <div class="outil-emoji">🏗️</div>
-        <h3>CoSpaces EDU</h3>
-        <div class="outil-level">
-          <div class="level-dot active"></div>
-          <div class="level-dot active"></div>
-          <div class="level-dot active"></div>
-        </div>
-        <p>Pour aller plus loin : reconstitutions 3D d'espaces historiques, programmation visuelle par blocs. Idéal pour les participants qui souhaitent approfondir après l'atelier.</p>
-        <div class="outil-tags">
-          <span class="outil-tag">Avancé</span>
-          <span class="outil-tag">3D</span>
-          <span class="outil-tag">Pour aller plus loin</span>
-        </div>
+        <a href="https://studio.gometa.io" target="_blank" class="tool-url">↗ studio.gometa.io</a>
       </div>
     </div>
   </div>
 </section>
 
-<!-- PROJETS -->
-<section class="projets" id="projets">
-  <div class="container">
-    <div class="reveal">
-      <div class="section-label">Idées de projets</div>
-      <h2 class="section-title">Que ferez-vous<br>avec la RA ?</h2>
-      <p class="section-desc">Voici quelques idées pour vous inspirer. Vous pouvez réaliser l'une de ces créations pendant l'atelier, ou trouver la vôtre !</p>
+<!-- RESSOURCES -->
+<section class="ressources" id="ressources">
+  <div class="wrap">
+    <div class="sh reveal">
+      <div class="sh-label">Pour aller plus loin</div>
+      <h2 style="color:var(--navy)">Ressources utiles</h2>
+      <p>Toutes les ressources dont vous avez besoin pour continuer à explorer et créer, chez vous.</p>
     </div>
-    <div class="projets-grid">
-      <div class="projet-card pc-debutant reveal" style="transition-delay: 0.1s;">
-        <div class="projet-icon">📬</div>
-        <div class="projet-level lvl-debutant">✦ Niveau débutant</div>
-        <h3>Carte postale animée</h3>
-        <p>Pointez une carte postale ancienne de votre région pour voir une vidéo du lieu tel qu'il est aujourd'hui.</p>
+    <div class="res-cols">
+      <div class="res-group reveal">
+        <h3>Images libres de droits</h3>
+        <ul class="res-list">
+          <li class="res-item">
+            <a href="https://gallica.bnf.fr" target="_blank">Gallica — BnF</a>
+            <span>Des millions de documents du patrimoine français numérisés et accessibles gratuitement.</span>
+          </li>
+          <li class="res-item">
+            <a href="https://www.europeana.eu" target="_blank">Europeana</a>
+            <span>Patrimoine culturel européen numérisé — photos, cartes, affiches, audio.</span>
+          </li>
+          <li class="res-item">
+            <a href="https://commons.wikimedia.org" target="_blank">Wikimedia Commons</a>
+            <span>Base d'images libres de droits mondiale, alimentée par la communauté.</span>
+          </li>
+          <li class="res-item">
+            <a href="https://www.culture.gouv.fr/Ressources" target="_blank">Ministère de la Culture</a>
+            <span>Collections numérisées des musées et institutions culturelles françaises.</span>
+          </li>
+        </ul>
       </div>
-      <div class="projet-card pc-debutant reveal" style="transition-delay: 0.15s;">
-        <div class="projet-icon">🎙️</div>
-        <div class="projet-level lvl-debutant">✦ Niveau débutant</div>
-        <h3>Portrait qui parle</h3>
-        <p>Associez à la photo d'une personnalité locale un enregistrement audio de sa biographie ou d'un témoignage.</p>
+      <div class="res-group reveal" style="transition-delay:.1s">
+        <h3>Plateformes & outils RA</h3>
+        <ul class="res-list">
+          <li class="res-item">
+            <a href="https://www.assemblrworld.com" target="_blank">Assemblr EDU</a>
+            <span>Outil de création RA en glisser-déposer, idéal pour débuter.</span>
+          </li>
+          <li class="res-item">
+            <a href="https://www.zappar.com/education" target="_blank">Zappar Education</a>
+            <span>Plateforme de création RA avec version pédagogique gratuite.</span>
+          </li>
+          <li class="res-item">
+            <a href="https://www.historypin.org" target="_blank">Historypin</a>
+            <span>Archive participative de photos historiques géolocalisées.</span>
+          </li>
+          <li class="res-item">
+            <a href="https://mirage.ticedu.fr" target="_blank">Mirage Make (FR)</a>
+            <span>Outil de RA français, gratuit, avec quiz intégré — très adapté à la médiation.</span>
+          </li>
+        </ul>
       </div>
-      <div class="projet-card pc-inter reveal" style="transition-delay: 0.2s;">
-        <div class="projet-icon">🗺️</div>
-        <div class="projet-level lvl-inter">✦✦ Niveau intermédiaire</div>
-        <h3>Plan enrichi</h3>
-        <p>Un plan de ville ancienne avec des points cliquables : chaque lieu révèle une photo d'archives ou une anecdote.</p>
-      </div>
-      <div class="projet-card pc-inter reveal" style="transition-delay: 0.25s;">
-        <div class="projet-icon">🔄</div>
-        <div class="projet-level lvl-inter">✦✦ Niveau intermédiaire</div>
-        <h3>Avant / après</h3>
-        <p>Un curseur qui fait glisser entre une photo ancienne et une vue actuelle du même lieu ou bâtiment.</p>
-      </div>
-      <div class="projet-card pc-avance reveal" style="transition-delay: 0.3s;">
-        <div class="projet-icon">🚶</div>
-        <div class="projet-level lvl-avance">✦✦✦ Niveau avancé</div>
-        <h3>Parcours RA dans la ville</h3>
-        <p>Un circuit de plusieurs étapes dans le quartier, chaque façade ou panneau déclenchant un contenu différent.</p>
-      </div>
-      <div class="projet-card pc-avance reveal" style="transition-delay: 0.35s;">
-        <div class="projet-icon">🏚️</div>
-        <div class="projet-level lvl-avance">✦✦✦ Niveau avancé</div>
-        <h3>Reconstitution 3D</h3>
-        <p>Redonner vie en 3D à un monument disparu ou à l'état originel d'un site historique dégradé.</p>
-      </div>
-    </div>
-  </div>
-</section>
-
-<!-- INSCRIPTION -->
-<section class="inscription" id="inscription">
-  <div class="insc-deco insc-deco1"></div>
-  <div class="insc-deco insc-deco2"></div>
-  <div class="container">
-    <div class="insc-inner reveal">
-      <div class="section-label">Inscription</div>
-      <h2 class="section-title light">Réservez votre place</h2>
-      <p style="color: rgba(255,255,255,0.6); margin-top: 0.75rem; font-size: 1rem;">Gratuit, ouvert à tous. Les places sont limitées à 15 participants.</p>
-      <div id="insc-form-wrap">
-        <form class="insc-form" onsubmit="handleSubmit(event)">
-          <div class="form-row">
-            <div class="form-field">
-              <label>Prénom</label>
-              <input type="text" placeholder="Marie" required>
-            </div>
-            <div class="form-field">
-              <label>Nom</label>
-              <input type="text" placeholder="Dupont" required>
-            </div>
-          </div>
-          <div class="form-field">
-            <label>Adresse e-mail</label>
-            <input type="email" placeholder="marie.dupont@email.fr" required>
-          </div>
-          <div class="form-field">
-            <label>Téléphone (optionnel)</label>
-            <input type="tel" placeholder="06 12 34 56 78">
-          </div>
-          <div class="form-field">
-            <label>Votre niveau avec les smartphones</label>
-            <select required>
-              <option value="">-- Choisir --</option>
-              <option>Débutant — j'utilise peu mon téléphone</option>
-              <option>Moyen — je me débrouille</option>
-              <option>À l'aise — j'utilise beaucoup d'applications</option>
-            </select>
-          </div>
-          <div class="form-field">
-            <label>Qu'est-ce qui vous attire dans cet atelier ?</label>
-            <select>
-              <option value="">-- Optionnel --</option>
-              <option>Découvrir la technologie RA</option>
-              <option>Valoriser un patrimoine local</option>
-              <option>Créer quelque chose de concret</option>
-              <option>Curiosité générale</option>
-              <option>Pour transmettre à mes proches</option>
-            </select>
-          </div>
-          <button type="submit" class="form-submit">
-            ✓ Confirmer mon inscription
-          </button>
-          <p class="form-note">En vous inscrivant, vous acceptez d'être contacté par la médiathèque pour confirmation. Données non transmises à des tiers.</p>
-        </form>
-      </div>
-      <div class="form-success" id="form-success">
-        <div class="success-icon">🎉</div>
-        <h3>Inscription enregistrée !</h3>
-        <p style="color: rgba(255,255,255,0.6);">Vous recevrez un e-mail de confirmation avec les détails pratiques (adresse, matériel à apporter, etc.) dans les prochaines heures.</p>
-        <p style="color: rgba(255,255,255,0.4); font-size: 0.85rem; margin-top: 1rem;">À très bientôt à la médiathèque !</p>
+      <div class="res-group reveal" style="transition-delay:.2s">
+        <h3>Apprendre & s'inspirer</h3>
+        <ul class="res-list">
+          <li class="res-item">
+            <a href="https://www.youtube.com/results?search_query=réalité+augmentée+patrimoine" target="_blank">YouTube — RA & Patrimoine</a>
+            <span>Nombreux tutoriels et exemples de projets en français et en anglais.</span>
+          </li>
+          <li class="res-item">
+            <a href="https://www.archimag.com" target="_blank">Archimag</a>
+            <span>Magazine spécialisé dans la valorisation numérique des archives et du patrimoine.</span>
+          </li>
+          <li class="res-item">
+            <a href="https://www.culture.gouv.fr/Thematiques/Innovation-numerique" target="_blank">Innovation numérique · Culture.gouv</a>
+            <span>Actualités et ressources sur le numérique au service de la culture en France.</span>
+          </li>
+          <li class="res-item">
+            <a href="https://clic-france.fr" target="_blank">CLIC France</a>
+            <span>Club Innovation & Culture — veille sur les technologies dans les musées.</span>
+          </li>
+        </ul>
       </div>
     </div>
   </div>
@@ -904,83 +905,35 @@
 
 <!-- FAQ -->
 <section class="faq" id="faq">
-  <div class="container">
-    <div class="reveal">
-      <div class="section-label">Questions fréquentes</div>
-      <h2 class="section-title">Vous avez des questions ?</h2>
+  <div class="wrap">
+    <div class="sh reveal" style="max-width:500px">
+      <div class="sh-label">Questions fréquentes</div>
+      <h2 style="color:var(--navy)">Vous avez des doutes ?</h2>
     </div>
-    <div class="faq-grid">
-      <div class="faq-item reveal" onclick="toggleFaq(this)">
-        <div class="faq-question">
-          <span>Faut-il apporter son propre téléphone ?</span>
-          <div class="faq-icon"><span>+</span></div>
-        </div>
-        <div class="faq-answer">
-          <p>Oui, si vous en avez un. Un smartphone (Android ou iOS) ou une tablette suffit. Si vous n'avez pas d'appareil, la médiathèque met des tablettes à disposition — précisez-le lors de votre inscription.</p>
-        </div>
+    <div class="faq-cols reveal">
+      <div class="faq-item" onclick="toggleFaq(this)">
+        <div class="fq"><span>Faut-il un téléphone récent pour que ça fonctionne ?</span><div class="fq-icon">+</div></div>
+        <div class="fa-ans"><p>Non, la plupart des outils fonctionnent sur des smartphones de 5 à 7 ans. L'essentiel est d'avoir Android 8+ ou iOS 12+, et une connexion Wi-Fi. Si votre téléphone est très ancien, la médiathèque met des tablettes à disposition.</p></div>
       </div>
-      <div class="faq-item reveal" style="transition-delay: 0.1s;" onclick="toggleFaq(this)">
-        <div class="faq-question">
-          <span>L'atelier est-il vraiment gratuit ?</span>
-          <div class="faq-icon"><span>+</span></div>
-        </div>
-        <div class="faq-answer">
-          <p>Oui, entièrement gratuit. Tous les outils utilisés ont une version gratuite suffisante pour l'atelier. Aucune installation payante, aucun abonnement requis.</p>
-        </div>
+      <div class="faq-item" onclick="toggleFaq(this)">
+        <div class="fq"><span>Mes photos resteront-elles privées ?</span><div class="fq-icon">+</div></div>
+        <div class="fa-ans"><p>Vous choisissez : les outils proposent des modes privé et public. Vos créations ne sont partagées que si vous le décidez explicitement, via un lien ou un QR code que vous diffusez vous-même.</p></div>
       </div>
-      <div class="faq-item reveal" style="transition-delay: 0.1s;" onclick="toggleFaq(this)">
-        <div class="faq-question">
-          <span>Je ne suis pas du tout à l'aise avec la technologie. Puis-je venir ?</span>
-          <div class="faq-icon"><span>+</span></div>
-        </div>
-        <div class="faq-answer">
-          <p>Absolument ! L'atelier est conçu pour tous les niveaux, y compris les personnes très peu habituées aux smartphones. L'animateur adapte le rythme et accompagne chacun individuellement.</p>
-        </div>
+      <div class="faq-item" onclick="toggleFaq(this)">
+        <div class="fq"><span>Puis-je continuer à créer chez moi après l'atelier ?</span><div class="fq-icon">+</div></div>
+        <div class="fa-ans"><p>Absolument ! Tous les outils présentés sont gratuits et accessibles 24h/24. Les tutoriels vidéos sur YouTube vous permettront de progresser à votre rythme. La médiathèque propose aussi des permanences numériques pour vous accompagner.</p></div>
       </div>
-      <div class="faq-item reveal" style="transition-delay: 0.2s;" onclick="toggleFaq(this)">
-        <div class="faq-question">
-          <span>Que se passe-t-il après l'atelier ? Je pourrai continuer ?</span>
-          <div class="faq-icon"><span>+</span></div>
-        </div>
-        <div class="faq-answer">
-          <p>Oui ! Vous repartez avec une fiche ressources, des tutoriels vidéo et les accès aux outils utilisés. Votre création reste accessible via un lien partageable. La médiathèque proposera des ateliers de perfectionnement.</p>
-        </div>
+      <div class="faq-item" onclick="toggleFaq(this)">
+        <div class="fq"><span>Qu'est-ce qui distingue Historypin des autres outils ?</span><div class="fq-icon">+</div></div>
+        <div class="fa-ans"><p>Historypin n'est pas un outil de création RA à proprement parler : c'est une plateforme d'archive collaborative. Vous y déposez des photos historiques géolocalisées, que d'autres peuvent retrouver et comparer avec l'état actuel via Google Street View. C'est l'idéal pour partager des photos de famille ou de collection avec la communauté mondiale.</p></div>
       </div>
-      <div class="faq-item reveal" style="transition-delay: 0.15s;" onclick="toggleFaq(this)">
-        <div class="faq-question">
-          <span>Faut-il apporter des photos ou documents patrimoniaux ?</span>
-          <div class="faq-icon"><span>+</span></div>
-        </div>
-        <div class="faq-answer">
-          <p>Ce n'est pas obligatoire — la médiathèque fournit des images patrimoniales locales pour l'exercice. Mais si vous avez une photo de famille, une carte postale ancienne ou un document que vous aimeriez animer, apportez-le !</p>
-        </div>
+      <div class="faq-item" onclick="toggleFaq(this)">
+        <div class="fq"><span>Faut-il créer un compte sur les plateformes ?</span><div class="fq-icon">+</div></div>
+        <div class="fa-ans"><p>Pour créer et sauvegarder des expériences, oui — mais la création de compte est toujours gratuite. Pour Assemblr et Zappar, une adresse e-mail suffit. Pour Historypin, le compte gratuit vous permet de contribuer à l'archive mondiale.</p></div>
       </div>
-      <div class="faq-item reveal" style="transition-delay: 0.25s;" onclick="toggleFaq(this)">
-        <div class="faq-question">
-          <span>Combien de participants y aura-t-il ?</span>
-          <div class="faq-icon"><span>+</span></div>
-        </div>
-        <div class="faq-answer">
-          <p>Le groupe est limité à 15 personnes maximum pour garantir un accompagnement personnalisé. Si la session est complète, une liste d'attente vous permettra de vous inscrire à la prochaine date.</p>
-        </div>
-      </div>
-      <div class="faq-item reveal" style="transition-delay: 0.2s;" onclick="toggleFaq(this)">
-        <div class="faq-question">
-          <span>Les créations seront-elles publiées quelque part ?</span>
-          <div class="faq-icon"><span>+</span></div>
-        </div>
-        <div class="faq-answer">
-          <p>Seulement si vous le souhaitez ! Vous pouvez choisir de partager votre création via un lien ou un QR code, ou de la garder strictement privée. Rien n'est publié sans votre accord explicite.</p>
-        </div>
-      </div>
-      <div class="faq-item reveal" style="transition-delay: 0.3s;" onclick="toggleFaq(this)">
-        <div class="faq-question">
-          <span>Y aura-t-il d'autres ateliers numériques à la médiathèque ?</span>
-          <div class="faq-icon"><span>+</span></div>
-        </div>
-        <div class="faq-answer">
-          <p>Oui, la médiathèque propose régulièrement des ateliers numériques : initiation à la photo, création de podcasts, impression 3D… Renseignez-vous à l'accueil ou sur notre site pour découvrir le programme complet.</p>
-        </div>
+      <div class="faq-item" onclick="toggleFaq(this)">
+        <div class="fq"><span>Peut-on réutiliser n'importe quelle photo ancienne ?</span><div class="fq-icon">+</div></div>
+        <div class="fa-ans"><p>Les œuvres dont les auteurs sont décédés depuis plus de 70 ans sont dans le domaine public. Pour les autres, cherchez des ressources avec mention "libre de droits" ou "Creative Commons". Gallica, Europeana et Wikimedia Commons sont des sources sûres.</p></div>
       </div>
     </div>
   </div>
@@ -988,78 +941,51 @@
 
 <!-- FOOTER -->
 <footer>
-  <div class="footer-inner">
-    <div class="footer-top">
+  <div class="wrap">
+    <div class="footer-grid">
       <div class="footer-brand">
-        <span class="nav-logo">🏛️ Patrimoine RA</span>
-        <p>Une animation numérique de votre médiathèque pour découvrir le patrimoine autrement.</p>
+        <div style="font-family:var(--serif);font-size:1.2rem;color:var(--gold-mid);font-weight:700;margin-bottom:.75rem">🏛️ Patrimoine en Réalité Augmentée</div>
+        <p>Support de médiation numérique réalisé par la médiathèque à destination des participants à l'animation. Toutes les ressources mentionnées sont gratuites et accessibles à tous.</p>
       </div>
-      <div class="footer-links">
-        <h4>Navigation</h4>
+      <div class="footer-col">
+        <h4>Sur ce guide</h4>
         <ul>
-          <li><a href="#cest-quoi">C'est quoi la RA ?</a></li>
-          <li><a href="#exemples">Exemples</a></li>
-          <li><a href="#programme">Programme</a></li>
+          <li><a href="#cest-quoi">La Réalité Augmentée</a></li>
+          <li><a href="#videos">Vidéos sélectionnées</a></li>
+          <li><a href="#historypin">Historypin</a></li>
+          <li><a href="#etapes">Pas à pas création</a></li>
           <li><a href="#outils">Les outils</a></li>
-          <li><a href="#projets">Idées de projets</a></li>
-          <li><a href="#inscription">S'inscrire</a></li>
+          <li><a href="#ressources">Ressources</a></li>
         </ul>
       </div>
-      <div class="footer-links">
-        <h4>Ressources</h4>
+      <div class="footer-col">
+        <h4>Ressources clés</h4>
         <ul>
-          <li><a href="#">Gallica — Images libres de droits</a></li>
-          <li><a href="#">Europeana — Patrimoine européen</a></li>
-          <li><a href="#">Wikimedia Commons</a></li>
-          <li><a href="#">Assemblr EDU</a></li>
-          <li><a href="#">Zappar Education</a></li>
+          <li><a href="https://gallica.bnf.fr" target="_blank">Gallica (BnF)</a></li>
+          <li><a href="https://www.europeana.eu" target="_blank">Europeana</a></li>
+          <li><a href="https://www.historypin.org" target="_blank">Historypin</a></li>
+          <li><a href="https://www.assemblrworld.com" target="_blank">Assemblr EDU</a></li>
+          <li><a href="https://commons.wikimedia.org" target="_blank">Wikimedia Commons</a></li>
         </ul>
       </div>
     </div>
     <div class="footer-bottom">
-      <p>© Médiathèque — Animation "Patrimoine en Réalité Augmentée". Tous droits réservés.</p>
-      <p style="color: rgba(255,255,255,0.2);">Entrée libre · Gratuit · Sur inscription</p>
+      <p>© Médiathèque — Animation "Patrimoine en Réalité Augmentée" — Support participant libre de diffusion</p>
+      <p>Mise à jour : 2025</p>
     </div>
   </div>
 </footer>
 
 <script>
-  // FAQ toggle
-  function toggleFaq(el) {
-    const isOpen = el.classList.contains('open');
-    document.querySelectorAll('.faq-item').forEach(f => f.classList.remove('open'));
-    if (!isOpen) el.classList.add('open');
-  }
-
-  // Form submit
-  function handleSubmit(e) {
-    e.preventDefault();
-    document.getElementById('insc-form-wrap').style.display = 'none';
-    const s = document.getElementById('form-success');
-    s.style.display = 'block';
-    s.scrollIntoView({ behavior: 'smooth', block: 'center' });
-  }
-
-  // Scroll reveal
-  const observer = new IntersectionObserver((entries) => {
-    entries.forEach(entry => {
-      if (entry.isIntersecting) {
-        entry.target.classList.add('visible');
-      }
-    });
-  }, { threshold: 0.1, rootMargin: '0px 0px -40px 0px' });
-
-  document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
-
-  // Nav scroll effect
-  window.addEventListener('scroll', () => {
-    const nav = document.getElementById('nav');
-    if (window.scrollY > 60) {
-      nav.style.padding = '0.65rem 2.5rem';
-    } else {
-      nav.style.padding = '1rem 2.5rem';
-    }
-  });
+function toggleFaq(el){
+  const open=el.classList.contains('open');
+  document.querySelectorAll('.faq-item').forEach(f=>f.classList.remove('open'));
+  if(!open)el.classList.add('open');
+}
+const obs=new IntersectionObserver(entries=>{
+  entries.forEach(e=>{if(e.isIntersecting)e.target.classList.add('visible')});
+},{threshold:.1,rootMargin:'0px 0px -40px 0px'});
+document.querySelectorAll('.reveal').forEach(el=>obs.observe(el));
 </script>
 </body>
 </html>
