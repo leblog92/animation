@@ -1,0 +1,925 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>L'Anastylose — Patrimoine en Réalité Augmentée</title>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,600;0,700;1,600&family=Outfit:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --ink:#1A1A1A;
+  --navy:#1C2B45;
+  --gold:#B8872A;
+  --gold-pale:#F4ECD8;
+  --gold-mid:#D4A84B;
+  --teal:#1A6068;
+  --teal-pale:#E3F0F1;
+  --cream:#F9F5EE;
+  --cream2:#EEE8DA;
+  --paper:#FDFAF5;
+  --grey:#6B7280;
+  --border:#DDD5C4;
+  --serif:'Cormorant Garamond',Georgia,serif;
+  --sans:'Outfit',system-ui,sans-serif;
+}
+html{scroll-behavior:smooth}
+body{font-family:var(--sans);background:var(--paper);color:var(--ink);overflow-x:hidden;font-size:16px;line-height:1.6}
+h1,h2,h3,h4{font-family:var(--serif);font-weight:700;line-height:1.1}
+p{font-weight:300}
+strong{font-weight:600}
+.wrap{max-width:1160px;margin:0 auto;padding:0 2rem}
+section{padding:5rem 0}
+
+/* ── NAV ── */
+nav{
+  position:sticky;top:0;z-index:100;
+  background:var(--navy);
+  border-bottom:2px solid var(--gold);
+}
+.nav-inner{
+  max-width:1160px;margin:0 auto;padding:0 2rem;
+  display:flex;align-items:center;justify-content:space-between;height:60px;
+}
+.nav-brand{
+  display:flex;align-items:center;gap:.75rem;
+  font-family:var(--serif);font-size:1.15rem;color:var(--gold-mid);font-weight:700;
+  text-decoration:none;letter-spacing:.02em;
+}
+.nav-back{
+  display:flex;align-items:center;gap:.5rem;
+  color:rgba(255,255,255,.55);font-size:.82rem;text-decoration:none;
+  border:1px solid rgba(255,255,255,.15);border-radius:4px;
+  padding:.3rem .85rem;transition:all .2s;
+}
+.nav-back:hover{color:var(--gold-mid);border-color:rgba(201,149,42,.4)}
+.nav-back::before{content:'←';font-size:.9rem}
+
+/* ── HERO ── */
+.hero{
+  background:var(--navy);
+  background-image:
+    radial-gradient(ellipse 80% 70% at 60% 40%, rgba(184,135,42,.1) 0%,transparent 65%),
+    radial-gradient(ellipse 60% 80% at 5% 90%, rgba(26,96,104,.18) 0%,transparent 55%);
+  padding:5.5rem 2rem 5rem;
+  border-bottom:1px solid rgba(255,255,255,.06);
+}
+.hero-inner{max-width:1160px;margin:0 auto}
+.hero-breadcrumb{
+  display:flex;align-items:center;gap:.5rem;
+  margin-bottom:2rem;color:rgba(255,255,255,.35);font-size:.78rem;
+}
+.hero-breadcrumb a{color:rgba(255,255,255,.35);text-decoration:none;transition:color .2s}
+.hero-breadcrumb a:hover{color:var(--gold-mid)}
+.hero-breadcrumb span{color:rgba(255,255,255,.2)}
+.hero-kicker{
+  display:inline-flex;align-items:center;gap:.6rem;
+  color:var(--gold-mid);font-size:.72rem;font-weight:600;
+  letter-spacing:.14em;text-transform:uppercase;margin-bottom:1.25rem;
+}
+.hero-kicker::before{content:'';width:24px;height:1px;background:var(--gold-mid)}
+.hero h1{
+  font-size:clamp(3rem,7vw,5.5rem);color:#fff;
+  margin-bottom:.5rem;
+}
+.hero h1 em{color:var(--gold-mid);font-style:italic}
+.hero-subtitle{
+  font-family:var(--serif);font-size:clamp(1.1rem,2.5vw,1.5rem);
+  color:rgba(255,255,255,.45);font-style:italic;margin-bottom:2rem;
+}
+.hero-lead{
+  max-width:680px;color:rgba(255,255,255,.65);
+  font-size:1.05rem;line-height:1.8;margin-bottom:2.5rem;
+}
+.hero-tags{display:flex;flex-wrap:wrap;gap:.6rem}
+.h-tag{
+  background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.12);
+  border-radius:3px;padding:.3rem .85rem;
+  color:rgba(255,255,255,.6);font-size:.78rem;
+}
+
+/* ── DEFINITION BAND ── */
+.def-band{background:var(--gold);padding:2.5rem 0}
+.def-inner{max-width:1160px;margin:0 auto;padding:0 2rem;display:grid;grid-template-columns:auto 1fr;gap:2.5rem;align-items:center}
+.def-greek{
+  font-family:var(--serif);font-size:3.5rem;color:var(--navy);
+  font-weight:700;font-style:italic;opacity:.25;white-space:nowrap;
+}
+.def-text{border-left:2px solid rgba(28,43,69,.2);padding-left:2rem}
+.def-text p{font-size:1.05rem;color:var(--navy);line-height:1.75;font-weight:400}
+.def-text p strong{font-weight:700}
+.def-etym{
+  margin-top:.75rem;font-size:.82rem;color:rgba(28,43,69,.6);
+  font-style:italic;
+}
+
+/* ── SECTION HEADERS ── */
+.sh{margin-bottom:3rem}
+.sh-label{
+  display:inline-flex;align-items:center;gap:.55rem;
+  color:var(--gold);font-size:.72rem;font-weight:600;letter-spacing:.12em;text-transform:uppercase;
+  margin-bottom:.8rem;
+}
+.sh-label::before{content:'';width:18px;height:1px;background:var(--gold)}
+.sh h2{color:var(--navy);font-size:clamp(1.8rem,4vw,2.8rem)}
+.sh p{color:var(--grey);margin-top:.7rem;max-width:600px;font-size:.98rem;line-height:1.7}
+
+/* ── PRINCIPES ── */
+.principes{background:var(--paper)}
+.principes-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:1.5rem;margin-top:3rem}
+.principe-card{
+  background:var(--cream);border:1px solid var(--border);border-radius:10px;
+  padding:2rem;position:relative;overflow:hidden;transition:all .3s;
+}
+.principe-card:hover{border-color:var(--gold-mid);transform:translateY(-3px);box-shadow:0 10px 28px rgba(28,43,69,.07)}
+.principe-card::before{
+  content:'';position:absolute;top:0;left:0;right:0;height:3px;
+  background:var(--border);transition:background .3s;
+}
+.principe-card:hover::before{background:var(--gold)}
+.pc-num{
+  font-family:var(--serif);font-size:3rem;color:var(--gold);
+  font-weight:700;opacity:.25;line-height:1;margin-bottom:.75rem;
+}
+.principe-card h3{font-family:var(--sans);font-size:1rem;font-weight:600;color:var(--navy);margin-bottom:.6rem}
+.principe-card p{font-size:.87rem;color:var(--grey);line-height:1.65}
+.principe-icon{font-size:1.6rem;margin-bottom:.85rem}
+
+/* ── HISTOIRE ── */
+.histoire{background:var(--cream)}
+.timeline-h{display:flex;flex-direction:column;gap:0;max-width:820px;position:relative}
+.timeline-h::before{
+  content:'';position:absolute;left:20px;top:40px;bottom:40px;
+  width:1px;background:linear-gradient(to bottom,var(--gold),rgba(184,135,42,.1));
+}
+.th-item{display:grid;grid-template-columns:40px 1fr;gap:1.5rem;margin-bottom:2.5rem;position:relative}
+.th-date{
+  display:flex;flex-direction:column;align-items:center;padding-top:2px;
+}
+.th-dot{
+  width:40px;height:40px;border-radius:50%;background:var(--paper);
+  border:2px solid var(--gold);display:flex;align-items:center;justify-content:center;
+  font-size:.7rem;font-weight:700;color:var(--gold);
+  position:relative;z-index:1;flex-shrink:0;text-align:center;line-height:1.2;
+}
+.th-content{padding-top:6px}
+.th-content h3{font-family:var(--sans);font-size:1rem;font-weight:600;color:var(--navy);margin-bottom:.4rem}
+.th-content p{font-size:.88rem;color:var(--grey);line-height:1.65}
+.th-content .site{
+  display:inline-block;margin-top:.5rem;background:var(--teal-pale);color:var(--teal);
+  font-size:.68rem;font-weight:600;letter-spacing:.06em;text-transform:uppercase;
+  padding:.18rem .55rem;border-radius:3px;
+}
+
+/* ── ANALOGIQUE vs NUMÉRIQUE ── */
+.comparaison{background:var(--paper)}
+.comp-grid{display:grid;grid-template-columns:1fr 1fr;gap:2rem;margin-top:3rem}
+.comp-col{border-radius:12px;overflow:hidden;border:1px solid var(--border)}
+.comp-head{padding:1.5rem 1.75rem;border-bottom:1px solid var(--border)}
+.comp-head.analogique{background:var(--cream2)}
+.comp-head.numerique{background:var(--navy)}
+.comp-head h3{font-family:var(--sans);font-size:1.05rem;font-weight:600;margin-bottom:.2rem}
+.comp-head.analogique h3{color:var(--navy)}
+.comp-head.numerique h3{color:var(--gold-mid)}
+.comp-head p{font-size:.82rem}
+.comp-head.analogique p{color:var(--grey)}
+.comp-head.numerique p{color:rgba(255,255,255,.45)}
+.comp-body{padding:1.5rem 1.75rem;background:var(--paper)}
+.comp-body.dark{background:#0E1928}
+.comp-item{display:flex;gap:.85rem;align-items:flex-start;margin-bottom:1.1rem}
+.comp-item:last-child{margin-bottom:0}
+.comp-bullet{
+  width:22px;height:22px;border-radius:50%;flex-shrink:0;margin-top:.1rem;
+  display:flex;align-items:center;justify-content:center;font-size:.65rem;font-weight:700;
+}
+.cb-a{background:rgba(184,135,42,.12);color:var(--gold)}
+.cb-n{background:rgba(26,96,104,.2);color:#4CAF82}
+.comp-item p{font-size:.87rem;line-height:1.6}
+.comp-body .comp-item p{color:var(--grey)}
+.comp-body.dark .comp-item p{color:rgba(255,255,255,.5)}
+.comp-body.dark .comp-item p strong{color:rgba(255,255,255,.8)}
+/* Étapes numérique */
+.num-steps{margin-top:3rem}
+.ns-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:1px;background:var(--border);border:1px solid var(--border);border-radius:10px;overflow:hidden}
+.ns-step{background:var(--paper);padding:1.5rem 1.25rem;text-align:center;transition:background .25s}
+.ns-step:hover{background:var(--gold-pale)}
+.ns-icon{font-size:1.8rem;margin-bottom:.75rem}
+.ns-step h4{font-family:var(--sans);font-size:.92rem;font-weight:600;color:var(--navy);margin-bottom:.5rem}
+.ns-step p{font-size:.8rem;color:var(--grey);line-height:1.55}
+.ns-num{
+  font-family:var(--serif);font-size:.75rem;color:var(--gold);
+  font-weight:700;letter-spacing:.08em;margin-bottom:.5rem;
+}
+
+/* ── EXEMPLES ── */
+.exemples{background:var(--cream)}
+.ex-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:1.5rem;margin-top:3rem}
+.ex-card{
+  background:var(--paper);border:1px solid var(--border);border-radius:10px;
+  overflow:hidden;transition:all .3s;
+}
+.ex-card:hover{transform:translateY(-4px);box-shadow:0 12px 28px rgba(28,43,69,.08);border-color:var(--gold-mid)}
+.ex-thumb{
+  height:140px;display:flex;align-items:center;justify-content:center;
+  font-size:3rem;position:relative;
+}
+.et1{background:linear-gradient(135deg,#2a1a0a,#5a3a1a)}
+.et2{background:linear-gradient(135deg,#0a1a2a,#1a3a5a)}
+.et3{background:linear-gradient(135deg,#1a2a0a,#3a5a1a)}
+.et4{background:linear-gradient(135deg,#2a0a1a,#5a1a3a)}
+.et5{background:linear-gradient(135deg,#0a2a2a,#1a5a5a)}
+.et6{background:linear-gradient(135deg,#2a2a0a,#5a5a1a)}
+.ex-flag{
+  position:absolute;bottom:8px;right:8px;
+  background:rgba(0,0,0,.55);color:rgba(255,255,255,.75);
+  font-size:.6rem;padding:.2rem .5rem;border-radius:2px;font-family:var(--sans);
+}
+.ex-body{padding:1.25rem}
+.ex-tag{
+  display:inline-block;background:var(--teal-pale);color:var(--teal);
+  font-size:.65rem;font-weight:600;letter-spacing:.07em;text-transform:uppercase;
+  padding:.2rem .55rem;border-radius:3px;margin-bottom:.6rem;
+}
+.ex-tag.ra{background:rgba(184,135,42,.1);color:var(--gold)}
+.ex-card h3{font-family:var(--sans);font-size:.98rem;font-weight:600;color:var(--navy);margin-bottom:.45rem}
+.ex-card p{font-size:.84rem;color:var(--grey);line-height:1.55}
+
+/* ── VIDEO ── */
+.video-section{background:var(--navy);padding:5rem 0}
+.vs-inner{max-width:1160px;margin:0 auto;padding:0 2rem}
+.vs-head{display:grid;grid-template-columns:1fr 1fr;gap:4rem;align-items:center;margin-bottom:3rem}
+.vs-head h2{color:#fff;font-size:clamp(1.8rem,3.5vw,2.6rem)}
+.vs-head p{color:rgba(255,255,255,.5);font-size:.97rem;line-height:1.7;margin-top:.75rem}
+.vs-grid{display:grid;grid-template-columns:1fr 1fr;gap:2rem}
+.vs-card{background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.08);border-radius:10px;overflow:hidden;transition:all .3s}
+.vs-card:hover{border-color:rgba(184,135,42,.4);background:rgba(255,255,255,.07)}
+.vs-thumb{position:relative;padding-bottom:56.25%}
+.vs-thumb iframe{position:absolute;inset:0;width:100%;height:100%;border:0}
+.vs-meta{padding:1.1rem 1.25rem}
+.vs-tag{
+  display:inline-block;background:rgba(184,135,42,.15);color:var(--gold-mid);
+  font-size:.65rem;font-weight:600;letter-spacing:.07em;text-transform:uppercase;
+  padding:.2rem .6rem;border-radius:3px;margin-bottom:.55rem;
+}
+.vs-card h3{font-size:.97rem;font-weight:600;color:#fff;font-family:var(--sans);margin-bottom:.4rem}
+.vs-card p{font-size:.82rem;color:rgba(255,255,255,.45);line-height:1.55}
+
+/* ── RA & ANASTYLOSE ── */
+.ra-anastylose{background:var(--paper)}
+.ra-grid{display:grid;grid-template-columns:1fr 1fr;gap:5rem;align-items:start}
+.quote-block{
+  border-left:3px solid var(--gold);padding:1.5rem 1.75rem;
+  background:var(--gold-pale);border-radius:0 10px 10px 0;
+  margin:2rem 0;
+}
+.quote-block p{
+  font-family:var(--serif);font-size:1.15rem;color:var(--navy);
+  line-height:1.7;font-style:italic;
+}
+.ra-benefits{display:flex;flex-direction:column;gap:1.1rem;margin-top:2rem}
+.ra-benefit{display:flex;gap:1rem;align-items:flex-start}
+.rb-icon{
+  width:38px;height:38px;border-radius:8px;background:var(--teal-pale);
+  display:flex;align-items:center;justify-content:center;font-size:1rem;flex-shrink:0;
+}
+.rb-text h4{font-family:var(--sans);font-size:.93rem;font-weight:600;color:var(--navy);margin-bottom:.25rem}
+.rb-text p{font-size:.84rem;color:var(--grey);line-height:1.6}
+/* Interactive diagram */
+.ra-diagram{background:var(--cream);border:1px solid var(--border);border-radius:12px;padding:2rem;position:sticky;top:80px}
+.diag-title{font-size:.7rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--grey);margin-bottom:1.5rem;text-align:center}
+.diag-layers{display:flex;flex-direction:column;gap:.75rem}
+.diag-layer{
+  border-radius:8px;padding:1rem 1.25rem;display:flex;align-items:center;gap:1rem;
+  border:1px solid;transition:all .25s;cursor:default;
+}
+.dl-ruines{background:rgba(106,90,70,.08);border-color:rgba(106,90,70,.2)}
+.dl-fouilles{background:rgba(184,135,42,.07);border-color:rgba(184,135,42,.2)}
+.dl-anastylose{background:rgba(26,43,74,.06);border-color:rgba(26,43,74,.15)}
+.dl-numerique{background:rgba(26,96,104,.08);border-color:rgba(26,96,104,.2)}
+.dl-ra{background:rgba(76,175,130,.1);border-color:rgba(76,175,130,.3)}
+.diag-layer:hover{transform:translateX(4px)}
+.dl-num{
+  font-family:var(--serif);font-size:1.3rem;font-weight:700;flex-shrink:0;width:28px;
+}
+.dl-ruines .dl-num{color:#6A5A46}
+.dl-fouilles .dl-num{color:var(--gold)}
+.dl-anastylose .dl-num{color:var(--navy)}
+.dl-numerique .dl-num{color:var(--teal)}
+.dl-ra .dl-num{color:#2E7D55}
+.dl-body h4{font-family:var(--sans);font-size:.88rem;font-weight:600;margin-bottom:.15rem}
+.dl-ruines .dl-body h4{color:#6A5A46}
+.dl-fouilles .dl-body h4{color:#8B6520}
+.dl-anastylose .dl-body h4{color:var(--navy)}
+.dl-numerique .dl-body h4{color:var(--teal)}
+.dl-ra .dl-body h4{color:#2E7D55}
+.dl-body p{font-size:.77rem;color:var(--grey);line-height:1.45}
+.diag-arrow{text-align:center;color:var(--border);font-size:1rem;margin:-.2rem 0}
+
+/* ── CHARTE VENISE ── */
+.charte{background:var(--navy);padding:5rem 0}
+.charte-inner{max-width:900px;margin:0 auto;padding:0 2rem;text-align:center}
+.charte-inner .sh-label{justify-content:center}
+.charte-inner h2{color:#fff;font-size:clamp(1.8rem,4vw,2.8rem);margin-bottom:1.25rem}
+.charte-inner p{color:rgba(255,255,255,.55);font-size:1rem;line-height:1.75;margin-bottom:2rem}
+.charte-pillars{display:grid;grid-template-columns:repeat(3,1fr);gap:1.25rem;margin-top:2.5rem}
+.cp{
+  background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.1);
+  border-radius:8px;padding:1.5rem;
+}
+.cp-icon{font-size:1.5rem;margin-bottom:.75rem}
+.cp h4{font-family:var(--sans);font-size:.93rem;font-weight:600;color:var(--gold-mid);margin-bottom:.5rem}
+.cp p{font-size:.83rem;color:rgba(255,255,255,.45);line-height:1.6}
+
+/* ── GLOSSAIRE ── */
+.glossaire{background:var(--cream);padding:5rem 0}
+.gloss-grid{display:grid;grid-template-columns:1fr 1fr;gap:1px;background:var(--border);border:1px solid var(--border);border-radius:10px;overflow:hidden;margin-top:2.5rem}
+.gloss-item{background:var(--paper);padding:1.25rem 1.5rem}
+.gloss-term{font-family:var(--serif);font-size:1.05rem;font-weight:700;color:var(--navy);margin-bottom:.35rem}
+.gloss-def{font-size:.85rem;color:var(--grey);line-height:1.6}
+
+/* ── FOOTER ── */
+footer{background:var(--navy);padding:3rem 0 2rem}
+.footer-inner{max-width:1160px;margin:0 auto;padding:0 2rem;display:flex;justify-content:space-between;align-items:center;flex-wrap:gap}
+.footer-brand{font-family:var(--serif);font-size:1rem;color:var(--gold-mid);font-weight:700}
+.footer-nav{display:flex;gap:2rem}
+.footer-nav a{color:rgba(255,255,255,.4);text-decoration:none;font-size:.82rem;transition:color .2s}
+.footer-nav a:hover{color:var(--gold-mid)}
+.footer-copy{color:rgba(255,255,255,.2);font-size:.76rem;margin-top:1.5rem;text-align:center;border-top:1px solid rgba(255,255,255,.06);padding-top:1.5rem}
+
+/* ── SCROLL REVEAL ── */
+.reveal{opacity:0;transform:translateY(22px);transition:opacity .65s ease,transform .65s ease}
+.reveal.visible{opacity:1;transform:none}
+
+/* ── RESPONSIVE ── */
+@media(max-width:960px){
+  .principes-grid{grid-template-columns:1fr}
+  .comp-grid{grid-template-columns:1fr}
+  .ex-grid{grid-template-columns:1fr 1fr}
+  .vs-head{grid-template-columns:1fr}
+  .vs-grid{grid-template-columns:1fr}
+  .ra-grid{grid-template-columns:1fr}
+  .ra-diagram{position:static}
+  .ns-grid{grid-template-columns:1fr 1fr}
+  .charte-pillars{grid-template-columns:1fr}
+  .gloss-grid{grid-template-columns:1fr}
+  .def-inner{grid-template-columns:1fr}
+  .def-greek{display:none}
+  .footer-inner{flex-direction:column;gap:1.5rem;text-align:center}
+  .footer-nav{flex-wrap:wrap;justify-content:center}
+}
+@media(max-width:600px){
+  section{padding:3.5rem 0}
+  .wrap{padding:0 1.25rem}
+  .ex-grid{grid-template-columns:1fr}
+  .ns-grid{grid-template-columns:1fr}
+  h1{font-size:2.6rem}
+}
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav>
+  <div class="nav-inner">
+    <a href="site_patrimoine_ra_v2.html" class="nav-brand">🏛️ Patrimoine en RA</a>
+    <a href="site_patrimoine_ra_v2.html" class="nav-back">Retour au guide</a>
+  </div>
+</nav>
+
+<!-- HERO -->
+<div class="hero">
+  <div class="hero-inner">
+    <div class="hero-breadcrumb">
+      <a href="site_patrimoine_ra_v2.html">Guide du participant</a>
+      <span>/</span>
+      <span>Notion clé</span>
+      <span>/</span>
+      <span style="color:rgba(255,255,255,.6)">Anastylose</span>
+    </div>
+    <div class="hero-kicker">Notion clé du patrimoine</div>
+    <h1>L'<em>Anastylose</em></h1>
+    <p class="hero-subtitle">Quand les pierres reprennent leur place</p>
+    <p class="hero-lead">
+      L'anastylose est la technique qui consiste à reconstruire un monument en ruines à partir de ses propres fragments originaux, replacés selon leur agencement d'origine. Une discipline rigoureuse, à mi-chemin entre archéologie, architecture et restauration — que le numérique et la réalité augmentée sont en train de transformer.
+    </p>
+    <div class="hero-tags">
+      <div class="h-tag">Archéologie</div>
+      <div class="h-tag">Restauration du patrimoine</div>
+      <div class="h-tag">Anastylose numérique</div>
+      <div class="h-tag">Réalité Augmentée</div>
+      <div class="h-tag">Charte de Venise</div>
+    </div>
+  </div>
+</div>
+
+<!-- DEFINITION -->
+<div class="def-band">
+  <div class="def-inner">
+    <div class="def-greek">αναστήλωσις</div>
+    <div class="def-text">
+      <p>L'anastylose est la <strong>technique de reconstruction d'un monument en ruines</strong> grâce à l'étude méthodique de l'ajustement des différents éléments qui composent son architecture. La reconstruction est réalisée en utilisant les <strong>fragments trouvés sur place</strong>, complétés si nécessaire par des matériaux modernes visuellement distincts, afin de <strong>préserver les pierres antiques</strong> et de permettre à l'œil de distinguer l'ancien du neuf.</p>
+      <p class="def-etym">Du grec ancien <em>ανα</em> (« de nouveau ») et <em>στηλόω</em> (« ériger »). Technique codifiée par la Charte de Venise (1964), article 15.</p>
+    </div>
+  </div>
+</div>
+
+<!-- PRINCIPES -->
+<section class="principes">
+  <div class="wrap">
+    <div class="sh reveal">
+      <div class="sh-label">Les principes fondamentaux</div>
+      <h2>Ce qui fait l'anastylose</h2>
+      <p>Toute anastylose digne de ce nom obéit à quatre principes stricts, hérités de la pensée moderne de la conservation du patrimoine.</p>
+    </div>
+    <div class="principes-grid">
+      <div class="principe-card reveal">
+        <div class="principe-icon">🧩</div>
+        <div class="pc-num">01</div>
+        <h3>Priorité aux fragments originaux</h3>
+        <p>La reconstruction utilise en priorité les éléments authentiques retrouvés sur le site ou conservés. Chaque bloc, colonne ou linteau d'origine est précieusement réemployé à sa place documentée.</p>
+      </div>
+      <div class="principe-card reveal" style="transition-delay:.1s">
+        <div class="principe-icon">👁️</div>
+        <div class="pc-num">02</div>
+        <h3>Distinction du neuf et de l'ancien</h3>
+        <p>Les éléments de complément modernes — béton, acier, pierre de carrière contemporaine — doivent être <strong>visiblement différents</strong> des originaux. L'œil doit pouvoir distinguer d'un coup d'œil ce qui est antique et ce qui est ajout.</p>
+      </div>
+      <div class="principe-card reveal" style="transition-delay:.2s">
+        <div class="principe-icon">🔄</div>
+        <div class="pc-num">03</div>
+        <h3>Réversibilité</h3>
+        <p>La technique doit être réversible : on doit pouvoir démonter la reconstitution en cas d'erreur d'interprétation ou de découverte nouvelle. Aucune intervention permanente irrémédiable ne doit compromettre les éléments originaux.</p>
+      </div>
+      <div class="principe-card reveal" style="transition-delay:.3s">
+        <div class="principe-icon">🔬</div>
+        <div class="pc-num">04</div>
+        <h3>Rigueur scientifique préalable</h3>
+        <p>Toute anastylose est précédée d'une étude approfondie : analyse des fragments, recherche documentaire, modélisation, avis collégial de spécialistes. On ne reconstruit pas au hasard.</p>
+      </div>
+      <div class="principe-card reveal" style="transition-delay:.1s">
+        <div class="principe-icon">⚠️</div>
+        <div class="pc-num">05</div>
+        <h3>Prudence face aux hypothèses</h3>
+        <p>L'anastylose s'appuie parfois sur des hypothèses de restitution. Ces zones d'incertitude doivent être clairement signalées, documentées et jamais présentées comme des certitudes.</p>
+      </div>
+      <div class="principe-card reveal" style="transition-delay:.2s">
+        <div class="principe-icon">📋</div>
+        <div class="pc-num">06</div>
+        <h3>Documentation exhaustive</h3>
+        <p>Chaque opération — emplacement de chaque fragment avant dépose, photographies, relevés — est consignée. L'archive de l'intervention est aussi précieuse que l'intervention elle-même.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- HISTOIRE -->
+<section class="histoire">
+  <div class="wrap">
+    <div class="sh reveal">
+      <div class="sh-label">Une longue histoire</div>
+      <h2>De Delphes à Palmyre :<br>naissance d'une discipline</h2>
+      <p>L'anastylose est née avec l'archéologie moderne, au croisement des fouilles européennes du XIXe siècle et de la quête de méthodes de restauration rigoureuses.</p>
+    </div>
+    <div class="timeline-h">
+      <div class="th-item reveal">
+        <div class="th-date"><div class="th-dot">1820</div></div>
+        <div class="th-content">
+          <h3>Naissance du débat européen</h3>
+          <p>À partir de 1820, s'ouvre un débat européen sur les pratiques de restauration des monuments antiques. Les grandes fouilles de Grèce et d'Italie posent la question : comment traiter les blocs épars retrouvés sur les sites ?</p>
+        </div>
+      </div>
+      <div class="th-item reveal">
+        <div class="th-date"><div class="th-dot">1901</div></div>
+        <div class="th-content">
+          <h3>Le Trésor des Athéniens à Delphes</h3>
+          <p>L'un des premiers sites à avoir été restauré par anastylose est le Trésor des Athéniens, dans le sanctuaire d'Apollon à Delphes, par l'École française d'Athènes. Une opération pionnière qui pose les bases de la méthode.</p>
+          <span class="site">Delphes, Grèce</span>
+        </div>
+      </div>
+      <div class="th-item reveal">
+        <div class="th-date"><div class="th-dot">1930s</div></div>
+        <div class="th-content">
+          <h3>Angkor et la méthode néerlandaise</h3>
+          <p>Henri Marchal, archéologue français de l'École française d'Extrême-Orient, s'inspire de la méthode développée par les Néerlandais à Java pour restaurer le temple de Banteay Srei au Cambodge. La technique se diffuse mondialement.</p>
+          <span class="site">Banteay Srei, Cambodge</span>
+        </div>
+      </div>
+      <div class="th-item reveal">
+        <div class="th-date"><div class="th-dot">1964</div></div>
+        <div class="th-content">
+          <h3>La Charte de Venise codifie tout</h3>
+          <p>La Charte internationale pour la conservation et la restauration des monuments et des sites (Charte de Venise, 1964) codifie les principes de l'anastylose à l'article 15. Elle devient la référence internationale en matière de restauration.</p>
+          <span class="site">Référentiel international</span>
+        </div>
+      </div>
+      <div class="th-item reveal">
+        <div class="th-date"><div class="th-dot">2000s</div></div>
+        <div class="th-content">
+          <h3>L'anastylose numérique émerge</h3>
+          <p>Les technologies numériques — photogrammétrie, scanner 3D, modélisation BIM — permettent de réaliser des anastyloses virtuelles avant même de toucher une pierre. On peut tester des hypothèses, identifier les pièces manquantes, visualiser le résultat.</p>
+          <span class="site">Partout dans le monde</span>
+        </div>
+      </div>
+      <div class="th-item reveal">
+        <div class="th-date"><div class="th-dot">2015–</div></div>
+        <div class="th-content">
+          <h3>Palmyre, urgence et numérique</h3>
+          <p>Après les destructions de Palmyre par Daech, la société ICONEM et d'autres acteurs documentent en urgence les vestiges par drone et photogrammétrie, créant des modèles 3D qui permettront de préparer des anastyloses futures. Le numérique devient un outil de sauvegarde d'urgence.</p>
+          <span class="site">Palmyre, Syrie</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ANALOGIQUE vs NUMÉRIQUE -->
+<section class="comparaison">
+  <div class="wrap">
+    <div class="sh reveal">
+      <div class="sh-label">Deux approches complémentaires</div>
+      <h2>Anastylose physique<br>et anastylose numérique</h2>
+      <p>Le numérique n'a pas remplacé l'anastylose physique — il l'a enrichie d'une nouvelle dimension : la possibilité de tester, visualiser et diffuser avant même de déplacer une pierre.</p>
+    </div>
+    <div class="comp-grid reveal">
+      <div class="comp-col">
+        <div class="comp-head analogique">
+          <h3>⛏️ Anastylose physique</h3>
+          <p>La technique traditionnelle, in situ, avec les mains</p>
+        </div>
+        <div class="comp-body">
+          <div class="comp-item"><div class="comp-bullet cb-a">✓</div><p>Manipulation et replacements <strong>des fragments originaux</strong> sur site</p></div>
+          <div class="comp-item"><div class="comp-bullet cb-a">✓</div><p>Complément par des matériaux modernes <strong>visuellement distincts</strong></p></div>
+          <div class="comp-item"><div class="comp-bullet cb-a">✓</div><p>Résultat <strong>tangible et visitable</strong> sur place</p></div>
+          <div class="comp-item"><div class="comp-bullet cb-a">✓</div><p>Valeur scientifique et symbolique <strong>très haute</strong></p></div>
+          <div class="comp-item"><div class="comp-bullet" style="background:rgba(200,50,50,.1);color:#C83232">!</div><p>Risque d'erreurs <strong>difficiles à corriger</strong></p></div>
+          <div class="comp-item"><div class="comp-bullet" style="background:rgba(200,50,50,.1);color:#C83232">!</div><p>Peut <strong>bloquer de futures fouilles</strong> sur le site</p></div>
+          <div class="comp-item"><div class="comp-bullet" style="background:rgba(200,50,50,.1);color:#C83232">!</div><p>Coût élevé, intervention longue</p></div>
+        </div>
+      </div>
+      <div class="comp-col">
+        <div class="comp-head numerique">
+          <h3>💻 Anastylose numérique</h3>
+          <p>La reconstitution virtuelle par scanner 3D et modélisation</p>
+        </div>
+        <div class="comp-body dark">
+          <div class="comp-item"><div class="comp-bullet cb-n">✓</div><p>Test des hypothèses <strong>sans toucher</strong> aux fragments originaux</p></div>
+          <div class="comp-item"><div class="comp-bullet cb-n">✓</div><p>Identification automatique des <strong>pièces manquantes</strong></p></div>
+          <div class="comp-item"><div class="comp-bullet cb-n">✓</div><p>Diffusion au <strong>grand public</strong> via RA, VR, web</p></div>
+          <div class="comp-item"><div class="comp-bullet cb-n">✓</div><p>Préparation et <strong>validation scientifique</strong> avant intervention physique</p></div>
+          <div class="comp-item"><div class="comp-bullet cb-n">✓</div><p>Conservation de <strong>l'état du monument</strong> à un instant T</p></div>
+          <div class="comp-item"><div class="comp-bullet cb-n">✓</div><p>Reconstitution possible de <strong>monuments totalement disparus</strong></p></div>
+          <div class="comp-item"><div class="comp-bullet" style="background:rgba(200,50,50,.15);color:#E57373">!</div><p>Nécessite équipements spécialisés (drones, scanners, logiciels 3D)</p></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="num-steps reveal">
+      <div style="margin-bottom:1.5rem">
+        <div class="sh-label">Le processus numérique</div>
+        <h3 style="color:var(--navy);font-family:var(--sans);font-weight:600;font-size:1.1rem">Comment se déroule une anastylose numérique ?</h3>
+      </div>
+      <div class="ns-grid">
+        <div class="ns-step">
+          <div class="ns-num">Étape 01</div>
+          <div class="ns-icon">📷</div>
+          <h4>Relevé & numérisation</h4>
+          <p>Photogrammétrie, scanner laser 3D ou drone pour capturer chaque fragment dans l'espace. Des milliers d'images créent un nuage de points précis au millimètre.</p>
+        </div>
+        <div class="ns-step">
+          <div class="ns-num">Étape 02</div>
+          <div class="ns-icon">🧠</div>
+          <h4>Analyse & assemblage virtuel</h4>
+          <p>Les logiciels identifient les surfaces de cassure et proposent des assemblages possibles. L'archéologue valide ou infirme chaque hypothèse.</p>
+        </div>
+        <div class="ns-step">
+          <div class="ns-num">Étape 03</div>
+          <div class="ns-icon">🏗️</div>
+          <h4>Modélisation 3D complète</h4>
+          <p>Le modèle numérique du monument est complété par des parties hypothétiques, clairement identifiées. Il peut être visualisé sous tous les angles.</p>
+        </div>
+        <div class="ns-step">
+          <div class="ns-num">Étape 04</div>
+          <div class="ns-icon">📱</div>
+          <h4>Diffusion en RA / VR</h4>
+          <p>Le modèle est intégré dans une application mobile ou de réalité augmentée. Le public peut voir le monument reconstitué superposé aux ruines réelles.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- EXEMPLES -->
+<section class="exemples">
+  <div class="wrap">
+    <div class="sh reveal">
+      <div class="sh-label">Dans le monde entier</div>
+      <h2>Anastyloses remarquables</h2>
+      <p>De l'Acropole d'Athènes aux temples d'Angkor, des exemples à travers le monde illustrent la diversité des approches et des enjeux.</p>
+    </div>
+    <div class="ex-grid">
+      <div class="ex-card reveal">
+        <div class="ex-thumb et1">🏛️<div class="ex-flag">Grèce · Ve s. av. J.-C.</div></div>
+        <div class="ex-body">
+          <div class="ex-tag">Anastylose physique</div>
+          <h3>Propylées de l'Acropole, Athènes</h3>
+          <p>Les chapiteaux ioniques et l'architrave des Propylées de l'Acropole présentent une anastylose clairement visible : les éléments originaux sont réassemblés, les comblements modernes distinguables à l'œil nu.</p>
+        </div>
+      </div>
+      <div class="ex-card reveal" style="transition-delay:.1s">
+        <div class="ex-thumb et2">🌿<div class="ex-flag">Cambodge · IXe s.</div></div>
+        <div class="ex-body">
+          <div class="ex-tag">Anastylose physique</div>
+          <h3>Temple de Banteay Srei, Angkor</h3>
+          <p>Restauré par Henri Marchal dans les années 1930 selon la technique néerlandaise empruntée à Java, ce temple khmer en grès rose est l'un des exemples les plus cités d'anastylose réussie en Asie.</p>
+        </div>
+      </div>
+      <div class="ex-card reveal" style="transition-delay:.2s">
+        <div class="ex-thumb et3">🏰<div class="ex-flag">France · Moyen Âge</div></div>
+        <div class="ex-body">
+          <div class="ex-tag ra">Anastylose numérique + RA</div>
+          <h3>Château de Châlucet, Limousin</h3>
+          <p>L'application mobile de Châlucet superpose en RA la reconstitution 3D de la forteresse médiévale aux vestiges actuels. Un exemple français de ce que le numérique apporte à la valorisation d'une anastylose.</p>
+        </div>
+      </div>
+      <div class="ex-card reveal" style="transition-delay:.1s">
+        <div class="ex-thumb et4">⛩️<div class="ex-flag">France · Antiquité</div></div>
+        <div class="ex-body">
+          <div class="ex-tag">Anastylose partielle</div>
+          <h3>Site de Glanum, Saint-Rémy-de-Provence</h3>
+          <p>À Glanum, une anastylose partielle des temples géminés a été réalisée avec des matériaux contemporains pour donner l'échelle de l'édifice antique aux visiteurs, sans prétendre reconstituer intégralement ce qui manque.</p>
+        </div>
+      </div>
+      <div class="ex-card reveal" style="transition-delay:.2s">
+        <div class="ex-thumb et5">🕌<div class="ex-flag">Syrie · IIe s. ap. J.-C.</div></div>
+        <div class="ex-body">
+          <div class="ex-tag ra">Numérique d'urgence</div>
+          <h3>Site de Palmyre, Syrie</h3>
+          <p>Après les destructions de 2015, ICONEM a numérisé les vestiges par drone et photogrammétrie, créant des modèles 3D qui permettront de préparer une future anastylose physique. Le numérique comme filet de sécurité du patrimoine en danger.</p>
+        </div>
+      </div>
+      <div class="ex-card reveal" style="transition-delay:.3s">
+        <div class="ex-thumb et6">🏟️<div class="ex-flag">Italie · Antiquité</div></div>
+        <div class="ex-body">
+          <div class="ex-tag ra">Anastylose numérique + RA</div>
+          <h3>Rome Reborn</h3>
+          <p>Le projet scientifique Rome Reborn a produit une reconstitution 3D complète de la Rome antique de l'an 320, fondée sur les recherches de dizaines d'archéologues. Accessible en VR et RA, c'est l'anastylose numérique à l'échelle d'une ville entière.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- VIDEOS -->
+<section class="video-section">
+  <div class="vs-inner">
+    <div class="vs-head reveal">
+      <div>
+        <div class="sh-label" style="color:var(--gold-mid)">Voir en images</div>
+        <h2>L'anastylose en vidéo</h2>
+        <p>Ces vidéos illustrent la technique de l'anastylose, du chantier archéologique à la reconstitution numérique en réalité augmentée.</p>
+      </div>
+      <div style="background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.1);border-radius:10px;padding:1.25rem">
+        <p style="font-size:.72rem;font-weight:600;letter-spacing:.08em;text-transform:uppercase;color:rgba(255,255,255,.35);margin-bottom:.75rem">Pour aller plus loin</p>
+        <p style="font-size:.85rem;color:rgba(255,255,255,.45);line-height:1.6">Recherchez sur YouTube : <em style="color:var(--gold-mid)">« anastylose archéologie »</em>, <em style="color:var(--gold-mid)">« reconstitution 3D patrimoine »</em> ou <em style="color:var(--gold-mid)">« Rome Reborn »</em> pour des exemples spectaculaires.</p>
+      </div>
+    </div>
+    <div class="vs-grid">
+      <div class="vs-card reveal">
+        <div class="vs-thumb">
+          <iframe loading="lazy" src="https://www.youtube.com/embed/XSIJHH3LFRU" title="Anastylose Acropole Athènes restauration" allowfullscreen allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"></iframe>
+        </div>
+        <div class="vs-meta">
+          <div class="vs-tag">Anastylose physique</div>
+          <h3>La restauration de l'Acropole d'Athènes</h3>
+          <p>Comment les archéologues et restaurateurs grecs travaillent depuis des décennies à replacer les blocs originaux du Parthénon et des Propylées, en appliquant les principes de la Charte de Venise.</p>
+        </div>
+      </div>
+      <div class="vs-card reveal" style="transition-delay:.1s">
+        <div class="vs-thumb">
+          <iframe loading="lazy" src="https://www.youtube.com/embed/o9g_2nRJpG0" title="Reconstitution 3D château médiéval réalité augmentée patrimoine" allowfullscreen allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"></iframe>
+        </div>
+        <div class="vs-meta">
+          <div class="vs-tag">Anastylose numérique</div>
+          <h3>Reconstitution 3D et réalité augmentée sur site médiéval</h3>
+          <p>Démonstration de l'utilisation de la RA pour superposer une reconstitution 3D à des vestiges réels : l'anastylose numérique rendue accessible au grand public lors d'une visite sur site.</p>
+        </div>
+      </div>
+      <div class="vs-card reveal" style="transition-delay:.2s">
+        <div class="vs-thumb">
+          <iframe loading="lazy" src="https://www.youtube.com/embed/TFCuE5rHbPA" title="Arromanches 1944 réalité augmentée reconstitution" allowfullscreen allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"></iframe>
+        </div>
+        <div class="vs-meta">
+          <div class="vs-tag">RA & Reconstitution</div>
+          <h3>Arromanches 1944 — Voir ce qui a disparu</h3>
+          <p>L'application Arromanches 1944 reconstitue en RA les bateaux alliés du Débarquement sur les plages actuelles. Une anastylose numérique appliquée à un paysage historique plutôt qu'à un monument.</p>
+        </div>
+      </div>
+      <div class="vs-card reveal" style="transition-delay:.3s">
+        <div class="vs-thumb">
+          <iframe loading="lazy" src="https://www.youtube.com/embed/VBKBmfFruoQ" title="Photogrammétrie patrimoine numérisation 3D" allowfullscreen allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"></iframe>
+        </div>
+        <div class="vs-meta">
+          <div class="vs-tag">Technique numérique</div>
+          <h3>La photogrammétrie au service du patrimoine</h3>
+          <p>Comment des milliers de photos prises sous tous les angles permettent de créer un modèle 3D précis d'un monument ou d'un site archéologique — première étape de l'anastylose numérique.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- RA & ANASTYLOSE -->
+<section class="ra-anastylose">
+  <div class="wrap">
+    <div class="ra-grid">
+      <div class="reveal">
+        <div class="sh">
+          <div class="sh-label">Le lien avec la RA</div>
+          <h2>Réalité augmentée<br>& anastylose :<br>une alliance naturelle</h2>
+        </div>
+        <p style="color:var(--grey);line-height:1.75">La réalité augmentée est devenue l'outil de diffusion idéal de l'anastylose numérique. Là où un modèle 3D n'était visible que sur un écran d'ordinateur ou en salle de musée, la RA permet de <strong>superposer la reconstitution directement sur les ruines</strong>, en situation réelle, avec votre téléphone.</p>
+
+        <div class="quote-block">
+          <p>« Voir le monument tel qu'il était, debout devant ses ruines actuelles — c'est exactement ce que permet la RA. L'anastylose numérique devient soudain vivante et compréhensible pour tous. »</p>
+        </div>
+
+        <p style="color:var(--grey);line-height:1.75;margin-bottom:1.5rem">La RA respecte aussi un principe cher à l'anastylose : la <strong>distinction entre l'original et la restitution</strong>. La reconstitution virtuelle flotte au-dessus des ruines réelles, sans jamais les cacher ni les modifier — c'est de la réversibilité numérique.</p>
+
+        <div class="ra-benefits">
+          <div class="ra-benefit">
+            <div class="rb-icon">🎯</div>
+            <div class="rb-text">
+              <h4>Sur site, en contexte</h4>
+              <p>La RA fonctionne là où se trouvent les ruines — pas dans un musée lointain. Le visiteur voit la reconstitution à l'endroit exact où elle s'est édifiée.</p>
+            </div>
+          </div>
+          <div class="ra-benefit">
+            <div class="rb-icon">📐</div>
+            <div class="rb-text">
+              <h4>À la bonne échelle</h4>
+              <p>Contrairement à une maquette ou une photo, la RA place le modèle 3D dans son environnement réel, aux dimensions et proportions exactes du monument disparu.</p>
+            </div>
+          </div>
+          <div class="ra-benefit">
+            <div class="rb-icon">🔀</div>
+            <div class="rb-text">
+              <h4>Avant / après en temps réel</h4>
+              <p>Un simple geste du doigt peut alterner entre les ruines actuelles et la reconstitution, offrant une lecture immédiate et intuitive de ce qui a disparu.</p>
+            </div>
+          </div>
+          <div class="ra-benefit">
+            <div class="rb-icon">🌍</div>
+            <div class="rb-text">
+              <h4>Accessible sans se déplacer</h4>
+              <p>Une photo d'archives peut devenir déclencheur : pointer une image d'un monument depuis son salon pour voir s'animer une reconstitution RA.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="reveal" style="transition-delay:.2s">
+        <div class="ra-diagram">
+          <div class="diag-title">Du site archéologique à l'expérience RA</div>
+          <div class="diag-layers">
+            <div class="diag-layer dl-ruines">
+              <div class="dl-num">①</div>
+              <div class="dl-body">
+                <h4>Les ruines sur le terrain</h4>
+                <p>Vestiges, fragments épars, blocs effondrés — la matière première de l'anastylose.</p>
+              </div>
+            </div>
+            <div class="diag-arrow">↓</div>
+            <div class="diag-layer dl-fouilles">
+              <div class="dl-num">②</div>
+              <div class="dl-body">
+                <h4>Fouilles & documentation</h4>
+                <p>Relevés, photos, catalogage de chaque fragment. L'anastylose commence par l'inventaire.</p>
+              </div>
+            </div>
+            <div class="diag-arrow">↓</div>
+            <div class="diag-layer dl-anastylose">
+              <div class="dl-num">③</div>
+              <div class="dl-body">
+                <h4>Anastylose physique</h4>
+                <p>Replacement des éléments originaux, complétés par des matériaux modernes distincts.</p>
+              </div>
+            </div>
+            <div class="diag-arrow">↓</div>
+            <div class="diag-layer dl-numerique">
+              <div class="dl-num">④</div>
+              <div class="dl-body">
+                <h4>Anastylose numérique</h4>
+                <p>Numérisation 3D, modélisation, reconstitution virtuelle des parties manquantes.</p>
+              </div>
+            </div>
+            <div class="diag-arrow">↓</div>
+            <div class="diag-layer dl-ra">
+              <div class="dl-num">⑤</div>
+              <div class="dl-body">
+                <h4>Expérience en Réalité Augmentée</h4>
+                <p>Le modèle 3D superposé aux ruines réelles, visible sur smartphone — pour tous.</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- CHARTE VENISE -->
+<section class="charte">
+  <div class="charte-inner reveal">
+    <div class="sh-label" style="justify-content:center;color:var(--gold-mid)">Référence internationale</div>
+    <h2>La Charte de Venise (1964)</h2>
+    <p>Document fondateur de la conservation moderne du patrimoine, la Charte de Venise encadre l'anastylose dans son article 15. Elle pose trois piliers qui restent les principes directeurs de toute intervention sur un monument historique.</p>
+    <div class="charte-pillars">
+      <div class="cp">
+        <div class="cp-icon">🧱</div>
+        <h4>Authenticité des matériaux</h4>
+        <p>Les éléments de complément doivent « s'intégrer harmonieusement dans l'ensemble tout en se distinguant des parties originales ». L'authenticité prime toujours.</p>
+      </div>
+      <div class="cp">
+        <div class="cp-icon">🔬</div>
+        <h4>Fondement scientifique</h4>
+        <p>L'anastylose n'est possible que si « des fragments autentiques ont été retrouvés » et uniquement lorsqu'on dispose d'une documentation scientifique solide.</p>
+      </div>
+      <div class="cp">
+        <div class="cp-icon">📖</div>
+        <h4>Documentation obligatoire</h4>
+        <p>Toute opération de restauration doit faire l'objet de « rapports analytiques et critiques illustrés de dessins et photographies ». La trace écrite est aussi importante que l'acte.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- GLOSSAIRE -->
+<section class="glossaire">
+  <div class="wrap">
+    <div class="sh reveal">
+      <div class="sh-label">Vocabulaire</div>
+      <h2>Mots clés à retenir</h2>
+      <p>Quelques termes essentiels pour comprendre et parler du domaine.</p>
+    </div>
+    <div class="gloss-grid reveal">
+      <div class="gloss-item">
+        <div class="gloss-term">Anastylose</div>
+        <div class="gloss-def">Reconstruction d'un monument en ruines à partir de ses propres fragments originaux, replacés dans leur position d'origine. Les parties manquantes sont complétées par des matériaux modernes distinguables.</div>
+      </div>
+      <div class="gloss-item">
+        <div class="gloss-term">Réversibilité</div>
+        <div class="gloss-def">Principe imposant que toute intervention de restauration puisse être défaite sans endommager les éléments originaux — en cas d'erreur ou de découverte scientifique nouvelle.</div>
+      </div>
+      <div class="gloss-item">
+        <div class="gloss-term">Photogrammétrie</div>
+        <div class="gloss-def">Technique qui consiste à assembler des centaines ou milliers de photographies sous différents angles pour reconstituer un modèle 3D précis d'un objet, d'une façade ou d'un site entier.</div>
+      </div>
+      <div class="gloss-item">
+        <div class="gloss-term">Lasergrammétrie</div>
+        <div class="gloss-def">Mesure par faisceau laser qui produit un nuage de points 3D ultra-précis d'un objet ou d'un bâtiment — utilisée pour documenter des monuments fragiles ou inaccessibles.</div>
+      </div>
+      <div class="gloss-item">
+        <div class="gloss-term">Anastylose numérique</div>
+        <div class="gloss-def">Reconstitution virtuelle d'un monument à partir de données numériques (nuages de points, modèles 3D), permettant de tester des hypothèses et de diffuser le résultat en RA ou VR sans toucher aux originaux.</div>
+      </div>
+      <div class="gloss-item">
+        <div class="gloss-term">Charte de Venise (1964)</div>
+        <div class="gloss-def">Document international de référence sur la conservation et la restauration des monuments et des sites. Ses 16 articles encadrent l'anastylose, la documentation et le recours aux matériaux modernes.</div>
+      </div>
+      <div class="gloss-item">
+        <div class="gloss-term">Reconstitution hypothétique</div>
+        <div class="gloss-def">Reconstruction d'une partie d'un monument pour laquelle aucun fragment original n'a été retrouvé. Doit être clairement identifiée comme telle, visuellement et documentairement.</div>
+      </div>
+      <div class="gloss-item">
+        <div class="gloss-term">In situ</div>
+        <div class="gloss-def">Expression latine signifiant « sur place ». Une anastylose in situ se réalise directement sur le site d'origine du monument, par opposition à une reconstitution en musée ou en atelier.</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div class="wrap">
+    <div class="footer-inner">
+      <div class="footer-brand">🏛️ Patrimoine en Réalité Augmentée</div>
+      <nav class="footer-nav">
+        <a href="site_patrimoine_ra_v2.html">← Retour au guide</a>
+        <a href="site_patrimoine_ra_v2.html#cest-quoi">La RA</a>
+        <a href="site_patrimoine_ra_v2.html#historypin">Historypin</a>
+        <a href="site_patrimoine_ra_v2.html#outils">Outils</a>
+        <a href="site_patrimoine_ra_v2.html#ressources">Ressources</a>
+      </nav>
+    </div>
+    <p class="footer-copy">Page dédiée à l'anastylose — Support de médiation numérique — Médiathèque · Animation "Patrimoine en Réalité Augmentée"</p>
+  </div>
+</footer>
+
+<script>
+const obs=new IntersectionObserver(entries=>{
+  entries.forEach(e=>{if(e.isIntersecting)e.target.classList.add('visible')});
+},{threshold:.08,rootMargin:'0px 0px -40px 0px'});
+document.querySelectorAll('.reveal').forEach(el=>obs.observe(el));
+</script>
+</body>
+</html>
