@@ -1,0 +1,249 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Étape II — Poème sous contrainte · Co-écriture avec l'IA</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400;1,700&family=DM+Mono:wght@300;400;500&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+:root {
+  --ink: #1a1208; --paper: #f7f3ec; --paper2: #efe9dc;
+  --gold: #b8860b; --gold-light: #e8c84a; --muted: #6b6050; --accent: #c9a84c;
+  --step-bg: #0f3d2e; --step-accent: #4caf8a; --step-light: #d4ede7; --step-text: #8ed8bc;
+}
+html { scroll-behavior: smooth; }
+body { background: var(--paper); color: var(--ink); font-family: 'DM Sans', sans-serif; font-weight: 300; line-height: 1.7; overflow-x: hidden; }
+
+.topnav { position: fixed; top: 0; left: 0; right: 0; z-index: 200; display: flex; align-items: center; justify-content: space-between; padding: 1.1rem 4vw; background: var(--ink); border-bottom: 1px solid #2e2418; }
+.topnav-back { font-family: 'DM Mono', monospace; font-size: 0.68rem; letter-spacing: 0.15em; text-transform: uppercase; color: var(--gold-light); text-decoration: none; transition: color 0.2s; }
+.topnav-back:hover { color: white; }
+.topnav-steps { display: flex; gap: 0.4rem; }
+.step-pill { font-family: 'DM Mono', monospace; font-size: 0.62rem; letter-spacing: 0.08em; padding: 0.3rem 0.7rem; border-radius: 999px; text-decoration: none; border: 1px solid #3a3228; color: #6b6050; transition: all 0.2s; }
+.step-pill:hover { border-color: var(--gold); color: var(--gold-light); }
+.step-pill.current { border-color: var(--step-accent); color: var(--step-text); background: rgba(76,175,138,0.1); }
+
+.hero-band { margin-top: 3.5rem; min-height: 50vh; background: var(--step-bg); display: grid; grid-template-columns: 1fr 1fr; position: relative; overflow: hidden; }
+.hero-band::before { content: 'II'; font-family: 'Playfair Display', serif; font-size: 22vw; font-weight: 700; color: rgba(255,255,255,0.04); position: absolute; right: -2vw; top: 50%; transform: translateY(-50%); line-height: 1; pointer-events: none; user-select: none; }
+.hero-left { padding: 5rem 4rem 5rem 6vw; display: flex; flex-direction: column; justify-content: center; }
+.eyebrow { font-family: 'DM Mono', monospace; font-size: 0.65rem; letter-spacing: 0.3em; text-transform: uppercase; color: var(--step-accent); margin-bottom: 1.5rem; }
+.hero-title { font-family: 'Playfair Display', serif; font-size: clamp(2.2rem, 4vw, 3.5rem); font-weight: 700; line-height: 1.1; color: #e8f5f0; margin-bottom: 1rem; }
+.hero-title em { font-style: italic; color: var(--gold-light); }
+.hero-meta { display: flex; align-items: center; gap: 0.75rem; margin-top: 1.75rem; flex-wrap: wrap; }
+.meta-chip { font-family: 'DM Mono', monospace; font-size: 0.62rem; letter-spacing: 0.08em; padding: 0.35rem 0.9rem; border: 1px solid rgba(76,175,138,0.35); color: var(--step-text); border-radius: 2px; }
+.hero-right { padding: 5rem 6vw 5rem 4rem; display: flex; flex-direction: column; justify-content: center; border-left: 1px solid rgba(76,175,138,0.15); }
+.hero-lead { font-family: 'Playfair Display', serif; font-size: 1.1rem; font-style: italic; color: #7ec4a8; line-height: 1.9; }
+
+.content { max-width: 1080px; margin: 0 auto; padding: 6rem 6vw; }
+.block-label { font-family: 'DM Mono', monospace; font-size: 0.63rem; letter-spacing: 0.3em; text-transform: uppercase; color: var(--gold); margin-bottom: 1.5rem; display: flex; align-items: center; gap: 1rem; }
+.block-label::after { content: ''; flex: 1; height: 1px; background: var(--accent); opacity: 0.3; max-width: 140px; }
+h2.block-title { font-family: 'Playfair Display', serif; font-size: clamp(1.8rem, 3vw, 2.5rem); font-weight: 700; margin-bottom: 1.5rem; line-height: 1.2; }
+.two-col { display: grid; grid-template-columns: 1fr 1fr; gap: 4rem; align-items: start; margin-bottom: 5rem; }
+.one-col { margin-bottom: 5rem; }
+p.body-text { font-size: 0.98rem; color: var(--muted); line-height: 1.85; margin-bottom: 1rem; }
+
+/* CONTRAINTES CARDS */
+.contrainte-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 1.25rem; margin-top: 2rem; }
+.contrainte-card { border: 1px solid #d4c9b8; padding: 2rem; position: relative; background: var(--paper2); transition: border-color 0.3s, transform 0.2s; }
+.contrainte-card:hover { border-color: var(--step-accent); transform: translateY(-2px); }
+.contrainte-card::before { content: ''; position: absolute; top: 0; left: 0; width: 0; height: 3px; background: var(--step-accent); transition: width 0.4s ease; }
+.contrainte-card:hover::before { width: 100%; }
+.contrainte-name { font-family: 'DM Mono', monospace; font-size: 0.63rem; letter-spacing: 0.15em; text-transform: uppercase; color: var(--step-accent); margin-bottom: 0.6rem; }
+.contrainte-card h3 { font-family: 'Playfair Display', serif; font-size: 1.1rem; font-weight: 700; margin-bottom: 0.75rem; }
+.contrainte-card p { font-size: 0.87rem; color: var(--muted); line-height: 1.7; }
+.contrainte-example { margin-top: 1.25rem; background: var(--ink); padding: 0.9rem 1.2rem; font-family: 'DM Mono', monospace; font-size: 0.72rem; color: #8ed8bc; line-height: 1.5; }
+.contrainte-example::before { content: 'prompt →  '; color: var(--gold); }
+
+/* POEM DISPLAY */
+.poem-display { background: var(--ink); padding: 3rem; position: relative; }
+.poem-display::before { content: 'poème co-écrit · exemple'; font-family: 'DM Mono', monospace; font-size: 0.6rem; letter-spacing: 0.2em; text-transform: uppercase; color: var(--gold); display: block; margin-bottom: 2rem; }
+.poem-lines { font-family: 'Playfair Display', serif; font-style: italic; font-size: 1.1rem; color: #e8e0d4; line-height: 2.2; }
+.poem-lines .human { color: #f7f3ec; }
+.poem-lines .machine { color: #8ed8bc; }
+.poem-legend { margin-top: 1.5rem; display: flex; gap: 1.5rem; }
+.legend-item { display: flex; align-items: center; gap: 0.5rem; font-family: 'DM Mono', monospace; font-size: 0.62rem; letter-spacing: 0.08em; color: #6b6050; }
+.legend-dot { width: 8px; height: 8px; border-radius: 50%; }
+.legend-dot.h { background: #f7f3ec; }
+.legend-dot.m { background: #8ed8bc; }
+
+/* TIMER */
+.timer-bar { display: flex; align-items: center; gap: 2rem; background: var(--ink); padding: 1.5rem 2rem; margin: 4rem 0; flex-wrap: wrap; }
+.timer-label { font-family: 'DM Mono', monospace; font-size: 0.63rem; letter-spacing: 0.2em; text-transform: uppercase; color: var(--gold); }
+.timer-display { font-family: 'Playfair Display', serif; font-size: 2rem; font-weight: 700; color: #f7f3ec; }
+.timer-desc { font-size: 0.83rem; color: #6b6050; }
+.timer-segments { display: flex; gap: 0.25rem; flex: 1; min-width: 180px; }
+.timer-seg { height: 5px; border-radius: 3px; background: #3a3228; flex: 1; }
+.timer-seg.on { background: var(--step-accent); }
+
+/* STEPS */
+.steps-list { display: flex; flex-direction: column; gap: 1px; margin-top: 2rem; }
+.step-row { display: grid; grid-template-columns: 4rem 1fr; gap: 1.5rem; align-items: start; background: var(--paper2); border: 1px solid #d4c9b8; padding: 1.5rem; margin-bottom: 0.75rem; transition: border-color 0.2s; }
+.step-row:hover { border-color: var(--step-accent); }
+.step-num-big { font-family: 'Playfair Display', serif; font-size: 2.5rem; font-weight: 700; color: #d4c9b8; line-height: 1; padding-top: 0.2rem; }
+.step-content h3 { font-family: 'Playfair Display', serif; font-size: 1.05rem; font-weight: 700; margin-bottom: 0.5rem; }
+.step-content p { font-size: 0.87rem; color: var(--muted); line-height: 1.7; }
+.step-time { font-family: 'DM Mono', monospace; font-size: 0.63rem; color: var(--step-accent); margin-top: 0.5rem; letter-spacing: 0.08em; }
+
+.bottom-nav { display: flex; justify-content: space-between; align-items: center; padding: 2.5rem 6vw; background: var(--ink); flex-wrap: wrap; gap: 1.5rem; }
+.bnav-link { font-family: 'DM Mono', monospace; font-size: 0.68rem; letter-spacing: 0.15em; text-transform: uppercase; text-decoration: none; padding: 0.75rem 1.5rem; border: 1px solid #3a3228; color: #6b6050; transition: all 0.2s; }
+.bnav-next { border-color: var(--gold); color: var(--gold-light); }
+.bnav-next:hover { background: var(--gold); color: var(--ink); }
+.bnav-link:hover:not(.bnav-next) { border-color: #6b6050; color: #a89880; }
+.bnav-center { font-family: 'Playfair Display', serif; font-style: italic; font-size: 0.88rem; color: #4a3e30; }
+
+.reveal { opacity: 0; transform: translateY(1.5rem); transition: opacity 0.6s ease, transform 0.6s ease; }
+.reveal.visible { opacity: 1; transform: translateY(0); }
+
+@media (max-width: 800px) {
+  .hero-band { grid-template-columns: 1fr; }
+  .hero-right { border-left: none; border-top: 1px solid rgba(76,175,138,0.12); padding: 2rem 6vw; }
+  .two-col, .contrainte-grid { grid-template-columns: 1fr; gap: 2rem; }
+  .topnav-steps { display: none; }
+}
+</style>
+</head>
+<body>
+
+<nav class="topnav">
+  <a class="topnav-back" href="co-ecriture-ia.html">← Programme</a>
+  <div class="topnav-steps">
+    <a class="step-pill" href="atelier-I.html">I · Ouverture</a>
+    <span class="step-pill current">II · Poème</span>
+    <a class="step-pill" href="atelier-III.html">III · Personnage</a>
+    <a class="step-pill" href="atelier-IV.html">IV · Débat</a>
+  </div>
+</nav>
+
+<header class="hero-band">
+  <div class="hero-left">
+    <p class="eyebrow">Étape II · 35 minutes</p>
+    <h1 class="hero-title">Le poème<br>sous <em>contrainte</em></h1>
+    <div class="hero-meta">
+      <span class="meta-chip">Écriture oulipienne</span>
+      <span class="meta-chip">Pratique individuelle</span>
+      <span class="meta-chip">Mise en commun</span>
+    </div>
+  </div>
+  <div class="hero-right">
+    <p class="hero-lead">La contrainte n'est pas une limite : c'est un moteur. L'Oulipo le savait. L'IA le pratique sans le savoir. Cette étape explore la tension productive entre règle et liberté, entre l'intention du poète et la logique du modèle.</p>
+  </div>
+</header>
+
+<main class="content">
+
+  <div class="one-col reveal">
+    <p class="block-label">Contexte</p>
+    <h2 class="block-title">L'Oulipo rencontre le LLM</h2>
+    <div class="two-col" style="margin-bottom:0;">
+      <div>
+        <p class="body-text">Raymond Queneau, Georges Perec, Italo Calvino — l'Oulipo a fait de la contrainte formelle un acte créatif radical. Le lipogramme, le palindrome, le texte à n+7 : des règles qui forcent la langue à dire autrement.</p>
+        <p class="body-text">Un LLM opère lui aussi sous contraintes — statistiques, contextuelles, sémantiques. Combiner les deux approches produit des textes que ni l'humain seul ni la machine seule n'auraient écrits.</p>
+      </div>
+      <div class="poem-display">
+        <div class="poem-lines">
+          <span class="human">La mer ce soir ressemble à une phrase</span><br>
+          <span class="machine">que personne n'a terminé d'écrire encore,</span><br>
+          <span class="human">les vagues sont des virgules, le sable</span><br>
+          <span class="machine">attend le point final qui ne viendra pas.</span><br>
+          <span class="human">J'aurais voulu te dire quelque chose</span><br>
+          <span class="machine">mais la langue aussi fait des vagues ce soir.</span>
+        </div>
+        <div class="poem-legend">
+          <span class="legend-item"><span class="legend-dot h"></span>auteur humain</span>
+          <span class="legend-item"><span class="legend-dot m"></span>continuation IA</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="timer-bar reveal">
+    <div><p class="timer-label">Déroulé</p><p class="timer-display">35 min</p></div>
+    <div class="timer-segments">
+      <div class="timer-seg on"></div><div class="timer-seg on"></div><div class="timer-seg on"></div>
+      <div class="timer-seg on"></div><div class="timer-seg on"></div><div class="timer-seg on"></div>
+      <div class="timer-seg"></div>
+    </div>
+    <p class="timer-desc">10 min cadrage · 20 min écriture · 5 min partage</p>
+  </div>
+
+  <div class="one-col reveal">
+    <p class="block-label">Exercices proposés</p>
+    <h2 class="block-title">Quatre contraintes à explorer</h2>
+    <div class="contrainte-grid">
+      <div class="contrainte-card">
+        <p class="contrainte-name">Contrainte 01</p>
+        <h3>La continuation alternée</h3>
+        <p>L'humain écrit un vers, l'IA continue, l'humain reprend. Strict tour par tour. Observer comment chacun réoriente l'autre, tire le texte vers son propre horizon.</p>
+        <div class="contrainte-example">Continue ce vers en maintenant la métaphore aquatique, puis je reprendrai</div>
+      </div>
+      <div class="contrainte-card">
+        <p class="contrainte-name">Contrainte 02</p>
+        <h3>Le lipogramme augmenté</h3>
+        <p>Écrire un poème sans utiliser la lettre « e ». Demander à l'IA de faire de même. Comparer les stratégies : l'humain contourne, la machine recalcule.</p>
+        <div class="contrainte-example">Écris 6 vers sans utiliser la lettre e. Sujet : une lettre non envoyée.</div>
+      </div>
+      <div class="contrainte-card">
+        <p class="contrainte-name">Contrainte 03</p>
+        <h3>Le style-transfert</h3>
+        <p>L'humain écrit en prose brute, sans style. L'IA réécrit en imitant un·e auteur·ice précis·e. L'humain réécrit à nouveau à partir de cette version. Trois couches.</p>
+        <div class="contrainte-example">Réécris ce texte dans le style de Marguerite Yourcenar, période Mémoires d'Hadrien.</div>
+      </div>
+      <div class="contrainte-card">
+        <p class="contrainte-name">Contrainte 04</p>
+        <h3>Le poème impossible</h3>
+        <p>Demander à l'IA de générer quelque chose qu'elle ne peut pas réussir : l'indicible, l'incohérent, le silence. Observer comment elle gère l'impossibilité.</p>
+        <div class="contrainte-example">Écris un poème qui dit exactement ce qui ne peut pas être dit. Pas de métaphore.</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="two-col reveal">
+    <div>
+      <p class="block-label">Déroulé détaillé</p>
+      <h2 class="block-title">Phase par phase</h2>
+      <p class="body-text">Chaque participant choisit librement sa contrainte. L'IA est un partenaire, pas un juge. L'objectif est de produire quelque chose d'inattendu — pas de beau.</p>
+    </div>
+    <div>
+      <div class="step-row">
+        <div class="step-num-big">1</div>
+        <div class="step-content">
+          <h3>Présentation des contraintes</h3>
+          <p>L'animateur présente les quatre exercices avec des exemples. Discussion rapide sur les résistances éventuelles.</p>
+          <p class="step-time">→ 10 minutes</p>
+        </div>
+      </div>
+      <div class="step-row">
+        <div class="step-num-big">2</div>
+        <div class="step-content">
+          <h3>Écriture autonome</h3>
+          <p>Chaque participant travaille seul avec l'IA de son choix. Pas de résultat imposé. On sauvegarde le dialogue complet, pas seulement le texte final.</p>
+          <p class="step-time">→ 20 minutes</p>
+        </div>
+      </div>
+      <div class="step-row">
+        <div class="step-num-big">3</div>
+        <div class="step-content">
+          <h3>Lecture et échange</h3>
+          <p>Deux ou trois volontaires partagent leur texte et racontent le processus. Qu'a apporté la machine ? Qu'a-t-elle détruit ?</p>
+          <p class="step-time">→ 5 minutes</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</main>
+
+<nav class="bottom-nav">
+  <a class="bnav-link" href="atelier-I.html">← Étape I : Ouverture</a>
+  <p class="bnav-center">Étape II / IV</p>
+  <a class="bnav-link bnav-next" href="atelier-III.html">Étape III : Personnage →</a>
+</nav>
+
+<script>
+const obs = new IntersectionObserver(entries => {
+  entries.forEach(e => { if (e.isIntersecting) { e.target.classList.add('visible'); obs.unobserve(e.target); } });
+}, { threshold: 0.08 });
+document.querySelectorAll('.reveal').forEach(r => obs.observe(r));
+</script>
+</body>
+</html>

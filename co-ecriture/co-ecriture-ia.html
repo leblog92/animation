@@ -1,0 +1,818 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Co-écriture avec l'IA</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400;1,700&family=DM+Mono:wght@300;400;500&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --ink: #1a1208;
+    --paper: #f7f3ec;
+    --paper2: #efe9dc;
+    --gold: #b8860b;
+    --gold-light: #e8c84a;
+    --rust: #8b3a1a;
+    --teal: #1d6a5a;
+    --teal-light: #d4ede7;
+    --muted: #6b6050;
+    --accent-line: #c9a84c;
+  }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    background: var(--paper);
+    color: var(--ink);
+    font-family: 'DM Sans', sans-serif;
+    font-weight: 300;
+    line-height: 1.7;
+    overflow-x: hidden;
+  }
+
+  /* HERO */
+  .hero {
+    min-height: 100vh;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .hero-left {
+    background: var(--ink);
+    padding: 5rem 4rem 5rem 5rem;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    position: relative;
+  }
+
+  .hero-left::after {
+    content: '';
+    position: absolute;
+    top: 0; right: -2px; bottom: 0;
+    width: 4px;
+    background: var(--accent-line);
+  }
+
+  .eyebrow {
+    font-family: 'DM Mono', monospace;
+    font-size: 0.7rem;
+    font-weight: 400;
+    letter-spacing: 0.25em;
+    text-transform: uppercase;
+    color: var(--gold-light);
+    margin-bottom: 2rem;
+  }
+
+  .hero-title {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(2.8rem, 5vw, 4.5rem);
+    font-weight: 700;
+    line-height: 1.1;
+    color: #f7f3ec;
+    margin-bottom: 0.5rem;
+  }
+
+  .hero-title em {
+    font-style: italic;
+    color: var(--gold-light);
+  }
+
+  .hero-subtitle {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(1rem, 1.8vw, 1.4rem);
+    font-style: italic;
+    font-weight: 400;
+    color: #a89880;
+    margin-top: 1rem;
+    margin-bottom: 3rem;
+    line-height: 1.5;
+  }
+
+  .hero-desc {
+    font-size: 1rem;
+    color: #c5b9a8;
+    line-height: 1.8;
+    max-width: 36ch;
+    border-left: 2px solid var(--accent-line);
+    padding-left: 1.25rem;
+  }
+
+  .hero-right {
+    background: var(--paper2);
+    padding: 5rem 4rem 5rem 5rem;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    position: relative;
+  }
+
+  .hero-right::before {
+    content: '✦';
+    font-size: 6rem;
+    color: var(--paper);
+    position: absolute;
+    top: 3rem; right: 3rem;
+    opacity: 0.5;
+    font-family: serif;
+  }
+
+  .typewriter-box {
+    background: var(--ink);
+    border-radius: 2px;
+    padding: 2rem 2.5rem;
+    margin-bottom: 2rem;
+    position: relative;
+  }
+
+  .typewriter-box::before {
+    content: '— fragment généré —';
+    font-family: 'DM Mono', monospace;
+    font-size: 0.65rem;
+    color: var(--gold);
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    display: block;
+    margin-bottom: 1rem;
+  }
+
+  .typewriter-text {
+    font-family: 'Playfair Display', serif;
+    font-style: italic;
+    font-size: 1.05rem;
+    color: #e8e0d4;
+    line-height: 1.9;
+  }
+
+  .typewriter-text .cursor {
+    display: inline-block;
+    width: 2px;
+    height: 1.1em;
+    background: var(--gold-light);
+    vertical-align: text-bottom;
+    animation: blink 1s step-end infinite;
+  }
+
+  @keyframes blink { 0%,100%{opacity:1} 50%{opacity:0} }
+
+  .tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+    margin-top: 2rem;
+  }
+
+  .tag {
+    font-family: 'DM Mono', monospace;
+    font-size: 0.7rem;
+    letter-spacing: 0.08em;
+    padding: 0.35rem 0.9rem;
+    border: 1px solid var(--muted);
+    border-radius: 999px;
+    color: var(--muted);
+    text-transform: lowercase;
+  }
+
+  /* NAV DOTS */
+  .nav-dots {
+    position: fixed;
+    right: 2rem;
+    top: 50%;
+    transform: translateY(-50%);
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+    z-index: 100;
+  }
+
+  .nav-dot {
+    width: 8px; height: 8px;
+    border-radius: 50%;
+    background: var(--muted);
+    opacity: 0.4;
+    cursor: pointer;
+    transition: opacity 0.3s, transform 0.3s;
+  }
+
+  .nav-dot.active { opacity: 1; background: var(--gold); transform: scale(1.4); }
+
+  /* SECTIONS */
+  section { padding: 7rem 6vw; }
+
+  .section-label {
+    font-family: 'DM Mono', monospace;
+    font-size: 0.65rem;
+    letter-spacing: 0.3em;
+    text-transform: uppercase;
+    color: var(--gold);
+    margin-bottom: 3rem;
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+  }
+
+  .section-label::after {
+    content: '';
+    flex: 1;
+    height: 1px;
+    background: var(--accent-line);
+    opacity: 0.4;
+    max-width: 200px;
+  }
+
+  h2.section-title {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(2rem, 4vw, 3.2rem);
+    font-weight: 700;
+    line-height: 1.15;
+    margin-bottom: 1.5rem;
+  }
+
+  /* SPECTRUM SECTION */
+  .spectrum-section { background: var(--paper); }
+
+  .spectrum-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 0;
+    margin-top: 4rem;
+    border: 1px solid #d4c9b8;
+  }
+
+  .spectrum-card {
+    padding: 2.5rem;
+    border-right: 1px solid #d4c9b8;
+    position: relative;
+    transition: background 0.3s;
+  }
+
+  .spectrum-card:last-child { border-right: none; }
+
+  .spectrum-card:hover { background: var(--paper2); }
+
+  .spectrum-number {
+    font-family: 'Playfair Display', serif;
+    font-size: 4rem;
+    font-weight: 700;
+    color: var(--paper2);
+    position: absolute;
+    top: 1rem; right: 1.5rem;
+    line-height: 1;
+    user-select: none;
+  }
+
+  .spectrum-icon {
+    font-size: 1.8rem;
+    margin-bottom: 1.5rem;
+    display: block;
+  }
+
+  .spectrum-card h3 {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.2rem;
+    font-weight: 700;
+    margin-bottom: 0.75rem;
+    font-style: italic;
+  }
+
+  .spectrum-card p {
+    font-size: 0.9rem;
+    color: var(--muted);
+    line-height: 1.7;
+  }
+
+  .spectrum-card .form-badge {
+    display: inline-block;
+    margin-top: 1.25rem;
+    font-family: 'DM Mono', monospace;
+    font-size: 0.65rem;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--teal);
+    border-bottom: 1px solid var(--teal);
+    padding-bottom: 2px;
+  }
+
+  /* TOOLS SECTION */
+  .tools-section { background: var(--ink); color: #e8e0d4; }
+
+  .tools-section .section-label { color: var(--gold-light); }
+  .tools-section h2.section-title { color: #f7f3ec; }
+
+  .tools-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 1.5rem;
+    margin-top: 4rem;
+  }
+
+  .tool-card {
+    border: 1px solid #3a3228;
+    padding: 2rem;
+    position: relative;
+    overflow: hidden;
+    transition: border-color 0.3s;
+  }
+
+  .tool-card::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0;
+    width: 3px;
+    height: 0;
+    background: var(--gold);
+    transition: height 0.4s ease;
+  }
+
+  .tool-card:hover::before { height: 100%; }
+  .tool-card:hover { border-color: #5a4e3c; }
+
+  .tool-name {
+    font-family: 'DM Mono', monospace;
+    font-size: 0.75rem;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--gold-light);
+    margin-bottom: 0.75rem;
+  }
+
+  .tool-card h3 {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.3rem;
+    font-weight: 700;
+    color: #f7f3ec;
+    margin-bottom: 0.75rem;
+  }
+
+  .tool-card p { font-size: 0.9rem; color: #a89880; line-height: 1.7; }
+
+  .tool-use {
+    margin-top: 1.25rem;
+    padding-top: 1rem;
+    border-top: 1px solid #3a3228;
+    font-size: 0.8rem;
+    color: #6b6050;
+    font-style: italic;
+  }
+
+  /* ETHICS SECTION */
+  .ethics-section { background: var(--teal-light); }
+
+  .ethics-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 4rem;
+    margin-top: 4rem;
+    align-items: start;
+  }
+
+  .ethics-manifesto {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.3rem;
+    font-style: italic;
+    line-height: 1.9;
+    color: var(--ink);
+  }
+
+  .ethics-manifesto strong { font-style: normal; font-weight: 700; color: var(--teal); }
+
+  .ethics-questions { display: flex; flex-direction: column; gap: 1rem; }
+
+  .ethics-q {
+    background: white;
+    border-left: 3px solid var(--teal);
+    padding: 1.25rem 1.5rem;
+    font-size: 0.95rem;
+    color: var(--ink);
+    position: relative;
+    cursor: default;
+    transition: transform 0.2s;
+  }
+
+  .ethics-q:hover { transform: translateX(4px); }
+
+  .ethics-q::before {
+    content: '?';
+    font-family: 'Playfair Display', serif;
+    font-size: 2rem;
+    font-style: italic;
+    color: var(--teal);
+    opacity: 0.2;
+    position: absolute;
+    right: 1rem;
+    top: 50%;
+    transform: translateY(-50%);
+  }
+
+  /* WORKSHOP SECTION */
+  .workshop-section { background: var(--paper2); }
+
+  .workshop-timeline {
+    margin-top: 4rem;
+    position: relative;
+  }
+
+  .workshop-timeline::before {
+    content: '';
+    position: absolute;
+    left: 1.5rem;
+    top: 0; bottom: 0;
+    width: 1px;
+    background: var(--accent-line);
+    opacity: 0.5;
+  }
+
+  .timeline-item {
+    display: grid;
+    grid-template-columns: 3rem 1fr;
+    gap: 2rem;
+    margin-bottom: 3rem;
+    position: relative;
+  }
+
+  .timeline-dot {
+    width: 3rem; height: 3rem;
+    border-radius: 50%;
+    background: var(--ink);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: 'DM Mono', monospace;
+    font-size: 0.7rem;
+    color: var(--gold-light);
+    flex-shrink: 0;
+    position: relative;
+    z-index: 1;
+  }
+
+  .timeline-item a {
+    display: contents;
+    text-decoration: none;
+    color: inherit;
+  }
+
+  .timeline-content {
+    transition: transform 0.2s;
+    cursor: pointer;
+  }
+
+  .timeline-item:hover .timeline-content { transform: translateX(6px); }
+  .timeline-item:hover .timeline-dot { background: var(--gold); color: var(--ink); }
+
+  .timeline-content h3 {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.15rem;
+    font-weight: 700;
+    margin-bottom: 0.5rem;
+    padding-top: 0.6rem;
+  }
+
+  .timeline-content p { font-size: 0.9rem; color: var(--muted); }
+
+  .timeline-arrow {
+    font-family: 'DM Mono', monospace;
+    font-size: 0.65rem;
+    color: var(--gold);
+    letter-spacing: 0.1em;
+    margin-top: 0.5rem;
+    opacity: 0;
+    transition: opacity 0.2s;
+    display: block;
+  }
+  .timeline-item:hover .timeline-arrow { opacity: 1; }
+
+  .duration {
+    display: inline-block;
+    margin-top: 0.5rem;
+    font-family: 'DM Mono', monospace;
+    font-size: 0.65rem;
+    letter-spacing: 0.1em;
+    color: var(--gold);
+  }
+
+  .timeline-arrow {
+    display: inline-block;
+    margin-top: 0.75rem;
+    margin-left: 1rem;
+    font-family: 'DM Mono', monospace;
+    font-size: 0.65rem;
+    letter-spacing: 0.1em;
+    color: var(--teal);
+    border-bottom: 1px solid var(--teal);
+    opacity: 0;
+    transition: opacity 0.3s;
+  }
+
+  .timeline-item:hover .timeline-arrow { opacity: 1; }
+  .timeline-item a { text-decoration: none; color: inherit; }
+  .timeline-item { cursor: pointer; }
+  .timeline-dot a { text-decoration: none; }
+
+  /* FOOTER */
+  footer {
+    background: var(--ink);
+    padding: 4rem 6vw;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 2rem;
+  }
+
+  .footer-title {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.3rem;
+    font-style: italic;
+    color: #f7f3ec;
+  }
+
+  .footer-note {
+    font-family: 'DM Mono', monospace;
+    font-size: 0.7rem;
+    color: #6b6050;
+    letter-spacing: 0.1em;
+    text-align: right;
+    line-height: 1.8;
+  }
+
+  /* SCROLL REVEAL */
+  .reveal { opacity: 0; transform: translateY(2rem); transition: opacity 0.7s ease, transform 0.7s ease; }
+  .reveal.visible { opacity: 1; transform: translateY(0); }
+
+  /* RESPONSIVE */
+  @media (max-width: 900px) {
+    .hero { grid-template-columns: 1fr; }
+    .hero-left { padding: 4rem 2rem; min-height: 60vh; }
+    .hero-left::after { display: none; }
+    .hero-right { padding: 3rem 2rem; }
+    .hero-right::before { display: none; }
+    .spectrum-grid { grid-template-columns: 1fr; }
+    .spectrum-card { border-right: none; border-bottom: 1px solid #d4c9b8; }
+    .tools-grid { grid-template-columns: 1fr; }
+    .ethics-grid { grid-template-columns: 1fr; }
+    section { padding: 5rem 6vw; }
+    .nav-dots { display: none; }
+    footer { flex-direction: column; text-align: center; }
+    .footer-note { text-align: center; }
+  }
+</style>
+</head>
+<body>
+
+<!-- Nav dots -->
+<nav class="nav-dots" aria-label="Navigation par section">
+  <div class="nav-dot active" data-target="hero" title="Accueil"></div>
+  <div class="nav-dot" data-target="spectrum" title="Le spectre créatif"></div>
+  <div class="nav-dot" data-target="tools" title="Outils"></div>
+  <div class="nav-dot" data-target="ethics" title="Éthique"></div>
+  <div class="nav-dot" data-target="workshop" title="Atelier"></div>
+</nav>
+
+<!-- HERO -->
+<section class="hero" id="hero">
+  <div class="hero-left">
+    <p class="eyebrow">Exploration · Création · Réflexion</p>
+    <h1 class="hero-title">Co-écriture<br>avec <em>l'IA</em></h1>
+    <p class="hero-subtitle">Du poème génératif<br>au roman interactif</p>
+    <p class="hero-desc">Explorer les outils d'IA créative pour l'écriture, tout en réfléchissant à leur usage éthique.</p>
+  </div>
+  <div class="hero-right">
+    <div class="typewriter-box">
+      <p class="typewriter-text" id="typewriter-text"></p>
+    </div>
+    <div class="tags">
+      <span class="tag">#poésie génératrice</span>
+      <span class="tag">#fiction interactive</span>
+      <span class="tag">#auteur augmenté</span>
+      <span class="tag">#éthique de la création</span>
+      <span class="tag">#prompt comme écriture</span>
+    </div>
+  </div>
+</section>
+
+<!-- SPECTRE -->
+<section class="spectrum-section" id="spectrum">
+  <p class="section-label reveal">Le spectre créatif</p>
+  <h2 class="section-title reveal">De la suggestion<br>à la co-narration</h2>
+  <p class="reveal" style="max-width: 55ch; color: var(--muted);">L'IA n'est pas un outil unique. C'est un continuum de postures créatives, du simple coup de pouce stylistique jusqu'à la génération autonome de récits entiers.</p>
+
+  <div class="spectrum-grid reveal">
+    <div class="spectrum-card">
+      <span class="spectrum-number">01</span>
+      <span class="spectrum-icon">✦</span>
+      <h3>Le poème génératif</h3>
+      <p>Contraintes formelles, aléatoire contrôlé, oulipisme computationnel. L'IA comme machine à contraintes et à surprises poétiques.</p>
+      <span class="form-badge">forme courte · vers libre · haïku</span>
+    </div>
+    <div class="spectrum-card">
+      <span class="spectrum-number">02</span>
+      <span class="spectrum-icon">◈</span>
+      <h3>L'écriture assistée</h3>
+      <p>Déblocages créatifs, suggestions de style, reformulations. L'auteur reste maître du sens, l'IA devient partenaire de langue.</p>
+      <span class="form-badge">nouvelle · essai · autobiographie</span>
+    </div>
+    <div class="spectrum-card">
+      <span class="spectrum-number">03</span>
+      <span class="spectrum-icon">⟡</span>
+      <h3>Le roman interactif</h3>
+      <p>Narrations embranchées, personnages adaptatifs, mondes réactifs. La fiction comme dialogue permanent entre lecteur, auteur et machine.</p>
+      <span class="form-badge">récit arborescent · jeu narratif</span>
+    </div>
+  </div>
+</section>
+
+<!-- OUTILS -->
+<section class="tools-section" id="tools">
+  <p class="section-label reveal">Boîte à outils</p>
+  <h2 class="section-title reveal">Les instruments<br>de la création augmentée</h2>
+
+  <div class="tools-grid reveal">
+    <div class="tool-card">
+      <p class="tool-name">Génération de texte</p>
+      <h3>Grands modèles de langage</h3>
+      <p>Claude, GPT-4, Mistral… Ces modèles comprennent le contexte, imitent des styles, génèrent des variations infinies à partir d'une intention simple.</p>
+      <p class="tool-use">Usage typique : « Réécris ce paragraphe dans le style de Marguerite Duras, en cinq versions contrastées. »</p>
+    </div>
+    <div class="tool-card">
+      <p class="tool-name">Prompt engineering</p>
+      <h3>L'art du cadrage</h3>
+      <p>Le prompt n'est pas une commande, c'est une écriture en soi. Contraintes, exemples, rôles, tons : chaque choix façonne l'espace de possibilités.</p>
+      <p class="tool-use">Usage typique : Construire un prompt-personnage pour tenir un narrateur cohérent sur 30 chapitres.</p>
+    </div>
+    <div class="tool-card">
+      <p class="tool-name">Narration interactive</p>
+      <h3>Twine, Ink & GPT</h3>
+      <p>Combiner des moteurs de fiction interactive traditionnels avec des LLMs pour créer des récits dont les dialogues s'adaptent en temps réel.</p>
+      <p class="tool-use">Usage typique : Un roman policier où chaque suspect répond différemment selon les questions posées.</p>
+    </div>
+    <div class="tool-card">
+      <p class="tool-name">Analyse stylistique</p>
+      <h3>L'IA comme lecteur critique</h3>
+      <p>Détecter les répétitions, mesurer la densité rythmique, comparer des registres. L'IA comme premier lecteur attentif et infatigable.</p>
+      <p class="tool-use">Usage typique : « Identifie mes cinq tics d'écriture dans ce manuscript de 200 pages. »</p>
+    </div>
+  </div>
+</section>
+
+<!-- ÉTHIQUE -->
+<section class="ethics-section" id="ethics">
+  <p class="section-label reveal">Réflexion éthique</p>
+  <h2 class="section-title reveal">Ce que l'outil<br>ne dit pas</h2>
+
+  <div class="ethics-grid reveal">
+    <div class="ethics-manifesto">
+      L'IA écrit <strong>vite</strong>, mais pas nécessairement <strong>juste</strong>. Elle peut imiter mille styles, mais elle n'a pas vécu. Elle peut générer de la beauté, mais elle ne sait pas <strong>pourquoi</strong> quelque chose est beau.<br><br>
+      La question n'est pas « peut-on utiliser l'IA pour écrire ? » mais « <strong>que voulons-nous</strong> qu'une œuvre soit, et à qui appartient-elle ? »
+    </div>
+
+    <div class="ethics-questions">
+      <div class="ethics-q">Qui est l'auteur d'un texte co-écrit avec une IA entraînée sur des millions d'œuvres humaines sans consentement ?</div>
+      <div class="ethics-q">L'IA reproduit les biais de ses données. Quels imaginaires invisibles s'infiltrent dans nos fictions ?</div>
+      <div class="ethics-q">Quand l'assistance devient dépendance : comment garder sa voix propre dans un flux de suggestions ?</div>
+      <div class="ethics-q">La fluidité générée vaut-elle l'aspérité d'une écriture cherchée, hésitante, profondément humaine ?</div>
+    </div>
+  </div>
+</section>
+
+<!-- ATELIER -->
+<section class="workshop-section" id="workshop">
+  <p class="section-label reveal">Déroulement</p>
+  <h2 class="section-title reveal">Structure de l'atelier</h2>
+
+  <div class="workshop-timeline reveal">
+    <div class="timeline-item">
+      <a href="atelier-I.html"><div class="timeline-dot">I</div></a>
+      <a href="atelier-I.html" style="text-decoration:none;color:inherit;">
+        <div class="timeline-content">
+          <h3>Ouverture : qu'est-ce qu'écrire avec une machine ?</h3>
+          <p>Démonstration live de génération poétique. Discussion sur les intuitions et les résistances de chacun.</p>
+          <span class="duration">→ 20 min</span>
+          <span class="timeline-arrow">Ouvrir cette étape →</span>
+        </div>
+      </a>
+    </div>
+    <div class="timeline-item">
+      <a href="atelier-II.html"><div class="timeline-dot">II</div></a>
+      <a href="atelier-II.html" style="text-decoration:none;color:inherit;">
+        <div class="timeline-content">
+          <h3>Pratique : le poème sous contrainte</h3>
+          <p>Exercice d'écriture oulipienne augmentée. Chaque participant dialogue avec le modèle pour produire un texte qu'il n'aurait pas écrit seul.</p>
+          <span class="duration">→ 35 min</span>
+          <span class="timeline-arrow">Ouvrir cette étape →</span>
+        </div>
+      </a>
+    </div>
+    <div class="timeline-item">
+      <a href="atelier-III.html"><div class="timeline-dot">III</div></a>
+      <a href="atelier-III.html" style="text-decoration:none;color:inherit;">
+        <div class="timeline-content">
+          <h3>Exploration : construire un personnage vivant</h3>
+          <p>Création d'un narrateur cohérent à travers le prompt engineering. Expérience de fiction interactive à embranchements.</p>
+          <span class="duration">→ 35 min</span>
+          <span class="timeline-arrow">Ouvrir cette étape →</span>
+        </div>
+      </a>
+    </div>
+    <div class="timeline-item">
+      <a href="atelier-IV.html"><div class="timeline-dot">IV</div></a>
+      <a href="atelier-IV.html" style="text-decoration:none;color:inherit;">
+        <div class="timeline-content">
+          <h3>Débat : usage éthique et voix singulière</h3>
+          <p>Tour de table sur les questions d'autorship, de transparence, et de ce que chacun souhaite garder comme espace irréductiblement humain.</p>
+          <span class="duration">→ 30 min</span>
+          <span class="timeline-arrow">Ouvrir cette étape →</span>
+        </div>
+      </a>
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <p class="footer-title">« L'outil augmente. L'auteur choisit. »</p>
+  <p class="footer-note">
+    Co-écriture avec l'IA<br>
+    Du poème génératif au roman interactif<br>
+    Atelier de création & réflexion éthique
+  </p>
+</footer>
+
+<script>
+// Typewriter
+const phrases = [
+  "La nuit tombait sur la ville comme un manuscript abandonné, chaque réverbère une phrase inachevée…",
+  "Il existe des mots qui n'ont jamais été écrits. Peut-être que la machine les rêve à notre place.",
+  "Chapitre 7 — Le personnage se retourna. Elle savait que le lecteur existait, quelque part, de l'autre côté de la page.",
+];
+
+let phraseIndex = 0;
+let charIndex = 0;
+let isDeleting = false;
+const el = document.getElementById('typewriter-text');
+
+function type() {
+  const current = phrases[phraseIndex];
+  if (!isDeleting) {
+    charIndex++;
+    el.innerHTML = current.substring(0, charIndex) + '<span class="cursor"></span>';
+    if (charIndex === current.length) {
+      setTimeout(() => { isDeleting = true; requestAnimationFrame(loop); }, 2800);
+      return;
+    }
+  } else {
+    charIndex--;
+    el.innerHTML = current.substring(0, charIndex) + '<span class="cursor"></span>';
+    if (charIndex === 0) {
+      isDeleting = false;
+      phraseIndex = (phraseIndex + 1) % phrases.length;
+    }
+  }
+  setTimeout(() => requestAnimationFrame(loop), isDeleting ? 18 : 42);
+}
+
+function loop() { type(); }
+setTimeout(loop, 800);
+
+// Scroll reveal
+const reveals = document.querySelectorAll('.reveal');
+const observer = new IntersectionObserver((entries) => {
+  entries.forEach((e, i) => {
+    if (e.isIntersecting) {
+      setTimeout(() => e.target.classList.add('visible'), i * 100);
+      observer.unobserve(e.target);
+    }
+  });
+}, { threshold: 0.1 });
+reveals.forEach(r => observer.observe(r));
+
+// Nav dots
+const sections = ['hero', 'spectrum', 'tools', 'ethics', 'workshop'];
+const dots = document.querySelectorAll('.nav-dot');
+
+dots.forEach((dot, i) => {
+  dot.addEventListener('click', () => {
+    document.getElementById(sections[i]).scrollIntoView({ behavior: 'smooth' });
+  });
+});
+
+const sectionObserver = new IntersectionObserver((entries) => {
+  entries.forEach(e => {
+    if (e.isIntersecting) {
+      const idx = sections.indexOf(e.target.id);
+      dots.forEach(d => d.classList.remove('active'));
+      if (idx > -1) dots[idx].classList.add('active');
+    }
+  });
+}, { threshold: 0.4 });
+
+sections.forEach(id => {
+  const el = document.getElementById(id);
+  if (el) sectionObserver.observe(el);
+});
+</script>
+</body>
+</html>

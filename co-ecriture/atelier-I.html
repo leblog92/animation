@@ -1,0 +1,232 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Étape I — Ouverture · Co-écriture avec l'IA</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400;1,700&family=DM+Mono:wght@300;400;500&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+:root {
+  --ink: #1a1208; --paper: #f7f3ec; --paper2: #efe9dc;
+  --gold: #b8860b; --gold-light: #e8c84a; --muted: #6b6050; --accent: #c9a84c;
+  --step-bg: #2a1a4e; --step-accent: #9b7fd4; --step-light: #ede8f5; --step-text: #c8b4f8;
+}
+html { scroll-behavior: smooth; }
+body { background: var(--paper); color: var(--ink); font-family: 'DM Sans', sans-serif; font-weight: 300; line-height: 1.7; overflow-x: hidden; }
+
+.topnav { position: fixed; top: 0; left: 0; right: 0; z-index: 200; display: flex; align-items: center; justify-content: space-between; padding: 1.1rem 4vw; background: var(--ink); border-bottom: 1px solid #2e2418; }
+.topnav-back { font-family: 'DM Mono', monospace; font-size: 0.68rem; letter-spacing: 0.15em; text-transform: uppercase; color: var(--gold-light); text-decoration: none; transition: color 0.2s; }
+.topnav-back:hover { color: white; }
+.topnav-steps { display: flex; gap: 0.4rem; }
+.step-pill { font-family: 'DM Mono', monospace; font-size: 0.62rem; letter-spacing: 0.08em; padding: 0.3rem 0.7rem; border-radius: 999px; text-decoration: none; border: 1px solid #3a3228; color: #6b6050; transition: all 0.2s; }
+.step-pill:hover { border-color: var(--gold); color: var(--gold-light); }
+.step-pill.current { border-color: var(--step-accent); color: var(--step-text); background: rgba(155,127,212,0.12); }
+
+.hero-band { margin-top: 3.5rem; min-height: 50vh; background: var(--step-bg); display: grid; grid-template-columns: 1fr 1fr; position: relative; overflow: hidden; }
+.hero-band::before { content: 'I'; font-family: 'Playfair Display', serif; font-size: 28vw; font-weight: 700; color: rgba(255,255,255,0.04); position: absolute; right: -2vw; top: 50%; transform: translateY(-50%); line-height: 1; pointer-events: none; user-select: none; }
+.hero-left { padding: 5rem 4rem 5rem 6vw; display: flex; flex-direction: column; justify-content: center; }
+.eyebrow { font-family: 'DM Mono', monospace; font-size: 0.65rem; letter-spacing: 0.3em; text-transform: uppercase; color: var(--step-accent); margin-bottom: 1.5rem; }
+.hero-title { font-family: 'Playfair Display', serif; font-size: clamp(2.2rem, 4vw, 3.5rem); font-weight: 700; line-height: 1.1; color: #f0ecfa; margin-bottom: 1rem; }
+.hero-title em { font-style: italic; color: var(--gold-light); }
+.hero-meta { display: flex; align-items: center; gap: 0.75rem; margin-top: 1.75rem; flex-wrap: wrap; }
+.meta-chip { font-family: 'DM Mono', monospace; font-size: 0.62rem; letter-spacing: 0.08em; padding: 0.35rem 0.9rem; border: 1px solid rgba(200,180,255,0.3); color: var(--step-text); border-radius: 2px; }
+.hero-right { padding: 5rem 6vw 5rem 4rem; display: flex; flex-direction: column; justify-content: center; border-left: 1px solid rgba(200,180,255,0.12); }
+.hero-lead { font-family: 'Playfair Display', serif; font-size: 1.1rem; font-style: italic; color: #bbaee0; line-height: 1.9; }
+
+.content { max-width: 1080px; margin: 0 auto; padding: 6rem 6vw; }
+.block-label { font-family: 'DM Mono', monospace; font-size: 0.63rem; letter-spacing: 0.3em; text-transform: uppercase; color: var(--gold); margin-bottom: 1.5rem; display: flex; align-items: center; gap: 1rem; }
+.block-label::after { content: ''; flex: 1; height: 1px; background: var(--accent); opacity: 0.3; max-width: 140px; }
+h2.block-title { font-family: 'Playfair Display', serif; font-size: clamp(1.8rem, 3vw, 2.5rem); font-weight: 700; margin-bottom: 1.5rem; line-height: 1.2; }
+.two-col { display: grid; grid-template-columns: 1fr 1fr; gap: 4rem; align-items: start; margin-bottom: 5rem; }
+.one-col { margin-bottom: 5rem; }
+p.body-text { font-size: 0.98rem; color: var(--muted); line-height: 1.85; margin-bottom: 1rem; }
+
+.demo-box { background: var(--ink); border-radius: 2px; padding: 2rem 2.5rem; }
+.demo-box::before { content: attr(data-label); font-family: 'DM Mono', monospace; font-size: 0.6rem; letter-spacing: 0.2em; text-transform: uppercase; color: var(--gold); display: block; margin-bottom: 1.25rem; }
+.demo-text { font-family: 'Playfair Display', serif; font-style: italic; font-size: 1rem; color: #e8e0d4; line-height: 1.9; }
+.cursor { display: inline-block; width: 2px; height: 1.1em; background: var(--gold-light); vertical-align: text-bottom; animation: blink 1s step-end infinite; }
+@keyframes blink { 0%,100%{opacity:1} 50%{opacity:0} }
+.demo-prompt { background: rgba(155,127,212,0.08); border-left: 3px solid var(--step-accent); padding: 1rem 1.5rem; margin-top: 1.5rem; border-radius: 0 2px 2px 0; font-family: 'DM Mono', monospace; font-size: 0.78rem; color: var(--step-text); line-height: 1.6; }
+.demo-prompt span { color: #6b6050; font-size: 0.68rem; display: block; margin-bottom: 0.4rem; }
+
+.activity-cards { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1.25rem; margin-top: 2rem; }
+.activity-card { background: var(--paper2); border: 1px solid #d4c9b8; padding: 1.75rem; transition: transform 0.2s; }
+.activity-card:hover { transform: translateY(-3px); }
+.activity-num { font-family: 'DM Mono', monospace; font-size: 0.63rem; letter-spacing: 0.15em; color: var(--gold); margin-bottom: 0.75rem; }
+.activity-card h3 { font-family: 'Playfair Display', serif; font-size: 1.05rem; font-weight: 700; margin-bottom: 0.75rem; }
+.activity-card p { font-size: 0.87rem; color: var(--muted); line-height: 1.7; }
+
+.provoc-list { display: flex; flex-direction: column; gap: 1px; margin-top: 2rem; }
+.provoc-item { background: var(--step-light); border-left: 4px solid var(--step-bg); padding: 1.2rem 1.7rem; font-size: 0.97rem; color: var(--ink); transition: padding-left 0.2s; }
+.provoc-item:hover { padding-left: 2.2rem; }
+
+.timer-bar { display: flex; align-items: center; gap: 2rem; background: var(--ink); padding: 1.5rem 2rem; margin: 4rem 0; flex-wrap: wrap; }
+.timer-label { font-family: 'DM Mono', monospace; font-size: 0.63rem; letter-spacing: 0.2em; text-transform: uppercase; color: var(--gold); }
+.timer-display { font-family: 'Playfair Display', serif; font-size: 2rem; font-weight: 700; color: #f7f3ec; }
+.timer-desc { font-size: 0.83rem; color: #6b6050; }
+.timer-segments { display: flex; gap: 0.25rem; flex: 1; min-width: 180px; }
+.timer-seg { height: 5px; border-radius: 3px; background: #3a3228; flex: 1; }
+.timer-seg.on { background: var(--step-accent); }
+
+.bottom-nav { display: flex; justify-content: space-between; align-items: center; padding: 2.5rem 6vw; background: var(--ink); flex-wrap: wrap; gap: 1.5rem; }
+.bnav-link { font-family: 'DM Mono', monospace; font-size: 0.68rem; letter-spacing: 0.15em; text-transform: uppercase; text-decoration: none; padding: 0.75rem 1.5rem; border: 1px solid #3a3228; color: #6b6050; transition: all 0.2s; }
+.bnav-next { border-color: var(--gold); color: var(--gold-light); }
+.bnav-next:hover { background: var(--gold); color: var(--ink); }
+.bnav-link:hover:not(.bnav-next) { border-color: #6b6050; color: #a89880; }
+.bnav-center { font-family: 'Playfair Display', serif; font-style: italic; font-size: 0.88rem; color: #4a3e30; }
+
+.reveal { opacity: 0; transform: translateY(1.5rem); transition: opacity 0.6s ease, transform 0.6s ease; }
+.reveal.visible { opacity: 1; transform: translateY(0); }
+
+@media (max-width: 800px) {
+  .hero-band { grid-template-columns: 1fr; }
+  .hero-right { border-left: none; border-top: 1px solid rgba(200,180,255,0.12); padding: 2rem 6vw; }
+  .two-col { grid-template-columns: 1fr; gap: 2rem; }
+  .activity-cards { grid-template-columns: 1fr; }
+  .topnav-steps { display: none; }
+}
+</style>
+</head>
+<body>
+
+<nav class="topnav">
+  <a class="topnav-back" href="co-ecriture-ia.html">← Programme</a>
+  <div class="topnav-steps">
+    <span class="step-pill current">I · Ouverture</span>
+    <a class="step-pill" href="atelier-II.html">II · Poème</a>
+    <a class="step-pill" href="atelier-III.html">III · Personnage</a>
+    <a class="step-pill" href="atelier-IV.html">IV · Débat</a>
+  </div>
+</nav>
+
+<header class="hero-band">
+  <div class="hero-left">
+    <p class="eyebrow">Étape I · 20 minutes</p>
+    <h1 class="hero-title">Qu'est-ce qu'écrire<br>avec une <em>machine</em> ?</h1>
+    <div class="hero-meta">
+      <span class="meta-chip">Démonstration live</span>
+      <span class="meta-chip">Discussion ouverte</span>
+      <span class="meta-chip">Collectif</span>
+    </div>
+  </div>
+  <div class="hero-right">
+    <p class="hero-lead">Avant d'écrire avec l'IA, il faut se demander ce qu'écrire signifie — et ce qu'une machine peut en comprendre. Cette ouverture met en mouvement les intuitions, les peurs, et les curiosités de chacun.</p>
+  </div>
+</header>
+
+<main class="content">
+
+  <div class="one-col reveal">
+    <p class="block-label">Démonstration</p>
+    <h2 class="block-title">Voir la machine écrire, en direct</h2>
+    <div class="two-col" style="margin-bottom:0;">
+      <div>
+        <p class="body-text">L'animateur partage son écran et soumet un prompt simple à un LLM. Les participants observent la génération en temps réel — le token par token, la logique de continuation, les surprises.</p>
+        <p class="body-text">L'objectif n'est pas de convaincre, mais d'observer : comment la machine construit-elle du sens ? Où s'arrête l'imitation, où commence quelque chose d'autre ?</p>
+      </div>
+      <div class="demo-box" data-label="— texte généré en direct —">
+        <p class="demo-text" id="demo-live"></p>
+        <div class="demo-prompt">
+          <span>prompt de démonstration</span>
+          Écris le début d'une nouvelle dont le narrateur est une bibliothèque qui observe les lecteurs depuis des siècles. Ton mélancolique, précis, sans pathos.
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="timer-bar reveal">
+    <div><p class="timer-label">Déroulé</p><p class="timer-display">20 min</p></div>
+    <div class="timer-segments">
+      <div class="timer-seg on"></div><div class="timer-seg on"></div><div class="timer-seg on"></div>
+      <div class="timer-seg on"></div><div class="timer-seg"></div><div class="timer-seg"></div>
+    </div>
+    <p class="timer-desc">7 min observation · 6 min réactions · 7 min cadrage</p>
+  </div>
+
+  <div class="one-col reveal">
+    <p class="block-label">Activités</p>
+    <h2 class="block-title">Trois temps d'exploration</h2>
+    <div class="activity-cards">
+      <div class="activity-card">
+        <p class="activity-num">01 · 0–7 min</p>
+        <h3>Observation muette</h3>
+        <p>L'animateur génère trois textes avec des prompts contrastés (lyrique, factuel, absurde). Personne ne commente encore. On regarde, on note sur papier.</p>
+      </div>
+      <div class="activity-card">
+        <p class="activity-num">02 · 7–13 min</p>
+        <h3>Premières réactions</h3>
+        <p>Chaque participant dit un mot ou une phrase : ce qui les a surpris, dérangés ou intéressés. L'animateur note au tableau sans juger ni hiérarchiser.</p>
+      </div>
+      <div class="activity-card">
+        <p class="activity-num">03 · 13–20 min</p>
+        <h3>Cadrage collectif</h3>
+        <p>Mise en commun des représentations. Qu'attendait-on ? Qu'est-ce qui était différent ? On établit le vocabulaire partagé pour la suite de l'atelier.</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="two-col reveal">
+    <div>
+      <p class="block-label">Pour débloquer la parole</p>
+      <h2 class="block-title">Questions à lancer dans la salle</h2>
+      <p class="body-text">Ces questions ne cherchent pas de réponse définitive. Elles sont des amorces, des frictions productives pour entrer dans l'atelier avec une posture de curiosité critique.</p>
+    </div>
+    <div class="provoc-list">
+      <div class="provoc-item">Est-ce que ce texte vous a ému ? Pourquoi — ou pourquoi pas ?</div>
+      <div class="provoc-item">Si vous ne saviez pas qu'une IA l'avait écrit, l'auriez-vous deviné ?</div>
+      <div class="provoc-item">Qu'est-ce qu'un texte « réussi » ? La machine peut-elle atteindre ce critère ?</div>
+      <div class="provoc-item">Y a-t-il une différence entre imiter un style et écrire dans un style ?</div>
+      <div class="provoc-item">Écrire, c'est aussi rater, recommencer. La machine connaît-elle le ratage ?</div>
+    </div>
+  </div>
+
+  <div class="one-col reveal">
+    <p class="block-label">Ressources pour l'animateur</p>
+    <h2 class="block-title">Matériel & préparation</h2>
+    <div class="activity-cards">
+      <div class="activity-card">
+        <p class="activity-num">Technique</p>
+        <h3>Interface à préparer</h3>
+        <p>Claude.ai ou ChatGPT en mode partage d'écran. Prévoir 3 prompts testés à l'avance. Connexion stable impérative, navigateur en plein écran.</p>
+      </div>
+      <div class="activity-card">
+        <p class="activity-num">Matériel papier</p>
+        <h3>Une fiche par participant</h3>
+        <p>Feuille blanche et stylo. Durant l'observation muette, chacun note librement — mots, sensations, questions. Aucune structure imposée.</p>
+      </div>
+      <div class="activity-card">
+        <p class="activity-num">Référence optionnelle</p>
+        <h3>Texte d'ancrage</h3>
+        <p>Distribuer un court extrait de Roland Barthes sur « la mort de l'auteur » ou de Pierre Bayard pour cadrer philosophiquement le débat.</p>
+      </div>
+    </div>
+  </div>
+
+</main>
+
+<nav class="bottom-nav">
+  <a class="bnav-link" href="co-ecriture-ia.html">← Programme général</a>
+  <p class="bnav-center">Étape I / IV</p>
+  <a class="bnav-link bnav-next" href="atelier-II.html">Étape II : Le poème →</a>
+</nav>
+
+<script>
+const text = "Je suis vieille de trois cent quarante ans, et je n'ai jamais fermé les yeux. Les hommes entrent, posent leurs manteaux sur le même crochet depuis des générations, cherchent quelque chose qu'ils ne savent pas nommer. Je le sais, moi. Chaque livre que j'abrite est une tentative de répondre à une question que personne n'a encore su formuler correctement…";
+let i = 0;
+const el = document.getElementById('demo-live');
+function type() {
+  if (i <= text.length) {
+    el.innerHTML = text.substring(0, i) + '<span class="cursor"></span>';
+    i++; setTimeout(type, i < 5 ? 80 : 32);
+  }
+}
+setTimeout(type, 900);
+
+const obs = new IntersectionObserver(entries => {
+  entries.forEach(e => { if (e.isIntersecting) { e.target.classList.add('visible'); obs.unobserve(e.target); } });
+}, { threshold: 0.08 });
+document.querySelectorAll('.reveal').forEach(r => obs.observe(r));
+</script>
+</body>
+</html>

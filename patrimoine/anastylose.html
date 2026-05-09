@@ -379,10 +379,38 @@ footer{background:var(--navy);padding:3rem 0 2rem}
 <body>
 
 <!-- NAV -->
+<!-- SITE NAV BAR -->
+<div id="site-nav" style="
+  position:sticky;top:0;z-index:200;
+  background:#131e30;border-bottom:1px solid rgba(212,168,75,0.35);
+  display:flex;align-items:center;justify-content:space-between;
+  padding:0 2rem;height:40px;font-family:'Outfit',system-ui,sans-serif;font-size:0.78rem;
+">
+  <span style="color:rgba(255,255,255,0.35);letter-spacing:0.06em;text-transform:uppercase;">🏛️ Patrimoine en Réalité Augmentée</span>
+  <div style="display:flex;gap:0;border:1px solid rgba(212,168,75,0.25);border-radius:4px;overflow:hidden;">
+    <a href="documentation.html" style="
+      padding:0 1rem;height:28px;display:inline-flex;align-items:center;
+      color:rgba(255,255,255,0.65);text-decoration:none;
+      border-right:1px solid rgba(212,168,75,0.25);font-size:0.78rem;
+      transition:all 0.2s;
+    " onmouseover="this.style.color='#D4A84B';this.style.background='rgba(212,168,75,0.08)'" onmouseout="this.style.color='rgba(255,255,255,0.65)';this.style.background='transparent'">📋 Programme</a>
+    <a href="patrimoine.html" style="
+      padding:0 1rem;height:28px;display:inline-flex;align-items:center;
+      color:rgba(255,255,255,0.65);text-decoration:none;
+      border-right:1px solid rgba(212,168,75,0.25);font-size:0.78rem;
+      transition:all 0.2s;
+    " onmouseover="this.style.color='#D4A84B';this.style.background='rgba(212,168,75,0.08)'" onmouseout="this.style.color='rgba(255,255,255,0.65)';this.style.background='transparent'">📖 Guide participant</a>
+    <a href="anastylose.html" style="
+      padding:0 1rem;height:28px;display:inline-flex;align-items:center;
+      background:rgba(212,168,75,0.18);color:#D4A84B;font-weight:500;text-decoration:none;font-size:0.78rem;
+    ">🧱 Anastylose</a>
+  </div>
+</div>
+
 <nav>
   <div class="nav-inner">
-    <a href="site_patrimoine_ra_v2.html" class="nav-brand">🏛️ Patrimoine en RA</a>
-    <a href="site_patrimoine_ra_v2.html" class="nav-back">Retour au guide</a>
+    <a href="anastylose.html" class="nav-brand">🏛️ Patrimoine en RA <span style="color:rgba(255,255,255,.4);font-size:.8rem;font-weight:300;font-family:var(--sans);margin-left:.5rem">/ L'Anastylose</span></a>
+    <a href="patrimoine.html" class="nav-back">Retour au guide</a>
   </div>
 </nav>
 
@@ -390,7 +418,7 @@ footer{background:var(--navy);padding:3rem 0 2rem}
 <div class="hero">
   <div class="hero-inner">
     <div class="hero-breadcrumb">
-      <a href="site_patrimoine_ra_v2.html">Guide du participant</a>
+      <a href="patrimoine.html">Guide du participant</a>
       <span>/</span>
       <span>Notion clé</span>
       <span>/</span>
@@ -904,11 +932,11 @@ footer{background:var(--navy);padding:3rem 0 2rem}
     <div class="footer-inner">
       <div class="footer-brand">🏛️ Patrimoine en Réalité Augmentée</div>
       <nav class="footer-nav">
-        <a href="site_patrimoine_ra_v2.html">← Retour au guide</a>
-        <a href="site_patrimoine_ra_v2.html#cest-quoi">La RA</a>
-        <a href="site_patrimoine_ra_v2.html#historypin">Historypin</a>
-        <a href="site_patrimoine_ra_v2.html#outils">Outils</a>
-        <a href="site_patrimoine_ra_v2.html#ressources">Ressources</a>
+        <a href="patrimoine.html">← Retour au guide</a>
+        <a href="patrimoine.html#cest-quoi">La RA</a>
+        <a href="patrimoine.html#historypin">Historypin</a>
+        <a href="patrimoine.html#outils">Outils</a>
+        <a href="patrimoine.html#ressources">Ressources</a>
       </nav>
     </div>
     <p class="footer-copy">Page dédiée à l'anastylose — Support de médiation numérique — Médiathèque · Animation "Patrimoine en Réalité Augmentée"</p>

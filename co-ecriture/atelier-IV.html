@@ -1,0 +1,262 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Étape IV — Débat éthique · Co-écriture avec l'IA</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400;1,700&family=DM+Mono:wght@300;400;500&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+:root {
+  --ink: #1a1208; --paper: #f7f3ec; --paper2: #efe9dc;
+  --gold: #b8860b; --gold-light: #e8c84a; --muted: #6b6050; --accent: #c9a84c;
+  --step-bg: #0c1f2e; --step-accent: #4a9aba; --step-light: #dcedf5; --step-text: #8dc8e0;
+}
+html { scroll-behavior: smooth; }
+body { background: var(--paper); color: var(--ink); font-family: 'DM Sans', sans-serif; font-weight: 300; line-height: 1.7; overflow-x: hidden; }
+
+.topnav { position: fixed; top: 0; left: 0; right: 0; z-index: 200; display: flex; align-items: center; justify-content: space-between; padding: 1.1rem 4vw; background: var(--ink); border-bottom: 1px solid #2e2418; }
+.topnav-back { font-family: 'DM Mono', monospace; font-size: 0.68rem; letter-spacing: 0.15em; text-transform: uppercase; color: var(--gold-light); text-decoration: none; transition: color 0.2s; }
+.topnav-back:hover { color: white; }
+.topnav-steps { display: flex; gap: 0.4rem; }
+.step-pill { font-family: 'DM Mono', monospace; font-size: 0.62rem; letter-spacing: 0.08em; padding: 0.3rem 0.7rem; border-radius: 999px; text-decoration: none; border: 1px solid #3a3228; color: #6b6050; transition: all 0.2s; }
+.step-pill:hover { border-color: var(--gold); color: var(--gold-light); }
+.step-pill.current { border-color: var(--step-accent); color: var(--step-text); background: rgba(74,154,186,0.1); }
+
+.hero-band { margin-top: 3.5rem; min-height: 50vh; background: var(--step-bg); display: grid; grid-template-columns: 1fr 1fr; position: relative; overflow: hidden; }
+.hero-band::before { content: 'IV'; font-family: 'Playfair Display', serif; font-size: 20vw; font-weight: 700; color: rgba(255,255,255,0.04); position: absolute; right: -2vw; top: 50%; transform: translateY(-50%); line-height: 1; pointer-events: none; user-select: none; }
+.hero-left { padding: 5rem 4rem 5rem 6vw; display: flex; flex-direction: column; justify-content: center; }
+.eyebrow { font-family: 'DM Mono', monospace; font-size: 0.65rem; letter-spacing: 0.3em; text-transform: uppercase; color: var(--step-accent); margin-bottom: 1.5rem; }
+.hero-title { font-family: 'Playfair Display', serif; font-size: clamp(2.2rem, 4vw, 3.5rem); font-weight: 700; line-height: 1.1; color: #e8f0f8; margin-bottom: 1rem; }
+.hero-title em { font-style: italic; color: var(--gold-light); }
+.hero-meta { display: flex; align-items: center; gap: 0.75rem; margin-top: 1.75rem; flex-wrap: wrap; }
+.meta-chip { font-family: 'DM Mono', monospace; font-size: 0.62rem; letter-spacing: 0.08em; padding: 0.35rem 0.9rem; border: 1px solid rgba(74,154,186,0.4); color: var(--step-text); border-radius: 2px; }
+.hero-right { padding: 5rem 6vw 5rem 4rem; display: flex; flex-direction: column; justify-content: center; border-left: 1px solid rgba(74,154,186,0.15); }
+.hero-lead { font-family: 'Playfair Display', serif; font-size: 1.1rem; font-style: italic; color: #6a9eb8; line-height: 1.9; }
+
+.content { max-width: 1080px; margin: 0 auto; padding: 6rem 6vw; }
+.block-label { font-family: 'DM Mono', monospace; font-size: 0.63rem; letter-spacing: 0.3em; text-transform: uppercase; color: var(--gold); margin-bottom: 1.5rem; display: flex; align-items: center; gap: 1rem; }
+.block-label::after { content: ''; flex: 1; height: 1px; background: var(--accent); opacity: 0.3; max-width: 140px; }
+h2.block-title { font-family: 'Playfair Display', serif; font-size: clamp(1.8rem, 3vw, 2.5rem); font-weight: 700; margin-bottom: 1.5rem; line-height: 1.2; }
+.two-col { display: grid; grid-template-columns: 1fr 1fr; gap: 4rem; align-items: start; margin-bottom: 5rem; }
+.one-col { margin-bottom: 5rem; }
+p.body-text { font-size: 0.98rem; color: var(--muted); line-height: 1.85; margin-bottom: 1rem; }
+
+/* TENSION CARDS */
+.tension-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 1.25rem; margin-top: 2rem; }
+.tension-card { padding: 2rem; background: var(--paper2); border: 1px solid #d4c9b8; position: relative; overflow: hidden; }
+.tension-card::after { content: ''; position: absolute; bottom: 0; left: 0; right: 0; height: 3px; background: var(--step-accent); transform: scaleX(0); transform-origin: left; transition: transform 0.4s ease; }
+.tension-card:hover::after { transform: scaleX(1); }
+.tension-vs { font-family: 'DM Mono', monospace; font-size: 0.62rem; letter-spacing: 0.12em; color: var(--step-accent); margin-bottom: 0.75rem; }
+.tension-card h3 { font-family: 'Playfair Display', serif; font-size: 1.05rem; font-weight: 700; margin-bottom: 0.6rem; }
+.tension-card p { font-size: 0.87rem; color: var(--muted); line-height: 1.7; }
+
+/* SPECTRUM SLIDER */
+.spectrum-visual { margin-top: 2rem; }
+.spectrum-bar { display: flex; height: 6px; border-radius: 3px; overflow: hidden; margin: 1.5rem 0; }
+.spec-seg { flex: 1; }
+.spec-seg:nth-child(1) { background: #c8b4f8; }
+.spec-seg:nth-child(2) { background: #9b7fd4; }
+.spec-seg:nth-child(3) { background: var(--step-accent); }
+.spec-seg:nth-child(4) { background: #e07840; }
+.spec-seg:nth-child(5) { background: #cc3030; }
+.spectrum-labels { display: flex; justify-content: space-between; font-family: 'DM Mono', monospace; font-size: 0.6rem; color: var(--muted); letter-spacing: 0.06em; }
+
+/* POSITIONS DÉBAT */
+.positions { display: flex; flex-direction: column; gap: 1px; margin-top: 2rem; }
+.position-item { display: grid; grid-template-columns: 3.5rem 1fr; background: var(--step-light); }
+.position-num { background: var(--step-bg); display: flex; align-items: center; justify-content: center; font-family: 'Playfair Display', serif; font-size: 1.1rem; font-weight: 700; color: var(--step-text); }
+.position-text { padding: 1.2rem 1.5rem; font-size: 0.93rem; color: var(--ink); line-height: 1.7; border-left: 3px solid var(--step-accent); }
+
+/* ENGAGEMENT INDIVIDUEL */
+.engagement-cards { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1.25rem; margin-top: 2rem; }
+.eng-card { background: var(--ink); padding: 2rem; }
+.eng-q { font-family: 'Playfair Display', serif; font-size: 0.95rem; font-style: italic; color: #e8e0d4; line-height: 1.7; margin-bottom: 1rem; }
+.eng-line { height: 1px; background: #2e2418; margin-bottom: 0.75rem; }
+.eng-prompt { font-family: 'DM Mono', monospace; font-size: 0.65rem; color: #6b6050; letter-spacing: 0.06em; }
+
+/* CITATION */
+.citation-block { background: var(--step-bg); padding: 3rem; margin: 4rem 0; position: relative; }
+.citation-block::before { content: '«'; font-family: 'Playfair Display', serif; font-size: 8rem; color: rgba(74,154,186,0.15); position: absolute; top: 0.5rem; left: 1.5rem; line-height: 1; }
+.citation-text { font-family: 'Playfair Display', serif; font-size: 1.25rem; font-style: italic; color: #c8e0f0; line-height: 1.85; position: relative; z-index: 1; padding-left: 1rem; }
+.citation-source { font-family: 'DM Mono', monospace; font-size: 0.65rem; color: var(--step-accent); letter-spacing: 0.1em; margin-top: 1.5rem; }
+
+/* TIMER */
+.timer-bar { display: flex; align-items: center; gap: 2rem; background: var(--ink); padding: 1.5rem 2rem; margin: 4rem 0; flex-wrap: wrap; }
+.timer-label { font-family: 'DM Mono', monospace; font-size: 0.63rem; letter-spacing: 0.2em; text-transform: uppercase; color: var(--gold); }
+.timer-display { font-family: 'Playfair Display', serif; font-size: 2rem; font-weight: 700; color: #f7f3ec; }
+.timer-desc { font-size: 0.83rem; color: #6b6050; }
+.timer-segments { display: flex; gap: 0.25rem; flex: 1; min-width: 180px; }
+.timer-seg { height: 5px; border-radius: 3px; background: #3a3228; flex: 1; }
+.timer-seg.on { background: var(--step-accent); }
+
+/* CLOTURE */
+.cloture-box { background: var(--paper2); border: 1px solid #d4c9b8; border-top: 4px solid var(--gold); padding: 3rem; margin-top: 2rem; }
+.cloture-box h3 { font-family: 'Playfair Display', serif; font-size: 1.4rem; font-weight: 700; margin-bottom: 1rem; }
+.cloture-box p { font-size: 0.95rem; color: var(--muted); line-height: 1.85; margin-bottom: 1rem; }
+.cloture-box em { font-style: italic; color: var(--ink); }
+
+.bottom-nav { display: flex; justify-content: space-between; align-items: center; padding: 2.5rem 6vw; background: var(--ink); flex-wrap: wrap; gap: 1.5rem; }
+.bnav-link { font-family: 'DM Mono', monospace; font-size: 0.68rem; letter-spacing: 0.15em; text-transform: uppercase; text-decoration: none; padding: 0.75rem 1.5rem; border: 1px solid #3a3228; color: #6b6050; transition: all 0.2s; }
+.bnav-end { border-color: var(--gold); color: var(--gold-light); }
+.bnav-end:hover { background: var(--gold); color: var(--ink); }
+.bnav-link:hover:not(.bnav-end) { border-color: #6b6050; color: #a89880; }
+.bnav-center { font-family: 'Playfair Display', serif; font-style: italic; font-size: 0.88rem; color: #4a3e30; }
+
+.reveal { opacity: 0; transform: translateY(1.5rem); transition: opacity 0.6s ease, transform 0.6s ease; }
+.reveal.visible { opacity: 1; transform: translateY(0); }
+
+@media (max-width: 800px) {
+  .hero-band { grid-template-columns: 1fr; }
+  .hero-right { border-left: none; border-top: 1px solid rgba(74,154,186,0.12); padding: 2rem 6vw; }
+  .two-col, .tension-grid, .engagement-cards { grid-template-columns: 1fr; gap: 2rem; }
+  .topnav-steps { display: none; }
+}
+</style>
+</head>
+<body>
+
+<nav class="topnav">
+  <a class="topnav-back" href="co-ecriture-ia.html">← Programme</a>
+  <div class="topnav-steps">
+    <a class="step-pill" href="atelier-I.html">I · Ouverture</a>
+    <a class="step-pill" href="atelier-II.html">II · Poème</a>
+    <a class="step-pill" href="atelier-III.html">III · Personnage</a>
+    <span class="step-pill current">IV · Débat</span>
+  </div>
+</nav>
+
+<header class="hero-band">
+  <div class="hero-left">
+    <p class="eyebrow">Étape IV · 30 minutes</p>
+    <h1 class="hero-title">Usage éthique<br>& <em>voix singulière</em></h1>
+    <div class="hero-meta">
+      <span class="meta-chip">Tour de table</span>
+      <span class="meta-chip">Positions critiques</span>
+      <span class="meta-chip">Engagement personnel</span>
+    </div>
+  </div>
+  <div class="hero-right">
+    <p class="hero-lead">Après avoir pratiqué, il faut réfléchir. Cette dernière étape sort de l'expérimentation pour entrer dans la délibération : que voulons-nous garder de cette expérience ? Que refusons-nous ? Et comment rester soi-même quand la machine écrit avec nous ?</p>
+  </div>
+</header>
+
+<main class="content">
+
+  <div class="one-col reveal">
+    <p class="block-label">Les tensions fondamentales</p>
+    <h2 class="block-title">Ce que l'atelier a mis à jour</h2>
+    <div class="tension-grid">
+      <div class="tension-card">
+        <p class="tension-vs">Tension 01</p>
+        <h3>Efficacité vs authenticité</h3>
+        <p>L'IA produit du texte fluide, élaboré, rapidement. Mais la fluidité est-elle une vertu littéraire ? L'effort d'écriture — et le ratage — font-ils partie du sens ?</p>
+      </div>
+      <div class="tension-card">
+        <p class="tension-vs">Tension 02</p>
+        <h3>Autorship vs collaboration</h3>
+        <p>Si l'IA propose et que l'humain choisit, qui a écrit ? Le monteur de cinéma est-il co-réalisateur ? Le passeur de phrases est-il co-auteur ?</p>
+      </div>
+      <div class="tension-card">
+        <p class="tension-vs">Tension 03</p>
+        <h3>Transparence vs réception</h3>
+        <p>Doit-on indiquer qu'un texte a été co-écrit avec une IA ? Pour qui — le lecteur ? L'éditeur ? Soi-même ? Quand la mention change-t-elle la lecture ?</p>
+      </div>
+      <div class="tension-card">
+        <p class="tension-vs">Tension 04</p>
+        <h3>Biais invisibles vs diversité</h3>
+        <p>Les LLMs sont entraînés sur des corpus déséquilibrés. Quelles voix surreprésentent-ils ? Quels imaginaires propagent-ils sans que nous le voyions ?</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="citation-block reveal">
+    <p class="citation-text">« L'outil change celui qui s'en sert. Non pas sa pensée, peut-être, mais son rapport au temps de la pensée, à l'hésitation, au manque. Écrire lentement, c'est aussi penser dans la lenteur. »</p>
+    <p class="citation-source">— repris et adapté d'une réflexion sur le stylo et l'imprimerie · à discuter collectivement</p>
+  </div>
+
+  <div class="timer-bar reveal">
+    <div><p class="timer-label">Déroulé</p><p class="timer-display">30 min</p></div>
+    <div class="timer-segments">
+      <div class="timer-seg on"></div><div class="timer-seg on"></div><div class="timer-seg on"></div>
+      <div class="timer-seg on"></div><div class="timer-seg on"></div><div class="timer-seg on"></div>
+    </div>
+    <p class="timer-desc">10 min positions · 12 min débat · 8 min engagement individuel</p>
+  </div>
+
+  <div class="two-col reveal">
+    <div>
+      <p class="block-label">Positions de départ</p>
+      <h2 class="block-title">Cinq postures à défendre ou attaquer</h2>
+      <p class="body-text">L'animateur présente ces cinq positions. Les participants choisissent celle qui les dérange le plus — et doivent trouver deux arguments pour la défendre tout de même.</p>
+    </div>
+    <div class="positions">
+      <div class="position-item">
+        <div class="position-num">A</div>
+        <div class="position-text">L'IA est un outil comme le correcteur orthographique. L'utiliser ne change pas plus le statut de l'auteur que Word ne le fait.</div>
+      </div>
+      <div class="position-item">
+        <div class="position-num">B</div>
+        <div class="position-text">Tout texte co-écrit avec une IA devrait le mentionner explicitement, comme une note de bas de page obligatoire.</div>
+      </div>
+      <div class="position-item">
+        <div class="position-num">C</div>
+        <div class="position-text">L'IA révèle nos zones d'évitement créatif : là où elle propose et que nous acceptons sans modifier, c'est là que notre voix était absente.</div>
+      </div>
+      <div class="position-item">
+        <div class="position-num">D</div>
+        <div class="position-text">Le vrai enjeu n'est pas éthique mais écologique et économique : qui profite de la valeur extraite des textes qui ont entraîné ces modèles ?</div>
+      </div>
+      <div class="position-item">
+        <div class="position-num">E</div>
+        <div class="position-text">L'IA ne remplacera pas les écrivains mais elle va changer ce que les lecteurs attendent de la littérature — et c'est cela qui est irréversible.</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="one-col reveal">
+    <p class="block-label">Clôture</p>
+    <h2 class="block-title">L'engagement personnel</h2>
+    <p class="body-text">Chaque participant note sur une fiche — pas pour la partager, pour soi — ses réponses à ces trois questions. Le but n'est pas le consensus mais la clarté personnelle.</p>
+    <div class="engagement-cards">
+      <div class="eng-card">
+        <p class="eng-q">« Qu'est-ce que cette expérience m'a appris sur ma propre façon d'écrire ? »</p>
+        <div class="eng-line"></div>
+        <p class="eng-prompt">réponse personnelle · non partagée</p>
+      </div>
+      <div class="eng-card">
+        <p class="eng-q">« Quelle est la ligne que je ne veux pas franchir dans ma pratique d'écriture avec l'IA ? »</p>
+        <div class="eng-line"></div>
+        <p class="eng-prompt">ma ligne rouge personnelle</p>
+      </div>
+      <div class="eng-card">
+        <p class="eng-q">« Qu'est-ce que je vais expérimenter dans les deux prochaines semaines ? »</p>
+        <div class="eng-line"></div>
+        <p class="eng-prompt">un engagement concret · daté</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="cloture-box reveal">
+    <h3>Mot de clôture pour l'animateur</h3>
+    <p>Il n'y a pas de bonne conclusion à cet atelier. L'inconfort est la bonne posture finale. Si des participants ressortent avec plus de questions qu'en entrant, l'atelier a réussi.</p>
+    <p>Ce qui compte : <em>chacun repart avec une expérience corporelle de la co-écriture</em> — pas seulement une opinion sur le sujet. L'expérience précède le jugement.</p>
+    <p>On peut terminer par un tour de table : un mot, une image, une phrase — pas une conclusion. <em>Ce que l'atelier a laissé en suspens.</em></p>
+  </div>
+
+</main>
+
+<nav class="bottom-nav">
+  <a class="bnav-link" href="atelier-III.html">← Étape III : Personnage</a>
+  <p class="bnav-center">Étape IV / IV · Fin de l'atelier</p>
+  <a class="bnav-link bnav-end" href="co-ecriture-ia.html">Retour au programme →</a>
+</nav>
+
+<script>
+const obs = new IntersectionObserver(entries => {
+  entries.forEach(e => { if (e.isIntersecting) { e.target.classList.add('visible'); obs.unobserve(e.target); } });
+}, { threshold: 0.08 });
+document.querySelectorAll('.reveal').forEach(r => obs.observe(r));
+</script>
+</body>
+</html>

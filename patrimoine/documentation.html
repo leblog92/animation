@@ -72,7 +72,7 @@
 
   .hero-content {
     position: relative; z-index: 2; max-width: 1200px; margin: 0 auto;
-    padding: 8rem 2.5rem 5rem; width: 100%;
+    padding: 9.5rem 2.5rem 5rem; width: 100%;
     display: grid; grid-template-columns: 1fr 1fr; gap: 4rem; align-items: center;
   }
   .hero-badge {
@@ -441,7 +441,35 @@
 <body>
 
 <!-- NAV -->
-<nav id="nav">
+<!-- SITE NAV BAR -->
+<div id="site-nav" style="
+  position:fixed;top:0;left:0;width:100%;z-index:200;
+  background:#0b1426;border-bottom:1px solid rgba(201,149,42,0.35);
+  display:flex;align-items:center;justify-content:space-between;
+  padding:0 2.5rem;height:40px;font-family:'DM Sans',sans-serif;font-size:0.78rem;
+">
+  <span style="color:rgba(255,255,255,0.35);letter-spacing:0.06em;text-transform:uppercase;">🏛️ Patrimoine en Réalité Augmentée</span>
+  <div style="display:flex;gap:0;border:1px solid rgba(201,149,42,0.25);border-radius:4px;overflow:hidden;">
+    <a href="documentation.html" style="
+      padding:0 1rem;height:28px;display:inline-flex;align-items:center;
+      background:rgba(201,149,42,0.18);color:#C9952A;font-weight:500;text-decoration:none;
+      border-right:1px solid rgba(201,149,42,0.25);font-size:0.78rem;
+    ">📋 Programme</a>
+    <a href="patrimoine.html" style="
+      padding:0 1rem;height:28px;display:inline-flex;align-items:center;
+      color:rgba(255,255,255,0.65);text-decoration:none;
+      border-right:1px solid rgba(201,149,42,0.25);font-size:0.78rem;
+      transition:all 0.2s;
+    " onmouseover="this.style.color='#C9952A';this.style.background='rgba(201,149,42,0.08)'" onmouseout="this.style.color='rgba(255,255,255,0.65)';this.style.background='transparent'">📖 Guide participant</a>
+    <a href="anastylose.html" style="
+      padding:0 1rem;height:28px;display:inline-flex;align-items:center;
+      color:rgba(255,255,255,0.65);text-decoration:none;font-size:0.78rem;
+      transition:all 0.2s;
+    " onmouseover="this.style.color='#C9952A';this.style.background='rgba(201,149,42,0.08)'" onmouseout="this.style.color='rgba(255,255,255,0.65)';this.style.background='transparent'">🧱 Anastylose</a>
+  </div>
+</div>
+
+<nav id="nav" style="top:40px;">
   <div class="nav-logo">🏛️ Patrimoine RA</div>
   <div class="nav-links">
     <a href="#cest-quoi">C'est quoi ?</a>
@@ -1001,17 +1029,16 @@
           <li><a href="#programme">Programme</a></li>
           <li><a href="#outils">Les outils</a></li>
           <li><a href="#projets">Idées de projets</a></li>
-          <!-- <li><a href="#inscription">S'inscrire</a></li> -->
         </ul>
       </div>
       <div class="footer-links">
-        <h4>Ressources</h4>
+        <h4>Autres pages</h4>
         <ul>
+          <li><a href="patrimoine.html">📖 Guide du participant</a></li>
+          <li><a href="anastylose.html">🧱 L'Anastylose</a></li>
           <li><a href="#">Gallica — Images libres de droits</a></li>
           <li><a href="#">Europeana — Patrimoine européen</a></li>
           <li><a href="#">Wikimedia Commons</a></li>
-          <li><a href="#">Assemblr EDU</a></li>
-          <li><a href="#">Zappar Education</a></li>
         </ul>
       </div>
     </div>
@@ -1058,6 +1085,8 @@
     } else {
       nav.style.padding = '1rem 2.5rem';
     }
+    // Keep nav below site-nav bar
+    nav.style.top = '40px';
   });
 </script>
 </body>
