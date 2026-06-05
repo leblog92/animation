@@ -1,0 +1,1538 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Création musicale avec IA générative</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;1,9..40,300&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+
+<style>
+  :root {
+    --accent: #E8FF47;
+    --accent2: #FF6B35;
+    --bg: #0A0A0F;
+    --bg2: #12121A;
+    --bg3: #1A1A28;
+    --fg: #F0EEE8;
+    --fg2: #9A9888;
+    --fg3: #5A5848;
+    --border: rgba(240,238,232,0.08);
+    --border2: rgba(240,238,232,0.15);
+    --purple: #B5A9FF;
+    --teal: #4EECD4;
+    --pink: #FF7EB3;
+    --orange: #FF9559;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    background: var(--bg);
+    color: var(--fg);
+    font-family: 'DM Sans', sans-serif;
+    font-size: 16px;
+    line-height: 1.6;
+    overflow: hidden;
+    height: 100vh;
+    width: 100vw;
+    cursor: default;
+    user-select: none;
+  }
+
+  /* SLIDES */
+  .slide {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    flex-direction: column;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.6s ease;
+    overflow: hidden;
+  }
+  .slide.active {
+    opacity: 1;
+    pointer-events: all;
+  }
+
+  /* NAV */
+  nav {
+    position: fixed;
+    bottom: 2rem;
+    left: 50%;
+    transform: translateX(-50%);
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    z-index: 100;
+    background: rgba(10,10,15,0.85);
+    border: 0.5px solid var(--border2);
+    border-radius: 100px;
+    padding: 0.6rem 1.2rem;
+    backdrop-filter: blur(12px);
+  }
+  nav button {
+    background: none;
+    border: none;
+    color: var(--fg2);
+    font-size: 1.1rem;
+    cursor: pointer;
+    padding: 0.2rem 0.5rem;
+    border-radius: 6px;
+    transition: color 0.2s, background 0.2s;
+    font-family: inherit;
+  }
+  nav button:hover { color: var(--fg); background: var(--border); }
+  nav button.primary {
+    background: var(--accent);
+    color: #0A0A0F;
+    font-weight: 500;
+    padding: 0.3rem 1rem;
+    font-size: 0.85rem;
+  }
+  nav button.primary:hover { background: #d4eb30; }
+  .slide-counter {
+    font-family: 'DM Mono', monospace;
+    font-size: 0.75rem;
+    color: var(--fg3);
+    min-width: 44px;
+    text-align: center;
+  }
+  .dots {
+    display: flex;
+    gap: 5px;
+    align-items: center;
+  }
+  .dot {
+    width: 5px; height: 5px;
+    border-radius: 50%;
+    background: var(--fg3);
+    cursor: pointer;
+    transition: all 0.3s;
+  }
+  .dot.active { background: var(--accent); transform: scale(1.4); }
+
+  /* KEYBOARD HINT */
+  .key-hint {
+    position: fixed;
+    top: 1.5rem;
+    right: 1.5rem;
+    font-size: 0.7rem;
+    color: var(--fg3);
+    font-family: 'DM Mono', monospace;
+    z-index: 100;
+  }
+
+  /* SLIDE LAYOUTS */
+  .layout-cover {
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    padding: 3rem;
+    background:
+      radial-gradient(ellipse 80% 60% at 50% 110%, rgba(181,169,255,0.12) 0%, transparent 60%),
+      radial-gradient(ellipse 50% 40% at 80% 20%, rgba(78,236,212,0.06) 0%, transparent 50%),
+      var(--bg);
+  }
+
+  .layout-split {
+    flex-direction: row;
+  }
+  .split-left {
+    width: 42%;
+    padding: 4rem 3rem;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    border-right: 0.5px solid var(--border);
+  }
+  .split-right {
+    flex: 1;
+    padding: 4rem 3rem;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    overflow-y: auto;
+  }
+
+  .layout-grid {
+    padding: 3.5rem;
+    overflow-y: auto;
+  }
+  .layout-center {
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    padding: 3rem 5rem;
+  }
+  .layout-full {
+    padding: 3.5rem;
+    overflow-y: auto;
+  }
+
+  /* TYPOGRAPHY */
+  .display {
+    font-family: 'Bebas Neue', sans-serif;
+    letter-spacing: 0.02em;
+    line-height: 0.95;
+  }
+  .display.xl { font-size: clamp(4rem, 10vw, 8rem); }
+  .display.lg { font-size: clamp(2.5rem, 6vw, 5rem); }
+  .display.md { font-size: clamp(2rem, 4vw, 3.5rem); }
+  .display.sm { font-size: clamp(1.5rem, 3vw, 2.5rem); }
+
+  .overline {
+    font-family: 'DM Mono', monospace;
+    font-size: 0.72rem;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--fg3);
+  }
+
+  .lead {
+    font-size: 1.2rem;
+    font-weight: 300;
+    color: var(--fg2);
+    line-height: 1.7;
+  }
+  .body-text { font-size: 0.95rem; color: var(--fg2); line-height: 1.75; }
+
+  /* ACCENT MARKS */
+  .accent { color: var(--accent); }
+  .accent2 { color: var(--accent2); }
+  .purple { color: var(--purple); }
+  .teal { color: var(--teal); }
+  .pink { color: var(--pink); }
+
+  /* TAGS / CHIPS */
+  .chip {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 0.3rem 0.75rem;
+    border-radius: 100px;
+    font-size: 0.8rem;
+    font-weight: 500;
+    border: 0.5px solid;
+    white-space: nowrap;
+  }
+  .chip-accent { border-color: var(--accent); color: var(--accent); background: rgba(232,255,71,0.07); }
+  .chip-purple { border-color: var(--purple); color: var(--purple); background: rgba(181,169,255,0.07); }
+  .chip-teal { border-color: var(--teal); color: var(--teal); background: rgba(78,236,212,0.07); }
+  .chip-orange { border-color: var(--orange); color: var(--orange); background: rgba(255,149,89,0.07); }
+  .chip-pink { border-color: var(--pink); color: var(--pink); background: rgba(255,126,179,0.07); }
+
+  /* CARDS */
+  .card {
+    background: var(--bg2);
+    border: 0.5px solid var(--border);
+    border-radius: 16px;
+    padding: 1.5rem;
+    transition: border-color 0.3s;
+  }
+  .card:hover { border-color: var(--border2); }
+  .card-accent {
+    border-color: rgba(232,255,71,0.2);
+    background: rgba(232,255,71,0.04);
+  }
+
+  /* GRID */
+  .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; }
+  .grid-3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 1rem; }
+  .grid-4 { display: grid; grid-template-columns: repeat(4, 1fr); gap: 0.75rem; }
+
+  /* TIMELINE */
+  .timeline { display: flex; flex-direction: column; gap: 0; }
+  .timeline-item {
+    display: flex;
+    gap: 1.5rem;
+    padding: 1.2rem 0;
+    border-bottom: 0.5px solid var(--border);
+    align-items: flex-start;
+  }
+  .timeline-item:last-child { border-bottom: none; }
+  .timeline-num {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 2.5rem;
+    color: var(--fg3);
+    line-height: 1;
+    min-width: 2.5rem;
+    text-align: right;
+  }
+  .timeline-content h3 { font-size: 1rem; font-weight: 500; margin-bottom: 0.25rem; }
+  .timeline-content p { font-size: 0.85rem; color: var(--fg2); }
+
+  /* BIG QUOTE */
+  .big-quote {
+    font-family: 'DM Sans', sans-serif;
+    font-size: clamp(1.4rem, 3vw, 2.2rem);
+    font-weight: 300;
+    line-height: 1.5;
+    color: var(--fg);
+  }
+
+  /* KEYWORD GRID */
+  .kw-grid {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.6rem;
+  }
+  .kw {
+    padding: 0.5rem 1.1rem;
+    border-radius: 8px;
+    font-size: 0.85rem;
+    font-weight: 400;
+    border: 0.5px solid var(--border2);
+    background: var(--bg2);
+    color: var(--fg);
+    cursor: default;
+    transition: all 0.25s;
+    font-family: 'DM Mono', monospace;
+  }
+  .kw:hover {
+    border-color: var(--accent);
+    color: var(--accent);
+    background: rgba(232,255,71,0.06);
+  }
+  .kw.h1 { font-size: 1rem; }
+  .kw.h2 { font-size: 0.9rem; }
+  .kw.dim { color: var(--fg3); font-size: 0.78rem; }
+
+  /* WAVEFORM DECO */
+  .waveform {
+    display: flex;
+    align-items: center;
+    gap: 3px;
+    height: 40px;
+  }
+  .waveform span {
+    display: block;
+    width: 3px;
+    border-radius: 2px;
+    background: var(--accent);
+    animation: wave 1.2s ease-in-out infinite;
+    opacity: 0.7;
+  }
+
+  @keyframes wave {
+    0%, 100% { transform: scaleY(0.3); }
+    50% { transform: scaleY(1); }
+  }
+
+  /* TOOL LOGOS PLACEHOLDER */
+  .tool-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 0.75rem;
+  }
+  .tool-card {
+    background: var(--bg2);
+    border: 0.5px solid var(--border);
+    border-radius: 12px;
+    padding: 1.25rem 1rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    transition: border-color 0.2s;
+  }
+  .tool-card:hover { border-color: var(--border2); }
+  .tool-icon {
+    font-size: 1.5rem;
+    line-height: 1;
+  }
+  .tool-name { font-size: 0.9rem; font-weight: 500; }
+  .tool-desc { font-size: 0.75rem; color: var(--fg3); }
+  .tool-free {
+    font-size: 0.65rem;
+    font-family: 'DM Mono', monospace;
+    padding: 0.15rem 0.5rem;
+    border-radius: 4px;
+    background: rgba(78,236,212,0.1);
+    color: var(--teal);
+    border: 0.5px solid rgba(78,236,212,0.25);
+    width: fit-content;
+  }
+  .tool-paid {
+    font-size: 0.65rem;
+    font-family: 'DM Mono', monospace;
+    padding: 0.15rem 0.5rem;
+    border-radius: 4px;
+    background: rgba(255,149,89,0.1);
+    color: var(--orange);
+    border: 0.5px solid rgba(255,149,89,0.25);
+    width: fit-content;
+  }
+
+  /* PROMPT BUILDER */
+  .prompt-box {
+    background: var(--bg3);
+    border: 0.5px solid var(--border2);
+    border-radius: 12px;
+    padding: 1.5rem;
+    font-family: 'DM Mono', monospace;
+    font-size: 0.9rem;
+    line-height: 1.9;
+    position: relative;
+  }
+  .prompt-part { display: inline; }
+  .p-genre { color: var(--accent); }
+  .p-mood { color: var(--purple); }
+  .p-tempo { color: var(--teal); }
+  .p-instr { color: var(--orange); }
+  .p-era { color: var(--pink); }
+  .p-struct { color: var(--fg2); }
+
+  /* LEGEND */
+  .legend {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem 1.5rem;
+    font-size: 0.78rem;
+    font-family: 'DM Mono', monospace;
+  }
+  .legend-item { display: flex; align-items: center; gap: 0.4rem; }
+  .legend-dot { width: 8px; height: 8px; border-radius: 50%; }
+
+  /* SEPARATOR */
+  .sep { height: 0.5px; background: var(--border); margin: 1.5rem 0; }
+
+  /* SLIDE-SPECIFIC DECORATIONS */
+  .bg-grid {
+    position: absolute;
+    inset: 0;
+    background-image:
+      linear-gradient(var(--border) 1px, transparent 1px),
+      linear-gradient(90deg, var(--border) 1px, transparent 1px);
+    background-size: 60px 60px;
+    pointer-events: none;
+  }
+  .bg-circle {
+    position: absolute;
+    border-radius: 50%;
+    pointer-events: none;
+  }
+
+  /* SECTION HEADER */
+  .section-header {
+    display: flex;
+    align-items: flex-end;
+    justify-content: space-between;
+    margin-bottom: 2rem;
+    padding-bottom: 1rem;
+    border-bottom: 0.5px solid var(--border);
+  }
+
+  /* FEATURE ROW */
+  .feat-row {
+    display: flex;
+    gap: 1.5rem;
+    padding: 1rem 0;
+    border-bottom: 0.5px solid var(--border);
+    align-items: flex-start;
+  }
+  .feat-row:last-child { border-bottom: none; }
+  .feat-marker {
+    width: 28px; height: 28px;
+    border-radius: 6px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 0.75rem;
+    font-weight: 500;
+    font-family: 'DM Mono', monospace;
+    flex-shrink: 0;
+    margin-top: 2px;
+  }
+  .feat-marker.a { background: rgba(232,255,71,0.15); color: var(--accent); }
+  .feat-marker.b { background: rgba(181,169,255,0.15); color: var(--purple); }
+  .feat-marker.c { background: rgba(78,236,212,0.15); color: var(--teal); }
+  .feat-marker.d { background: rgba(255,149,89,0.15); color: var(--orange); }
+  .feat-marker.e { background: rgba(255,126,179,0.15); color: var(--pink); }
+
+  /* INTERACTIVE PROMPT BUILDER */
+  .builder-tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+    margin-bottom: 1rem;
+  }
+  .builder-tag {
+    padding: 0.4rem 0.9rem;
+    border-radius: 100px;
+    font-size: 0.78rem;
+    font-family: 'DM Mono', monospace;
+    border: 0.5px solid var(--border2);
+    background: var(--bg3);
+    cursor: pointer;
+    transition: all 0.2s;
+    color: var(--fg2);
+  }
+  .builder-tag.selected-genre { border-color: var(--accent); color: var(--accent); background: rgba(232,255,71,0.08); }
+  .builder-tag.selected-mood { border-color: var(--purple); color: var(--purple); background: rgba(181,169,255,0.08); }
+  .builder-tag.selected-tempo { border-color: var(--teal); color: var(--teal); background: rgba(78,236,212,0.08); }
+  .builder-tag.selected-instr { border-color: var(--orange); color: var(--orange); background: rgba(255,149,89,0.08); }
+  .builder-tag.selected-era { border-color: var(--pink); color: var(--pink); background: rgba(255,126,179,0.08); }
+
+  .builder-output {
+    background: var(--bg3);
+    border: 0.5px solid var(--border2);
+    border-radius: 10px;
+    padding: 1rem 1.25rem;
+    font-family: 'DM Mono', monospace;
+    font-size: 0.85rem;
+    line-height: 1.8;
+    min-height: 80px;
+    color: var(--fg2);
+    transition: all 0.3s;
+  }
+
+  .builder-label {
+    font-size: 0.68rem;
+    font-family: 'DM Mono', monospace;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--fg3);
+    margin-bottom: 0.5rem;
+  }
+
+  .copy-btn {
+    background: var(--accent);
+    color: #0A0A0F;
+    border: none;
+    padding: 0.5rem 1.25rem;
+    border-radius: 8px;
+    font-size: 0.8rem;
+    font-weight: 500;
+    cursor: pointer;
+    font-family: 'DM Mono', monospace;
+    transition: all 0.2s;
+  }
+  .copy-btn:hover { background: #d4eb30; }
+  .copy-btn:active { transform: scale(0.97); }
+  .copy-btn.copied { background: var(--teal); color: #0A0A0F; }
+
+  /* TIPS */
+  .tip-row {
+    display: flex;
+    gap: 1rem;
+    align-items: flex-start;
+    padding: 0.85rem 0;
+    border-bottom: 0.5px solid var(--border);
+  }
+  .tip-row:last-child { border-bottom: none; }
+  .tip-num {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 1.8rem;
+    color: var(--accent);
+    line-height: 1;
+    min-width: 28px;
+  }
+
+  /* HEADER BADGE */
+  .header-badge {
+    position: fixed;
+    top: 1.5rem;
+    left: 1.5rem;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    z-index: 100;
+  }
+  .wv-mini {
+    display: flex;
+    align-items: center;
+    gap: 2px;
+    height: 18px;
+  }
+  .wv-mini span {
+    display: block;
+    width: 2px;
+    border-radius: 1px;
+    background: var(--accent);
+    animation: wave 1.2s ease-in-out infinite;
+  }
+
+  /* DO DON'T */
+  .do-dont { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; }
+  .good-box { background: rgba(78,236,212,0.05); border: 0.5px solid rgba(78,236,212,0.2); border-radius: 12px; padding: 1.25rem; }
+  .bad-box { background: rgba(255,107,53,0.05); border: 0.5px solid rgba(255,107,53,0.2); border-radius: 12px; padding: 1.25rem; }
+  .box-label { font-size: 0.7rem; font-family: 'DM Mono', monospace; text-transform: uppercase; letter-spacing: 0.1em; margin-bottom: 0.75rem; font-weight: 500; }
+  .good-box .box-label { color: var(--teal); }
+  .bad-box .box-label { color: var(--accent2); }
+  .example-prompt {
+    font-family: 'DM Mono', monospace;
+    font-size: 0.78rem;
+    line-height: 1.7;
+    color: var(--fg2);
+  }
+
+  /* STEP CIRCLE */
+  .step-circle {
+    width: 36px; height: 36px;
+    border-radius: 50%;
+    border: 1.5px solid;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 1.1rem;
+    flex-shrink: 0;
+  }
+  .step-circle.a { border-color: var(--accent); color: var(--accent); }
+  .step-circle.b { border-color: var(--purple); color: var(--purple); }
+  .step-circle.c { border-color: var(--teal); color: var(--teal); }
+  .step-circle.d { border-color: var(--orange); color: var(--orange); }
+  .step-circle.e { border-color: var(--pink); color: var(--pink); }
+
+  /* PROGRESS BAR */
+  .progress-track {
+    position: fixed;
+    top: 0;
+    left: 0;
+    height: 2px;
+    background: var(--accent);
+    transition: width 0.4s ease;
+    z-index: 200;
+  }
+</style>
+</head>
+<body>
+
+<div class="progress-track" id="progress"></div>
+
+<div class="header-badge">
+  <div class="wv-mini">
+    <span style="height:8px; animation-delay:0s"></span>
+    <span style="height:14px; animation-delay:0.15s"></span>
+    <span style="height:10px; animation-delay:0.3s"></span>
+    <span style="height:18px; animation-delay:0.1s"></span>
+    <span style="height:7px; animation-delay:0.25s"></span>
+  </div>
+  <span style="font-family:'DM Mono',monospace; font-size:0.65rem; color:var(--fg3); letter-spacing:0.1em;">IA MUSICALE</span>
+</div>
+
+<div class="key-hint">← → ou clic pour naviguer</div>
+
+<!-- ═══════════════════════════════════════════
+     SLIDE 1 — COUVERTURE
+════════════════════════════════════════════ -->
+<div class="slide active" id="s1">
+  <div class="layout-cover" style="position:relative; height:100vh; justify-content:center; display:flex; flex-direction:column; align-items:center;">
+    <div class="bg-grid" style="opacity:0.4;"></div>
+    <div class="bg-circle" style="width:600px;height:600px;background:radial-gradient(circle,rgba(181,169,255,0.08) 0%,transparent 70%);top:50%;left:50%;transform:translate(-50%,-50%);"></div>
+
+    <div style="position:relative; z-index:1; max-width:820px;">
+      <div style="display:flex; justify-content:center; margin-bottom:2.5rem;">
+        <div class="waveform">
+          <span style="height:12px; animation-delay:0s"></span>
+          <span style="height:28px; animation-delay:0.1s"></span>
+          <span style="height:18px; animation-delay:0.2s"></span>
+          <span style="height:36px; animation-delay:0.05s"></span>
+          <span style="height:22px; animation-delay:0.15s"></span>
+          <span style="height:40px; animation-delay:0.25s"></span>
+          <span style="height:16px; animation-delay:0.3s"></span>
+          <span style="height:30px; animation-delay:0.08s"></span>
+          <span style="height:20px; animation-delay:0.18s"></span>
+          <span style="height:34px; animation-delay:0.12s"></span>
+          <span style="height:14px; animation-delay:0.22s"></span>
+          <span style="height:26px; animation-delay:0.35s"></span>
+        </div>
+      </div>
+
+      <div class="overline" style="margin-bottom:1.5rem; text-align:center;">Initiation · Atelier participatif</div>
+
+      <h1 class="display xl" style="text-align:center; margin-bottom:1rem;">
+        Création musicale<br>
+        <span class="accent">avec IA générative</span>
+      </h1>
+
+      <div class="sep" style="max-width:200px; margin:2rem auto;"></div>
+
+      <p class="lead" style="text-align:center; max-width:520px; margin:0 auto 2.5rem;">
+        Les mots clés pour créer votre morceau unique — sans connaissances musicales requises
+      </p>
+
+      <div style="display:flex; justify-content:center; gap:0.75rem; flex-wrap:wrap;">
+        <span class="chip chip-accent">Débutant·e·s bienvenu·e·s</span>
+        <span class="chip chip-teal">Aucun instrument requis</span>
+        <span class="chip chip-purple">100% participatif</span>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════
+     SLIDE 2 — C'EST QUOI L'IA MUSICALE ?
+════════════════════════════════════════════ -->
+<div class="slide" id="s2">
+  <div class="layout-split" style="height:100vh;">
+    <div class="split-left">
+      <div class="overline" style="margin-bottom:1rem;">01 — Point de départ</div>
+      <h2 class="display md" style="margin-bottom:1.5rem;">L'IA musicale,<br><span class="accent">c'est quoi ?</span></h2>
+      <p class="body-text" style="margin-bottom:1.5rem;">Un outil qui génère de la musique à partir de <strong style="color:var(--fg)">descriptions textuelles</strong>. Vous décrivez, l'IA compose.</p>
+      <p class="body-text" style="margin-bottom:2rem;">Pas de clavier, pas de solfège. Juste des mots — les bons mots.</p>
+      <div class="chip chip-accent" style="display:inline-flex;">Prompt → Musique</div>
+    </div>
+    <div class="split-right" style="background:var(--bg2);">
+      <div class="overline" style="margin-bottom:1.5rem;">Comment ça marche ?</div>
+      <div class="timeline">
+        <div class="timeline-item">
+          <div class="timeline-num">1</div>
+          <div class="timeline-content">
+            <h3>Vous écrivez un <span class="accent">prompt</span></h3>
+            <p>Une description textuelle de la musique souhaitée — genre, ambiance, instruments, tempo…</p>
+          </div>
+        </div>
+        <div class="timeline-item">
+          <div class="timeline-num">2</div>
+          <div class="timeline-content">
+            <h3>L'IA <span class="purple">analyse et génère</span></h3>
+            <p>Le modèle a été entraîné sur des millions de morceaux. Il interprète vos mots et compose.</p>
+          </div>
+        </div>
+        <div class="timeline-item">
+          <div class="timeline-num">3</div>
+          <div class="timeline-content">
+            <h3>Vous obtenez un <span class="teal">fichier audio</span></h3>
+            <p>En quelques secondes, un morceau original, téléchargeable et modifiable.</p>
+          </div>
+        </div>
+        <div class="timeline-item">
+          <div class="timeline-num">4</div>
+          <div class="timeline-content">
+            <h3>Vous <span class="pink">itérez</span></h3>
+            <p>Vous affinez le prompt, vous explorez des variantes — la créativité est dans le dialogue.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════
+     SLIDE 3 — LES OUTILS
+════════════════════════════════════════════ -->
+<div class="slide" id="s3">
+  <div class="layout-full" style="height:100vh; display:flex; flex-direction:column; justify-content:center;">
+    <div class="section-header">
+      <div>
+        <div class="overline" style="margin-bottom:0.5rem;">02 — L'écosystème</div>
+        <h2 class="display sm">Les outils principaux</h2>
+      </div>
+      <div style="display:flex; gap:0.5rem;">
+        <span class="tool-free">● gratuit</span>
+        <span class="tool-paid">● payant/freemium</span>
+      </div>
+    </div>
+
+    <div class="tool-grid">
+      <div class="tool-card">
+        <div class="tool-icon">🎵</div>
+        <div class="tool-name">Suno</div>
+        <div class="tool-desc">Génère des morceaux complets avec voix et paroles. Très accessible.</div>
+        <div class="tool-paid">Freemium</div>
+      </div>
+      <div class="tool-card">
+        <div class="tool-icon">🎼</div>
+        <div class="tool-name">Udio</div>
+        <div class="tool-desc">Haute qualité audio. Excellente gestion des styles et des genres.</div>
+        <div class="tool-paid">Freemium</div>
+      </div>
+      <div class="tool-card">
+        <div class="tool-icon">🌊</div>
+        <div class="tool-name">Stable Audio</div>
+        <div class="tool-desc">Musique instrumentale et sons. Idéal pour fonds sonores et samples.</div>
+        <div class="tool-free">Gratuit</div>
+      </div>
+      <div class="tool-card">
+        <div class="tool-icon">🎹</div>
+        <div class="tool-name">MusicFX</div>
+        <div class="tool-desc">Par Google. Simple, rapide, parfait pour débuter.</div>
+        <div class="tool-free">Gratuit</div>
+      </div>
+      <div class="tool-card">
+        <div class="tool-icon">🎸</div>
+        <div class="tool-name">Mubert</div>
+        <div class="tool-desc">Musique génératrice en continu, idéale pour les créateurs de contenu.</div>
+        <div class="tool-paid">Freemium</div>
+      </div>
+      <div class="tool-card">
+        <div class="tool-icon">🔊</div>
+        <div class="tool-name">ElevenLabs</div>
+        <div class="tool-desc">Génération de voix et d'effets sonores. Complète une chaîne musicale.</div>
+        <div class="tool-paid">Freemium</div>
+      </div>
+    </div>
+
+    <div style="margin-top:1.5rem; padding:1rem 1.25rem; background:rgba(232,255,71,0.06); border:0.5px solid rgba(232,255,71,0.2); border-radius:10px;">
+      <span style="font-size:0.8rem; color:var(--fg2);">💡 <strong style="color:var(--accent)">Recommandation pour aujourd'hui :</strong> Nous utiliserons principalement <strong style="color:var(--fg)">Suno</strong> — interface simple, résultats spectaculaires, aucune installation.</span>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════
+     SLIDE 4 — LES 5 DIMENSIONS DU PROMPT
+════════════════════════════════════════════ -->
+<div class="slide" id="s4">
+  <div class="layout-split" style="height:100vh;">
+    <div class="split-left" style="background:var(--bg2);">
+      <div class="overline" style="margin-bottom:1rem;">03 — La grammaire du prompt</div>
+      <h2 class="display sm" style="margin-bottom:0.5rem;">Les <span class="accent">5 dimensions</span><br>d'un bon prompt</h2>
+      <p class="body-text" style="margin-bottom:2rem;">Chaque dimension affine le résultat. Combinez-les pour un morceau précis et unique.</p>
+      <div class="legend">
+        <div class="legend-item"><div class="legend-dot" style="background:var(--accent)"></div><span style="color:var(--accent)">Genre</span></div>
+        <div class="legend-item"><div class="legend-dot" style="background:var(--purple)"></div><span style="color:var(--purple)">Humeur</span></div>
+        <div class="legend-item"><div class="legend-dot" style="background:var(--teal)"></div><span style="color:var(--teal)">Tempo</span></div>
+        <div class="legend-item"><div class="legend-dot" style="background:var(--orange)"></div><span style="color:var(--orange)">Instruments</span></div>
+        <div class="legend-item"><div class="legend-dot" style="background:var(--pink)"></div><span style="color:var(--pink)">Époque / Style</span></div>
+      </div>
+    </div>
+    <div class="split-right" style="padding:3rem 2.5rem;">
+      <div style="display:flex; flex-direction:column; gap:1rem; height:100%; justify-content:center;">
+
+        <div class="feat-row">
+          <div class="feat-marker a">G</div>
+          <div>
+            <div style="font-weight:500; margin-bottom:0.2rem; color:var(--accent)">Genre musical</div>
+            <div class="body-text">Le cadre stylistique principal. Définit les règles harmoniques et rythmiques implicites.</div>
+            <div class="kw-grid" style="margin-top:0.5rem;">
+              <span class="chip chip-accent" style="font-size:0.72rem;">jazz</span>
+              <span class="chip chip-accent" style="font-size:0.72rem;">lo-fi hip-hop</span>
+              <span class="chip chip-accent" style="font-size:0.72rem;">bossa nova</span>
+              <span class="chip chip-accent" style="font-size:0.72rem;">électro</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="feat-row">
+          <div class="feat-marker b">H</div>
+          <div>
+            <div style="font-weight:500; margin-bottom:0.2rem; color:var(--purple)">Humeur / Ambiance</div>
+            <div class="body-text">L'émotion que doit transmettre le morceau. Paramètre crucial.</div>
+            <div class="kw-grid" style="margin-top:0.5rem;">
+              <span class="chip chip-purple" style="font-size:0.72rem;">mélancolique</span>
+              <span class="chip chip-purple" style="font-size:0.72rem;">euphorique</span>
+              <span class="chip chip-purple" style="font-size:0.72rem;">mystérieux</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="feat-row">
+          <div class="feat-marker c">T</div>
+          <div>
+            <div style="font-weight:500; margin-bottom:0.2rem; color:var(--teal)">Tempo / Énergie</div>
+            <div class="body-text">La vitesse perçue et le niveau d'énergie. En BPM ou en adjectif.</div>
+            <div class="kw-grid" style="margin-top:0.5rem;">
+              <span class="chip chip-teal" style="font-size:0.72rem;">120 BPM</span>
+              <span class="chip chip-teal" style="font-size:0.72rem;">lent et planant</span>
+              <span class="chip chip-teal" style="font-size:0.72rem;">effréné</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="feat-row">
+          <div class="feat-marker d">I</div>
+          <div>
+            <div style="font-weight:500; margin-bottom:0.2rem; color:var(--orange)">Instruments</div>
+            <div class="body-text">Les sons dominants. Soyez précis : "guitare acoustique fingerstyle" &gt; "guitare".</div>
+            <div class="kw-grid" style="margin-top:0.5rem;">
+              <span class="chip chip-orange" style="font-size:0.72rem;">piano Rhodes</span>
+              <span class="chip chip-orange" style="font-size:0.72rem;">violoncelle solo</span>
+              <span class="chip chip-orange" style="font-size:0.72rem;">synthé analogique</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="feat-row">
+          <div class="feat-marker e">É</div>
+          <div>
+            <div style="font-weight:500; margin-bottom:0.2rem; color:var(--pink)">Époque / Référence</div>
+            <div class="body-text">Une décennie, un courant ou un artiste de référence oriente l'IA efficacement.</div>
+            <div class="kw-grid" style="margin-top:0.5rem;">
+              <span class="chip chip-pink" style="font-size:0.72rem;">années 70</span>
+              <span class="chip chip-pink" style="font-size:0.72rem;">style Debussy</span>
+              <span class="chip chip-pink" style="font-size:0.72rem;">Berlin techno</span>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════
+     SLIDE 5 — LES MOTS CLÉS PAR CATÉGORIE
+════════════════════════════════════════════ -->
+<div class="slide" id="s5">
+  <div class="layout-full" style="height:100vh; display:flex; flex-direction:column; justify-content:center;">
+    <div class="section-header">
+      <div>
+        <div class="overline" style="margin-bottom:0.5rem;">04 — Lexique</div>
+        <h2 class="display sm">Mots clés <span class="accent">par catégorie</span></h2>
+      </div>
+    </div>
+
+    <div class="grid-2" style="gap:1.5rem;">
+      <div>
+        <div class="builder-label" style="color:var(--accent); margin-bottom:0.6rem;">🎵 Genres</div>
+        <div class="kw-grid">
+          <span class="kw h1">jazz</span><span class="kw h1">blues</span><span class="kw">folk</span>
+          <span class="kw h1">lo-fi</span><span class="kw">bossa nova</span><span class="kw">samba</span>
+          <span class="kw h1">électro</span><span class="kw">house</span><span class="kw">techno</span>
+          <span class="kw">drum & bass</span><span class="kw h2">ambient</span><span class="kw">new age</span>
+          <span class="kw">classique</span><span class="kw h2">baroque</span><span class="kw">cinématique</span>
+          <span class="kw">pop</span><span class="kw">indie</span><span class="kw h2">rock</span>
+          <span class="kw dim">afrobeat</span><span class="kw dim">reggae</span><span class="kw dim">flamenco</span>
+        </div>
+
+        <div class="builder-label" style="color:var(--teal); margin-top:1.2rem; margin-bottom:0.6rem;">⚡ Tempo & Énergie</div>
+        <div class="kw-grid">
+          <span class="kw" style="border-color:rgba(78,236,212,0.3);">60 BPM</span>
+          <span class="kw" style="border-color:rgba(78,236,212,0.3);">90 BPM</span>
+          <span class="kw" style="border-color:rgba(78,236,212,0.3);">120 BPM</span>
+          <span class="kw" style="border-color:rgba(78,236,212,0.3);">140 BPM</span>
+          <span class="kw" style="border-color:rgba(78,236,212,0.3);">lent</span>
+          <span class="kw" style="border-color:rgba(78,236,212,0.3);">moderato</span>
+          <span class="kw" style="border-color:rgba(78,236,212,0.3);">effréné</span>
+          <span class="kw" style="border-color:rgba(78,236,212,0.3);">hypnotique</span>
+          <span class="kw dim" style="border-color:rgba(78,236,212,0.15);">dansant</span>
+          <span class="kw dim" style="border-color:rgba(78,236,212,0.15);">planant</span>
+        </div>
+      </div>
+
+      <div>
+        <div class="builder-label" style="color:var(--purple); margin-bottom:0.6rem;">💜 Humeur & Ambiance</div>
+        <div class="kw-grid">
+          <span class="kw" style="border-color:rgba(181,169,255,0.3);">mélancolique</span>
+          <span class="kw" style="border-color:rgba(181,169,255,0.3);">nostalgique</span>
+          <span class="kw" style="border-color:rgba(181,169,255,0.3);">joyeux</span>
+          <span class="kw" style="border-color:rgba(181,169,255,0.3);">euphorique</span>
+          <span class="kw" style="border-color:rgba(181,169,255,0.3);">mystérieux</span>
+          <span class="kw" style="border-color:rgba(181,169,255,0.3);">sombre</span>
+          <span class="kw" style="border-color:rgba(181,169,255,0.3);">apaisant</span>
+          <span class="kw" style="border-color:rgba(181,169,255,0.3);">épique</span>
+          <span class="kw dim" style="border-color:rgba(181,169,255,0.15);">romantique</span>
+          <span class="kw dim" style="border-color:rgba(181,169,255,0.15);">angoissant</span>
+          <span class="kw dim" style="border-color:rgba(181,169,255,0.15);">rêveur</span>
+        </div>
+
+        <div class="builder-label" style="color:var(--orange); margin-top:1.2rem; margin-bottom:0.6rem;">🎹 Instruments clés</div>
+        <div class="kw-grid">
+          <span class="kw" style="border-color:rgba(255,149,89,0.3);">piano</span>
+          <span class="kw" style="border-color:rgba(255,149,89,0.3);">Rhodes</span>
+          <span class="kw" style="border-color:rgba(255,149,89,0.3);">violon</span>
+          <span class="kw" style="border-color:rgba(255,149,89,0.3);">violoncelle</span>
+          <span class="kw" style="border-color:rgba(255,149,89,0.3);">contrebasse</span>
+          <span class="kw" style="border-color:rgba(255,149,89,0.3);">batterie jazz</span>
+          <span class="kw" style="border-color:rgba(255,149,89,0.3);">pad synthé</span>
+          <span class="kw" style="border-color:rgba(255,149,89,0.3);">808</span>
+          <span class="kw" style="border-color:rgba(255,149,89,0.3);">chorale</span>
+          <span class="kw dim" style="border-color:rgba(255,149,89,0.15);">trompette bouchée</span>
+          <span class="kw dim" style="border-color:rgba(255,149,89,0.15);">shakuhachi</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════
+     SLIDE 6 — ANATOMIE D'UN PROMPT
+════════════════════════════════════════════ -->
+<div class="slide" id="s6">
+  <div class="layout-center" style="height:100vh; display:flex; flex-direction:column; justify-content:center; align-items:flex-start; padding:4rem 5rem; text-align:left;">
+    <div class="overline" style="margin-bottom:1rem;">05 — Anatomie</div>
+    <h2 class="display sm" style="margin-bottom:2rem;">Un prompt <span class="accent">décortiqué</span></h2>
+
+    <div class="prompt-box" style="width:100%; margin-bottom:1.5rem;">
+      <span class="p-genre">jazz fusion</span>,
+      <span class="p-mood">mélancolique et introspectif</span>,
+      <span class="p-tempo">80 BPM</span>,
+      <span class="p-instr">trompette bouchée solo, contrebasse acoustique, brushes jazz</span>,
+      <span class="p-era">style Miles Davis années 50</span>,
+      <span class="p-struct">intro douce qui monte progressivement, pas de voix</span>
+    </div>
+
+    <div class="legend" style="margin-bottom:2rem; gap:1rem 2rem;">
+      <div class="legend-item"><div class="legend-dot" style="background:var(--accent)"></div><span style="color:var(--fg2);">Genre</span></div>
+      <div class="legend-item"><div class="legend-dot" style="background:var(--purple)"></div><span style="color:var(--fg2);">Humeur</span></div>
+      <div class="legend-item"><div class="legend-dot" style="background:var(--teal)"></div><span style="color:var(--fg2);">Tempo</span></div>
+      <div class="legend-item"><div class="legend-dot" style="background:var(--orange)"></div><span style="color:var(--fg2);">Instruments</span></div>
+      <div class="legend-item"><div class="legend-dot" style="background:var(--pink)"></div><span style="color:var(--fg2);">Référence</span></div>
+      <div class="legend-item"><div class="legend-dot" style="background:var(--fg3)"></div><span style="color:var(--fg2);">Structure</span></div>
+    </div>
+
+    <div class="grid-2" style="width:100%; gap:1rem;">
+      <div class="card card-accent">
+        <div style="font-size:0.75rem; color:var(--accent); font-family:'DM Mono',monospace; margin-bottom:0.5rem;">RÈGLE D'OR</div>
+        <p class="body-text">Soyez <strong style="color:var(--fg)">aussi précis que possible</strong> sur l'instrument, mais laissez de la liberté sur l'arrangement général.</p>
+      </div>
+      <div class="card">
+        <div style="font-size:0.75rem; color:var(--purple); font-family:'DM Mono',monospace; margin-bottom:0.5rem;">LONGUEUR IDÉALE</div>
+        <p class="body-text">Entre <strong style="color:var(--fg)">20 et 80 mots</strong>. En dessous c'est trop vague, au-delà l'IA peut se perdre.</p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════
+     SLIDE 7 — BON / MAUVAIS PROMPT
+════════════════════════════════════════════ -->
+<div class="slide" id="s7">
+  <div class="layout-full" style="height:100vh; display:flex; flex-direction:column; justify-content:center;">
+    <div class="section-header">
+      <div>
+        <div class="overline" style="margin-bottom:0.5rem;">06 — Erreurs fréquentes</div>
+        <h2 class="display sm">Bon prompt vs <span class="accent2">mauvais prompt</span></h2>
+      </div>
+    </div>
+
+    <div style="display:flex; flex-direction:column; gap:1rem;">
+
+      <div class="do-dont">
+        <div class="bad-box">
+          <div class="box-label">✗ Trop vague</div>
+          <div class="example-prompt">"une musique bien"</div>
+        </div>
+        <div class="good-box">
+          <div class="box-label">✓ Précis et évocateur</div>
+          <div class="example-prompt">"folk acoustique, chaleureux, guitare fingerpicking et violon, tempo tranquille, style années 70"</div>
+        </div>
+      </div>
+
+      <div class="do-dont">
+        <div class="bad-box">
+          <div class="box-label">✗ Contradictoire</div>
+          <div class="example-prompt">"electro rapide et calme, avec batterie heavy metal et harpe douce, musique pour dormir et pour danser"</div>
+        </div>
+        <div class="good-box">
+          <div class="box-label">✓ Cohérent</div>
+          <div class="example-prompt">"ambient électronique, apaisant, nappes de synthé doux, BPM 70, idéal pour la méditation ou le travail concentré"</div>
+        </div>
+      </div>
+
+      <div class="do-dont">
+        <div class="bad-box">
+          <div class="box-label">✗ Technique incompris</div>
+          <div class="example-prompt">"gamme pentatonique mineure en Ré avec accord sus4 en contrepoint polyphonique"</div>
+        </div>
+        <div class="good-box">
+          <div class="box-label">✓ Langage naturel + précis</div>
+          <div class="example-prompt">"blues mélancolique, guitare slide, sonorité années 50, légèrement désaccordé, ambiance bourbon et pluie"</div>
+        </div>
+      </div>
+
+    </div>
+
+    <div style="margin-top:1.5rem; padding:0.75rem 1.25rem; background:var(--bg2); border:0.5px solid var(--border); border-radius:10px;">
+      <span style="font-size:0.8rem; color:var(--fg2);">💡 <strong style="color:var(--fg)">Astuce :</strong> Utilisez des métaphores et des images sensorielles — "brume matinale", "tension électrique", "chaleur d'un feu de camp". L'IA les comprend très bien.</span>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════
+     SLIDE 8 — CONSTRUCTEUR DE PROMPT INTERACTIF
+════════════════════════════════════════════ -->
+<div class="slide" id="s8">
+  <div class="layout-full" style="height:100vh; display:flex; flex-direction:column; justify-content:flex-start; padding-top:2rem;">
+    <div class="section-header" style="margin-bottom:1.2rem;">
+      <div>
+        <div class="overline" style="margin-bottom:0.3rem;">07 — Atelier</div>
+        <h2 class="display sm">Construisez votre <span class="accent">prompt</span></h2>
+      </div>
+      <span style="font-size:0.75rem; color:var(--fg3);">Cliquez pour sélectionner</span>
+    </div>
+
+    <div class="grid-2" style="gap:1.5rem; flex:1;">
+      <div>
+        <div class="builder-label" style="color:var(--accent);">Genre</div>
+        <div class="builder-tags" id="genre-tags">
+          <span class="builder-tag" data-cat="genre" data-val="jazz">jazz</span>
+          <span class="builder-tag" data-cat="genre" data-val="lo-fi hip-hop">lo-fi hip-hop</span>
+          <span class="builder-tag" data-cat="genre" data-val="électro ambient">électro ambient</span>
+          <span class="builder-tag" data-cat="genre" data-val="bossa nova">bossa nova</span>
+          <span class="builder-tag" data-cat="genre" data-val="folk acoustique">folk acoustique</span>
+          <span class="builder-tag" data-cat="genre" data-val="musique cinématique">cinématique</span>
+          <span class="builder-tag" data-cat="genre" data-val="techno">techno</span>
+          <span class="builder-tag" data-cat="genre" data-val="néo-classique">néo-classique</span>
+        </div>
+
+        <div class="builder-label" style="color:var(--purple);">Humeur</div>
+        <div class="builder-tags" id="mood-tags">
+          <span class="builder-tag" data-cat="mood" data-val="mélancolique">mélancolique</span>
+          <span class="builder-tag" data-cat="mood" data-val="euphorique">euphorique</span>
+          <span class="builder-tag" data-cat="mood" data-val="mystérieux">mystérieux</span>
+          <span class="builder-tag" data-cat="mood" data-val="nostalgique">nostalgique</span>
+          <span class="builder-tag" data-cat="mood" data-val="apaisant">apaisant</span>
+          <span class="builder-tag" data-cat="mood" data-val="épique et grandiose">épique</span>
+          <span class="builder-tag" data-cat="mood" data-val="sombre et tendu">sombre</span>
+        </div>
+
+        <div class="builder-label" style="color:var(--teal);">Tempo</div>
+        <div class="builder-tags" id="tempo-tags">
+          <span class="builder-tag" data-cat="tempo" data-val="lent, 60 BPM">lent (60 BPM)</span>
+          <span class="builder-tag" data-cat="tempo" data-val="moderato, 90 BPM">moderato (90 BPM)</span>
+          <span class="builder-tag" data-cat="tempo" data-val="120 BPM">120 BPM</span>
+          <span class="builder-tag" data-cat="tempo" data-val="rapide et effréné, 140 BPM">effréné (140 BPM)</span>
+        </div>
+      </div>
+
+      <div style="display:flex; flex-direction:column; gap:0.5rem;">
+        <div>
+          <div class="builder-label" style="color:var(--orange);">Instruments</div>
+          <div class="builder-tags" id="instr-tags">
+            <span class="builder-tag" data-cat="instr" data-val="piano acoustique">piano</span>
+            <span class="builder-tag" data-cat="instr" data-val="guitare acoustique fingerstyle">guitare acoustique</span>
+            <span class="builder-tag" data-cat="instr" data-val="synthétiseur analogique">synthé analogique</span>
+            <span class="builder-tag" data-cat="instr" data-val="violoncelle solo">violoncelle</span>
+            <span class="builder-tag" data-cat="instr" data-val="batterie jazz aux baguettes">batterie jazz</span>
+            <span class="builder-tag" data-cat="instr" data-val="contrebasse acoustique">contrebasse</span>
+            <span class="builder-tag" data-cat="instr" data-val="cordes orchestrales">cordes orchestrales</span>
+          </div>
+
+          <div class="builder-label" style="color:var(--pink);">Époque / Référence</div>
+          <div class="builder-tags" id="era-tags">
+            <span class="builder-tag" data-cat="era" data-val="style années 50">années 50</span>
+            <span class="builder-tag" data-cat="era" data-val="style années 70">années 70</span>
+            <span class="builder-tag" data-cat="era" data-val="style années 80">années 80</span>
+            <span class="builder-tag" data-cat="era" data-val="contemporain">contemporain</span>
+            <span class="builder-tag" data-cat="era" data-val="style Debussy">Debussy</span>
+            <span class="builder-tag" data-cat="era" data-val="style Hans Zimmer">Hans Zimmer</span>
+          </div>
+        </div>
+
+        <div style="flex:1; display:flex; flex-direction:column; gap:0.5rem; justify-content:flex-end;">
+          <div class="builder-label">Votre prompt généré</div>
+          <div class="builder-output" id="prompt-output">Sélectionnez au moins un élément pour construire votre prompt…</div>
+          <div style="display:flex; gap:0.5rem; align-items:center;">
+            <button class="copy-btn" id="copy-btn" onclick="copyPrompt()">Copier le prompt</button>
+            <button style="background:none;border:0.5px solid var(--border2);color:var(--fg2);padding:0.5rem 1rem;border-radius:8px;font-size:0.78rem;cursor:pointer;font-family:'DM Mono',monospace;" onclick="resetBuilder()">Réinitialiser</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════
+     SLIDE 9 — TECHNIQUES AVANCÉES
+════════════════════════════════════════════ -->
+<div class="slide" id="s9">
+  <div class="layout-split" style="height:100vh;">
+    <div class="split-left">
+      <div class="overline" style="margin-bottom:1rem;">08 — Aller plus loin</div>
+      <h2 class="display sm" style="margin-bottom:1.5rem;">Techniques <span class="accent">avancées</span></h2>
+      <p class="body-text">Une fois à l'aise avec les bases, ces techniques ouvrent de nouvelles possibilités créatives.</p>
+    </div>
+    <div class="split-right" style="background:var(--bg2);">
+      <div class="timeline">
+        <div class="timeline-item">
+          <div class="step-circle a">A</div>
+          <div>
+            <h3 style="margin-bottom:0.3rem;">Prompts négatifs</h3>
+            <p class="body-text">Indiquez ce que vous <em>ne</em> voulez pas : <span style="font-family:'DM Mono',monospace;font-size:0.8rem;color:var(--accent2)">no drums, no vocals, avoid distortion</span>. Réduit les surprises.</p>
+          </div>
+        </div>
+        <div class="timeline-item">
+          <div class="step-circle b">B</div>
+          <div>
+            <h3 style="margin-bottom:0.3rem;">Référence à des morceaux</h3>
+            <p class="body-text">Citez un morceau connu comme point de départ : <span style="font-family:'DM Mono',monospace;font-size:0.8rem;color:var(--purple)">"dans l'esprit de Clair de Lune de Debussy"</span></p>
+          </div>
+        </div>
+        <div class="timeline-item">
+          <div class="step-circle c">C</div>
+          <div>
+            <h3 style="margin-bottom:0.3rem;">Structure narrative</h3>
+            <p class="body-text">Décrivez l'évolution : <span style="font-family:'DM Mono',monospace;font-size:0.8rem;color:var(--teal)">"intro calme, montée progressive, climax à 2 min, retour au calme"</span></p>
+          </div>
+        </div>
+        <div class="timeline-item">
+          <div class="step-circle d">D</div>
+          <div>
+            <h3 style="margin-bottom:0.3rem;">Fusion de genres</h3>
+            <p class="body-text">Mélangez des univers inattendus : <span style="font-family:'DM Mono',monospace;font-size:0.8rem;color:var(--orange)">"jazz × électro × musique de jeu vidéo 16-bit"</span></p>
+          </div>
+        </div>
+        <div class="timeline-item">
+          <div class="step-circle e">E</div>
+          <div>
+            <h3 style="margin-bottom:0.3rem;">Contexte d'usage</h3>
+            <p class="body-text">Précisez l'usage : <span style="font-family:'DM Mono',monospace;font-size:0.8rem;color:var(--pink)">"bande-son de film noir, générique d'ouverture, tension dramatique"</span></p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════
+     SLIDE 10 — CONSEILS PRATIQUES
+════════════════════════════════════════════ -->
+<div class="slide" id="s10">
+  <div class="layout-full" style="height:100vh; display:flex; flex-direction:column; justify-content:center;">
+    <div class="section-header">
+      <div>
+        <div class="overline" style="margin-bottom:0.5rem;">09 — Méthode</div>
+        <h2 class="display sm">Conseils <span class="accent">pratiques</span></h2>
+      </div>
+    </div>
+
+    <div>
+      <div class="tip-row">
+        <div class="tip-num">1</div>
+        <div>
+          <h3 style="font-size:1rem; margin-bottom:0.25rem;">Générez, ne cherchez pas la perfection d'emblée</h3>
+          <p class="body-text">Lancez 3-5 générations avec le même prompt. Les variations sont précieuses. Gardez la meilleure.</p>
+        </div>
+      </div>
+      <div class="tip-row">
+        <div class="tip-num">2</div>
+        <div>
+          <h3 style="font-size:1rem; margin-bottom:0.25rem;">Affinez par étapes</h3>
+          <p class="body-text">Partez d'un prompt simple, ajoutez un élément à la fois. Notez ce qui change entre chaque version.</p>
+        </div>
+      </div>
+      <div class="tip-row">
+        <div class="tip-num">3</div>
+        <div>
+          <h3 style="font-size:1rem; margin-bottom:0.25rem;">Gardez vos prompts qui fonctionnent</h3>
+          <p class="body-text">Créez un fichier de prompts réussis. C'est votre bibliothèque créative personnelle.</p>
+        </div>
+      </div>
+      <div class="tip-row">
+        <div class="tip-num">4</div>
+        <div>
+          <h3 style="font-size:1rem; margin-bottom:0.25rem;">Pensez en "couches"</h3>
+          <p class="body-text">Générez une base instrumentale, puis ajoutez une mélodie, puis du rythme — ou combinez plusieurs générations.</p>
+        </div>
+      </div>
+      <div class="tip-row">
+        <div class="tip-num">5</div>
+        <div>
+          <h3 style="font-size:1rem; margin-bottom:0.25rem;">Exploitez les versions instrumentales</h3>
+          <p class="body-text">Les morceaux sans voix sont plus polyvalents : podcast, vidéos, ambiance d'exposition…</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════
+     SLIDE 11 — EXERCICE
+════════════════════════════════════════════ -->
+<div class="slide" id="s11">
+  <div style="height:100vh; display:flex; flex-direction:column; justify-content:center; align-items:center; padding:4rem; background:radial-gradient(ellipse 70% 50% at 50% 50%, rgba(232,255,71,0.07) 0%, transparent 60%), var(--bg); text-align:center;">
+    <div class="overline" style="margin-bottom:1.5rem;">10 — C'est votre tour</div>
+    <h2 class="display lg" style="margin-bottom:2rem;">Exercice <span class="accent">pratique</span></h2>
+
+    <div style="max-width:680px; width:100%;">
+      <div style="display:grid; grid-template-columns:1fr 1fr; gap:1rem; margin-bottom:2rem; text-align:left;">
+        <div class="card">
+          <div style="font-size:0.7rem; font-family:'DM Mono',monospace; color:var(--fg3); margin-bottom:0.5rem;">ÉTAPE 1</div>
+          <p style="font-size:0.9rem;">Choisissez une <strong style="color:var(--accent)">ambiance</strong> — un lieu, une heure de la journée, un souvenir.</p>
+        </div>
+        <div class="card">
+          <div style="font-size:0.7rem; font-family:'DM Mono',monospace; color:var(--fg3); margin-bottom:0.5rem;">ÉTAPE 2</div>
+          <p style="font-size:0.9rem;">Choisissez un <strong style="color:var(--purple)">genre</strong> qui correspond à cette ambiance.</p>
+        </div>
+        <div class="card">
+          <div style="font-size:0.7rem; font-family:'DM Mono',monospace; color:var(--fg3); margin-bottom:0.5rem;">ÉTAPE 3</div>
+          <p style="font-size:0.9rem;">Ajoutez au moins <strong style="color:var(--teal)">2 instruments</strong> et une indication de tempo.</p>
+        </div>
+        <div class="card">
+          <div style="font-size:0.7rem; font-family:'DM Mono',monospace; color:var(--fg3); margin-bottom:0.5rem;">ÉTAPE 4</div>
+          <p style="font-size:0.9rem;">Générez sur <strong style="color:var(--orange)">Suno</strong>, écoutez, et affinez une fois.</p>
+        </div>
+      </div>
+
+      <div style="padding:1.25rem 1.5rem; background:var(--bg2); border:0.5px solid var(--border); border-radius:12px; text-align:left;">
+        <div style="font-size:0.7rem; font-family:'DM Mono',monospace; color:var(--fg3); margin-bottom:0.6rem;">EXEMPLE D'INSPIRATION</div>
+        <div class="prompt-box" style="background:var(--bg3); margin:0; padding:1rem; font-size:0.82rem;">
+          <span class="p-genre">néo-soul</span>, <span class="p-mood">introspectif et doux</span>, <span class="p-tempo">85 BPM</span>, <span class="p-instr">Rhodes électrique, basse fretless, percussions légères</span>, <span class="p-era">style D'Angelo ou Erykah Badu</span>, <span class="p-struct">sans voix, atmosphère nocturne</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════
+     SLIDE 12 — ASPECTS ÉTHIQUES
+════════════════════════════════════════════ -->
+<div class="slide" id="s12">
+  <div class="layout-split" style="height:100vh;">
+    <div class="split-left" style="background:var(--bg2);">
+      <div class="overline" style="margin-bottom:1rem;">11 — Contexte</div>
+      <h2 class="display sm" style="margin-bottom:1.5rem;">Questions <span class="accent">éthiques</span><br>et pratiques</h2>
+      <p class="body-text" style="margin-bottom:1rem;">L'IA musicale soulève des questions importantes — voici les principaux enjeux à connaître.</p>
+      <div style="display:flex; flex-wrap:wrap; gap:0.5rem;">
+        <span class="chip chip-accent">Droits d'auteur</span>
+        <span class="chip chip-purple">Usage commercial</span>
+        <span class="chip chip-teal">Impact sur les artistes</span>
+      </div>
+    </div>
+    <div class="split-right">
+      <div class="feat-row">
+        <div class="feat-marker a">©</div>
+        <div>
+          <div style="font-weight:500; margin-bottom:0.3rem;">Propriété des créations</div>
+          <p class="body-text">Les conditions varient selon les plateformes. Sur Suno (plan gratuit) : usage personnel uniquement. Plans payants : droits étendus à l'usage commercial.</p>
+        </div>
+      </div>
+      <div class="feat-row">
+        <div class="feat-marker b">🎵</div>
+        <div>
+          <div style="font-weight:500; margin-bottom:0.3rem;">Données d'entraînement</div>
+          <p class="body-text">Ces IA ont été entraînées sur des millions de morceaux existants. Des recours légaux sont en cours (procès Suno/Udio, 2024). La situation évolue.</p>
+        </div>
+      </div>
+      <div class="feat-row">
+        <div class="feat-marker c">👩‍🎤</div>
+        <div>
+          <div style="font-weight:500; margin-bottom:0.3rem;">Impact sur les musiciens</div>
+          <p class="body-text">Débat réel. L'IA musicale peut compléter le travail créatif humain ou concurrencer certaines missions (jingles, habillages sonores).</p>
+        </div>
+      </div>
+      <div class="feat-row">
+        <div class="feat-marker d">✓</div>
+        <div>
+          <div style="font-weight:500; margin-bottom:0.3rem;">Bonne pratique</div>
+          <p class="body-text">Indiquez toujours que votre contenu est généré par IA. La transparence est essentielle pour maintenir la confiance.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════
+     SLIDE 13 — RESSOURCES
+════════════════════════════════════════════ -->
+<div class="slide" id="s13">
+  <div class="layout-full" style="height:100vh; display:flex; flex-direction:column; justify-content:center;">
+    <div class="section-header">
+      <div>
+        <div class="overline" style="margin-bottom:0.5rem;">12 — Pour continuer</div>
+        <h2 class="display sm">Ressources <span class="accent">utiles</span></h2>
+      </div>
+    </div>
+
+    <div class="grid-2" style="gap:1rem; margin-bottom:1.5rem;">
+      <div>
+        <div class="builder-label" style="margin-bottom:0.75rem;">🛠 Plateformes à tester</div>
+        <div style="display:flex; flex-direction:column; gap:0.5rem;">
+          <div style="display:flex; justify-content:space-between; align-items:center; padding:0.6rem 0; border-bottom:0.5px solid var(--border);">
+            <span style="font-size:0.9rem; font-weight:500;">suno.com</span>
+            <span class="tool-paid">Freemium</span>
+          </div>
+          <div style="display:flex; justify-content:space-between; align-items:center; padding:0.6rem 0; border-bottom:0.5px solid var(--border);">
+            <span style="font-size:0.9rem; font-weight:500;">udio.com</span>
+            <span class="tool-paid">Freemium</span>
+          </div>
+          <div style="display:flex; justify-content:space-between; align-items:center; padding:0.6rem 0; border-bottom:0.5px solid var(--border);">
+            <span style="font-size:0.9rem; font-weight:500;">stableaudio.com</span>
+            <span class="tool-free">Gratuit</span>
+          </div>
+          <div style="display:flex; justify-content:space-between; align-items:center; padding:0.6rem 0; border-bottom:0.5px solid var(--border);">
+            <span style="font-size:0.9rem; font-weight:500;">aitestkitchen.withgoogle.com</span>
+            <span class="tool-free">Gratuit</span>
+          </div>
+          <div style="display:flex; justify-content:space-between; align-items:center; padding:0.6rem 0;">
+            <span style="font-size:0.9rem; font-weight:500;">mubert.com</span>
+            <span class="tool-paid">Freemium</span>
+          </div>
+        </div>
+      </div>
+
+      <div>
+        <div class="builder-label" style="margin-bottom:0.75rem;">📚 Pour progresser</div>
+        <div style="display:flex; flex-direction:column; gap:0.75rem;">
+          <div class="card" style="padding:1rem;">
+            <div style="font-size:0.85rem; font-weight:500; margin-bottom:0.3rem;">Prompt Engineering Guide</div>
+            <div style="font-size:0.78rem; color:var(--fg3);">Les principes généraux du prompting s'appliquent à la musique.</div>
+          </div>
+          <div class="card" style="padding:1rem;">
+            <div style="font-size:0.85rem; font-weight:500; margin-bottom:0.3rem;">Communautés Reddit</div>
+            <div style="font-size:0.78rem; color:var(--fg3);">r/SunoAI, r/AIMusic — partage de prompts et techniques de la communauté.</div>
+          </div>
+          <div class="card" style="padding:1rem;">
+            <div style="font-size:0.85rem; font-weight:500; margin-bottom:0.3rem;">YouTube</div>
+            <div style="font-size:0.78rem; color:var(--fg3);">Nombreux tutoriels pour chaque plateforme. Recherchez "Suno tutorial 2024".</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div style="padding:1rem 1.25rem; background:rgba(78,236,212,0.05); border:0.5px solid rgba(78,236,212,0.2); border-radius:10px;">
+      <span style="font-size:0.85rem; color:var(--fg2);">💡 <strong style="color:var(--teal)">Conseil final :</strong> La meilleure façon d'apprendre c'est de créer. Générez 10 morceaux cette semaine en variant les prompts — vous progresserez très vite.</span>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════
+     SLIDE 14 — FIN
+════════════════════════════════════════════ -->
+<div class="slide" id="s14">
+  <div class="layout-cover" style="position:relative; height:100vh; justify-content:center; display:flex; flex-direction:column; align-items:center;">
+    <div class="bg-grid" style="opacity:0.3;"></div>
+    <div class="bg-circle" style="width:500px;height:500px;background:radial-gradient(circle,rgba(232,255,71,0.07) 0%,transparent 70%);top:50%;left:50%;transform:translate(-50%,-50%);"></div>
+
+    <div style="position:relative; z-index:1; max-width:700px; text-align:center;">
+      <h2 class="display lg" style="margin-bottom:1.5rem;">À vous de <span class="accent">composer</span></h2>
+      <p class="lead" style="margin-bottom:2.5rem; max-width:450px; margin-left:auto; margin-right:auto;">Vous avez maintenant tous les outils pour créer votre premier morceau unique.</p>
+
+      <div style="display:flex; justify-content:center; gap:1rem; flex-wrap:wrap; margin-bottom:3rem;">
+        <span class="chip chip-accent">Genre</span>
+        <span style="font-size:1.2rem; color:var(--fg3);">+</span>
+        <span class="chip chip-purple">Humeur</span>
+        <span style="font-size:1.2rem; color:var(--fg3);">+</span>
+        <span class="chip chip-teal">Tempo</span>
+        <span style="font-size:1.2rem; color:var(--fg3);">+</span>
+        <span class="chip chip-orange">Instruments</span>
+        <span style="font-size:1.2rem; color:var(--fg3);">+</span>
+        <span class="chip chip-pink">Référence</span>
+        <span style="font-size:1.2rem; color:var(--fg3);">=</span>
+        <span class="chip chip-accent" style="background:rgba(232,255,71,0.15);">Votre morceau 🎵</span>
+      </div>
+
+      <div class="waveform" style="justify-content:center; height:50px;">
+        <span style="height:15px; animation-delay:0s"></span>
+        <span style="height:35px; animation-delay:0.12s"></span>
+        <span style="height:22px; animation-delay:0.22s"></span>
+        <span style="height:45px; animation-delay:0.06s"></span>
+        <span style="height:30px; animation-delay:0.18s"></span>
+        <span style="height:50px; animation-delay:0.28s"></span>
+        <span style="height:20px; animation-delay:0.08s"></span>
+        <span style="height:38px; animation-delay:0.16s"></span>
+        <span style="height:25px; animation-delay:0.3s"></span>
+        <span style="height:42px; animation-delay:0.1s"></span>
+        <span style="height:18px; animation-delay:0.24s"></span>
+        <span style="height:33px; animation-delay:0.04s"></span>
+        <span style="height:28px; animation-delay:0.2s"></span>
+        <span style="height:48px; animation-delay:0.14s"></span>
+        <span style="height:16px; animation-delay:0.32s"></span>
+      </div>
+
+      <div style="margin-top:2.5rem; padding-top:2rem; border-top:0.5px solid var(--border);">
+        <p style="font-size:0.75rem; color:var(--fg3); font-family:'DM Mono',monospace;">Merci pour votre participation · Bonne création !</p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- NAVIGATION -->
+<nav>
+  <button onclick="prevSlide()">←</button>
+  <div class="dots" id="dots"></div>
+  <span class="slide-counter" id="counter">1 / 14</span>
+  <button onclick="nextSlide()">→</button>
+</nav>
+
+<script>
+  const TOTAL = 14;
+  let current = 1;
+
+  // BUILD DOTS
+  const dotsEl = document.getElementById('dots');
+  for (let i = 1; i <= TOTAL; i++) {
+    const d = document.createElement('div');
+    d.className = 'dot' + (i === 1 ? ' active' : '');
+    d.onclick = () => goTo(i);
+    d.title = 'Slide ' + i;
+    dotsEl.appendChild(d);
+  }
+
+  function goTo(n) {
+    document.getElementById('s' + current).classList.remove('active');
+    dotsEl.children[current - 1].classList.remove('active');
+    current = Math.max(1, Math.min(TOTAL, n));
+    document.getElementById('s' + current).classList.add('active');
+    dotsEl.children[current - 1].classList.add('active');
+    document.getElementById('counter').textContent = current + ' / ' + TOTAL;
+    document.getElementById('progress').style.width = ((current / TOTAL) * 100) + '%';
+  }
+
+  function nextSlide() { goTo(current + 1); }
+  function prevSlide() { goTo(current - 1); }
+
+  document.addEventListener('keydown', e => {
+    if (e.key === 'ArrowRight' || e.key === ' ') { e.preventDefault(); nextSlide(); }
+    if (e.key === 'ArrowLeft') { e.preventDefault(); prevSlide(); }
+  });
+
+  // TOUCH
+  let touchX = 0;
+  document.addEventListener('touchstart', e => { touchX = e.touches[0].clientX; });
+  document.addEventListener('touchend', e => {
+    const dx = e.changedTouches[0].clientX - touchX;
+    if (Math.abs(dx) > 50) { dx < 0 ? nextSlide() : prevSlide(); }
+  });
+
+  // INIT PROGRESS
+  document.getElementById('progress').style.width = ((1 / TOTAL) * 100) + '%';
+
+  // ─── PROMPT BUILDER ──────────────────────────
+  const selections = { genre: null, mood: null, tempo: null, instr: null, era: null };
+
+  document.querySelectorAll('.builder-tag').forEach(tag => {
+    tag.addEventListener('click', function() {
+      const cat = this.dataset.cat;
+      const val = this.dataset.val;
+
+      // Deselect same category
+      document.querySelectorAll(`.builder-tag[data-cat="${cat}"]`).forEach(t => {
+        t.classList.remove(`selected-${cat}`);
+      });
+
+      if (selections[cat] === val) {
+        selections[cat] = null;
+      } else {
+        selections[cat] = val;
+        this.classList.add(`selected-${cat}`);
+      }
+
+      updatePrompt();
+    });
+  });
+
+  function updatePrompt() {
+    const parts = [];
+    if (selections.genre) parts.push(selections.genre);
+    if (selections.mood) parts.push(selections.mood);
+    if (selections.tempo) parts.push(selections.tempo);
+    if (selections.instr) parts.push(selections.instr);
+    if (selections.era) parts.push('style ' + selections.era.replace('style ', ''));
+
+    const out = document.getElementById('prompt-output');
+    if (parts.length === 0) {
+      out.textContent = 'Sélectionnez au moins un élément pour construire votre prompt…';
+      out.style.color = 'var(--fg3)';
+    } else {
+      out.textContent = parts.join(', ');
+      out.style.color = 'var(--fg)';
+    }
+  }
+
+  function copyPrompt() {
+    const text = document.getElementById('prompt-output').textContent;
+    if (!text || text.startsWith('Sélectionnez')) return;
+    navigator.clipboard.writeText(text).then(() => {
+      const btn = document.getElementById('copy-btn');
+      btn.textContent = '✓ Copié !';
+      btn.classList.add('copied');
+      setTimeout(() => {
+        btn.textContent = 'Copier le prompt';
+        btn.classList.remove('copied');
+      }, 2000);
+    });
+  }
+
+  function resetBuilder() {
+    Object.keys(selections).forEach(k => selections[k] = null);
+    document.querySelectorAll('.builder-tag').forEach(t => {
+      t.className = 'builder-tag';
+    });
+    updatePrompt();
+  }
+</script>
+</body>
+</html>
